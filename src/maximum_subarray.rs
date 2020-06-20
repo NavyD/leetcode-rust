@@ -1,3 +1,14 @@
+//! Given an integer array nums, find the contiguous subarray (containing at least one number) which has the largest sum and return its sum.
+//! 
+//! Example:
+//! 
+//! Input: [-2,1,-3,4,-1,2,1,-5,4],
+//! Output: 6
+//! Explanation: [4,-1,2,1] has the largest sum = 6.
+//! Follow up:
+//! 
+//! If you have figured out the O(n) solution, try coding another solution using the divide and conquer approach, which is more subtle.
+
 pub mod solution_dp {
     /// # 思路
     ///
@@ -141,6 +152,106 @@ mod solution_max_sum {
 
             let nums = vec![];
             assert_eq!(Solution::max_sub_array(nums), 0);
+            let nums = vec![-2, -1];
+            assert_eq!(Solution::max_sub_array(nums), -1);
+        }
+    }
+}
+
+pub mod solution_divide_and_conquer {
+    /// # 思路
+    ///
+    /// 用分治法将max sub array的sum用于两个数组上，如果能知道0..mid, mid+1..n两个数组对应
+    /// 的max sub array：left_max_sum, right_max_sum. 就可以比较得到更大的sum，那如何找left, right的sum
+    ///
+    /// dp[0..n] = max(max(dp[0..=mid], dp[mid+1..n]), max_sum[0..n])
+    ///
+    /// 与归并中的递归相同，当left,right只有1个元素时，可以比较得到答案并回用于下个loop
+    /// 
+    /// 而对于max_sum(0, n)要保证最大的连续和，可用mid..left, mid..hi找最大和再加上就是最大和，利用mid to left找
+    /// 连续和
+    /// 
+    /// ```ignore
+    /// nums=[4, -1, 2, 1]
+    /// mid=1, lo=0, hi=3
+    /// left_max_sum = nums[1] + nums[0] = 3
+    /// right_max_sum = nums[2] + nums[3] = 3
+    /// 
+    /// max_sum = left_max_sum + right_max_sum = 6
+    /// ```
+    /// 
+    /// ## Submissions
+    /// 
+    /// date=20200620, mem=2.1, mem_beats=92.56, runtime=0, runtime_beats=100, url=https://leetcode.com/submissions/detail/355978516/
+    /// 
+    /// author=porker2008, references=https://leetcode.com/problems/maximum-subarray/discuss/20372/How-to-solve-"Maximum-Subarray"-by-using-the-divide-and-conquer-approach/20607
+    /// 
+    /// ## 复杂度
+    /// 
+    /// - 时间：O(N log N)
+    /// 
+    /// - 空间：O(log N) 存在log N的stack空间
+    pub struct Solution;
+
+    impl Solution {
+        pub fn max_sub_array(nums: Vec<i32>) -> i32 {
+            if nums.is_empty() {
+                0
+            } else {
+                Self::max_sum(&nums, 0, nums.len() - 1)
+            }
+        }
+
+        fn max_sum(nums: &Vec<i32>, lo: usize, hi: usize) -> i32 {
+            if lo >= hi {
+                return nums[lo];
+            }
+            let mid = (lo + hi) / 2;
+            // get max sub sum compare with left sum and right sum
+            let sub_max_sum = Self::max_sum(nums, lo, mid)
+                .max(Self::max_sum(nums, mid + 1, hi));
+            // get current max sum with left and right
+            let mut left_max_sum = nums[mid];
+            let mut sum = 0;
+            // get left sum from mid to lo
+            for i in (lo..=mid).rev() {
+                sum += nums[i];
+                if sum > left_max_sum {
+                    left_max_sum = sum;
+                }
+            }
+            sum = 0;
+            let mut right_max_sum = nums[mid + 1];
+            // get right sum from mid+1 to hi
+            for i in mid + 1..=hi {
+                sum += nums[i];
+                if sum > right_max_sum {
+                    right_max_sum = sum;
+                }
+            }
+            // to compare current sum and max sub sums
+            (left_max_sum + right_max_sum).max(sub_max_sum)
+        }
+    }
+
+    #[cfg(test)]
+    mod tests {
+        use super::*;
+
+        #[test]
+        fn basics() {
+            let nums = vec![-2, 1, -3, 4, -1, 2, 1, -5, 4];
+            assert_eq!(Solution::max_sub_array(nums), 6);
+
+            let nums = vec![-2, 1, -3];
+            assert_eq!(Solution::max_sub_array(nums), 1);
+
+            let nums = vec![-2];
+            assert_eq!(Solution::max_sub_array(nums), -2);
+
+            let nums = vec![];
+            assert_eq!(Solution::max_sub_array(nums), 0);
+
             let nums = vec![-2, -1];
             assert_eq!(Solution::max_sub_array(nums), -1);
         }
