@@ -8,3 +8,5 @@ pub mod maximum_profit_in_job_scheduling;
 
 // dynamic programming
 pub mod maximum_subarray;
+pub mod climbing_stairs;
+pub mod house_robber;

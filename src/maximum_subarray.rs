@@ -135,11 +135,11 @@ mod solution_max_sum {
         }
     }
 
-    #[cfg(test)]
+    //#[cfg(test)]
     mod tests {
         use super::*;
 
-        #[test]
+        //#[test]
         fn basics() {
             let nums = vec![-2, 1, -3, 4, -1, 2, 1, -5, 4];
             assert_eq!(Solution::max_sub_array(nums), 6);
