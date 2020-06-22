@@ -10,3 +10,5 @@ pub mod maximum_profit_in_job_scheduling;
 pub mod maximum_subarray;
 pub mod climbing_stairs;
 pub mod house_robber;
+pub mod best_time_to_buy_and_sell_stock;
+pub mod range_sum_query_immutable;
