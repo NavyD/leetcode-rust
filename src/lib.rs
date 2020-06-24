@@ -12,3 +12,4 @@ pub mod climbing_stairs;
 pub mod house_robber;
 pub mod best_time_to_buy_and_sell_stock;
 pub mod range_sum_query_immutable;
+pub mod is_subsequence;
