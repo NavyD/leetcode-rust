@@ -15,3 +15,4 @@ pub mod range_sum_query_immutable;
 pub mod is_subsequence;
 pub mod min_cost_climbing_stairs;
 pub mod divisor_game;
+pub mod longest_palindromic_substring;
