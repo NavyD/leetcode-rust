@@ -25,6 +25,16 @@
 //! 1. Right -> Right -> Down -> Down
 //! 2. Down -> Down -> Right -> Right
 
+
+/// 总结
+/// 
+/// 1. 在当时没有注意到dp[i][j]与obstacle_grid[i][j]直接相关，而是用
+/// `dp[i][j] = obstacle_grid[i-1][j-1] == 0 ? dp[i-1][j] + dp[i][j-1] : 0`，
+/// 认为障碍物[i][j]也是可到的，这点是没有想好的
+/// 
+/// 2. 考虑初始值不当，使用多个if self判断，没有注意到dp[row+1][col+1]与obstacle_grid
+/// 的关系
+
 pub mod solution_dp {
     /// # 思路
     ///
