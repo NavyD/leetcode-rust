@@ -1,7 +1,6 @@
 pub mod count_of_range_sum;
 pub mod count_of_smaller_numbers_after_self;
 pub mod reverse_pairs;
-pub mod unique_paths;
 pub mod random_pick_with_blacklist;
 pub mod maximum_profit_in_job_scheduling;
 
@@ -16,3 +15,5 @@ pub mod is_subsequence;
 pub mod min_cost_climbing_stairs;
 pub mod divisor_game;
 pub mod longest_palindromic_substring;
+pub mod unique_paths;
+pub mod unique_paths_ii;
