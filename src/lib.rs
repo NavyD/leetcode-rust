@@ -17,3 +17,4 @@ pub mod divisor_game;
 pub mod longest_palindromic_substring;
 pub mod unique_paths;
 pub mod unique_paths_ii;
+pub mod minimum_path_sum;
