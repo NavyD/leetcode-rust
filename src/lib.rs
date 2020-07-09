@@ -22,3 +22,4 @@ pub mod decode_ways;
 
 // tree
 pub mod same_tree;
+pub mod symmetric_tree;
