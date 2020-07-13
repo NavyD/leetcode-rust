@@ -23,3 +23,4 @@ pub mod decode_ways;
 // tree
 pub mod same_tree;
 pub mod symmetric_tree;
+pub mod maximum_depth_of_binary_tree;
