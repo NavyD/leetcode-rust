@@ -81,3 +81,55 @@ pub mod solution_dfs {
         }
     }
 }
+
+pub mod solution_bfs {
+    use super::*;
+
+    /// # 思路
+    /// 
+    /// bfs一层层遍历所有结点
+    /// 
+    /// ## Submissions
+    /// 
+    /// date=20200718, mem=2.2, mem_beats=100, runtime=0, runtime_beats=100, url=https://leetcode.com/submissions/detail/368224847/
+    /// 
+    /// author=navyd
+    /// 
+    /// ## 复杂度
+    /// 
+    /// 树的高度为M，个数为N
+    /// 
+    /// - 时间：O(N)
+    /// - 空间：O(N*M)
+    pub struct Solution;
+
+    impl Solution {
+        pub fn level_order_bottom(root: Option<Rc<RefCell<TreeNode>>>) -> Vec<Vec<i32>> {
+            let mut res = vec![];
+            if root.is_none() {
+                return res;
+            }
+            let mut queue = std::collections::VecDeque::new();
+            queue.push_back(root.unwrap());
+            while let Some(_) = queue.front() {
+                let mut vals = vec![];
+                // 当前层
+                for _ in 0..queue.len() {
+                    let node = queue.pop_front().unwrap();
+                    let node = node.borrow();
+                    vals.push(node.val);
+                    // 子结点
+                    if let Some(left) = node.left.clone() {
+                        queue.push_back(left);
+                    }
+                    if let Some(right) = node.right.clone() {
+                        queue.push_back(right);
+                    }
+                }
+                // 插入当前到最前面
+                res.insert(0, vals);
+            }
+            res
+        }
+    }
+}
