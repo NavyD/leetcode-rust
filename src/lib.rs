@@ -26,3 +26,4 @@ pub mod symmetric_tree;
 pub mod maximum_depth_of_binary_tree;
 pub mod binary_tree_level_order_traversal_ii;
 pub mod convert_sorted_array_to_binary_search_tree;
+pub mod balanced_binary_tree;
