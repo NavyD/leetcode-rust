@@ -54,6 +54,8 @@ pub mod solution_dfs {
     /// 
     /// date=20200805, mem=2.7, mem_beats=2.6, runtime=0, runtime_beats=100, url=https://leetcode.com/submissions/detail/376461021/
     /// 
+    /// author=力扣官方题解, references=https://leetcode-cn.com/problems/path-sum/solution/lu-jing-zong-he-by-leetcode-solution/
+    /// 
     /// ## 复杂度
     /// 
     /// - 时间：O(N)
@@ -80,11 +82,51 @@ pub mod solution_dfs {
 
 pub mod solution_bfs {
     use super::*;
-    /// bfs如何记录路径和与节点对应
+    /// # 思路
+    /// 
+    /// bfs如何记录路径和与节点对应？
+    /// 
+    /// 由于bfs中queue记录每个path，可同用val_queue记录每个path的sum
+    /// 两个queue顺序对应就是(path, path_sum)
+    /// 
+    /// ## Submission
+    /// 
+    /// date=20200806, mem=2.5, mem_beats=100, runtime=0, runtime_beats=100, url=https://leetcode.com/submissions/detail/376820425/
+    /// 
+    /// author=力扣官方题解, references=https://leetcode-cn.com/problems/path-sum/solution/lu-jing-zong-he-by-leetcode-solution/
+    /// 
+    /// ## 复杂度
+    /// 
+    /// - 时间：O(N)。最小复杂度为O(1)
+    /// - 空间：O(N)
     pub struct Solution;
 
     impl Solution {
         pub fn has_path_sum(root: Option<Rc<RefCell<TreeNode>>>, sum: i32) -> bool {
+            if let Some(root) = root {
+                let mut paths = std::collections::VecDeque::new();
+                let mut path_vals = std::collections::VecDeque::new();
+                path_vals.push_back(root.borrow().val);
+                paths.push_back(root);
+                while !paths.is_empty() {
+                    for _ in 0..paths.len() {
+                        let root = paths.pop_front().unwrap();
+                        let root = root.borrow();
+                        let cur_sum = path_vals.pop_front().unwrap();
+                        if root.left.is_none() && root.right.is_none() && cur_sum == sum {
+                            return true
+                        }
+                        if let Some(left) = root.left.clone() {
+                            path_vals.push_back(left.borrow().val + cur_sum);
+                            paths.push_back(left);
+                        }
+                        if let Some(right) = root.right.clone() {
+                            path_vals.push_back(right.borrow().val + cur_sum);
+                            paths.push_back(right);
+                        }
+                    }
+                }
+            }
             false
         }
     }
