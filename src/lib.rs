@@ -29,3 +29,4 @@ pub mod convert_sorted_array_to_binary_search_tree;
 pub mod balanced_binary_tree;
 pub mod minimum_depth_of_binary_tree;
 pub mod path_sum;
+pub mod invert_binary_tree;
