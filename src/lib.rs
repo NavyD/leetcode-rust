@@ -30,3 +30,4 @@ pub mod balanced_binary_tree;
 pub mod minimum_depth_of_binary_tree;
 pub mod path_sum;
 pub mod invert_binary_tree;
+pub mod binary_tree_paths;
