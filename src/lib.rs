@@ -31,3 +31,4 @@ pub mod minimum_depth_of_binary_tree;
 pub mod path_sum;
 pub mod invert_binary_tree;
 pub mod binary_tree_paths;
+pub mod sum_of_left_leaves;
