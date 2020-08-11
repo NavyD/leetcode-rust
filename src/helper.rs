@@ -24,7 +24,7 @@ pub fn convert_tree(s: &str) -> Option<Rc<RefCell<TreeNode>>> {
 }
 
 /// 将array转为treeNode
-/// 
+///
 /// 如果array.len==0则返回None
 pub fn vec_to_tree(array: Vec<Option<i32>>) -> Option<Rc<RefCell<TreeNode>>> {
     if array.len() == 0 {
@@ -69,11 +69,11 @@ pub fn vec_to_tree(array: Vec<Option<i32>>) -> Option<Rc<RefCell<TreeNode>>> {
 }
 
 /// 将`[1,null,2,2]`转化为`[Some(1), None, Some(2), Some(2)]`
-/// 
+///
 /// # panic
-/// 
+///
 /// 如果str数字间存在空格。如[1,   2 , 3]。
-/// 
+///
 /// `  [] `两边空格不影响
 pub fn str_to_vec(s: &str) -> Vec<Option<i32>> {
     let a = s
@@ -101,6 +101,16 @@ pub fn str_to_vec(s: &str) -> Vec<Option<i32>> {
         }
     }
     res
+}
+
+/// 如果another中的所有元素都在cur中时返回true
+pub fn is_included_vec<T: PartialEq>(cur: &Vec<T>, another: &Vec<T>) -> bool {
+    for e in another {
+        if !cur.contains(e) {
+            return false;
+        }
+    }
+    return true;
 }
 
 #[cfg(test)]
@@ -132,7 +142,7 @@ mod tests {
         let r = r.unwrap();
         let root = r.borrow();
         assert_eq!(root.val, 1);
-        
+
         let left = root.left.clone();
         let right = root.right.clone();
         assert_eq!(left, None);
@@ -142,6 +152,13 @@ mod tests {
         let right = right.clone().unwrap().borrow().right.clone();
         assert!(left.is_some() && left.clone().unwrap().borrow().val == 2);
         assert_eq!(right, None);
+    }
+
+    #[test]
+    fn basic_is_included_vec() {
+        assert!(is_included_vec(&vec![1, 2], &vec![1]));
+        assert!(is_included_vec(&vec![1, 2], &vec![1, 2]));
+        assert!(!is_included_vec(&vec![1], &vec![1, 2]));
     }
 }
 
