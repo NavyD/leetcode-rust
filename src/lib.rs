@@ -34,4 +34,7 @@ pub mod binary_tree_paths;
 pub mod sum_of_left_leaves;
 pub mod find_mode_in_binary_search_tree;
 
+// tree traversal
+pub mod binary_tree_inorder_traversal;
+
 pub mod helper;
