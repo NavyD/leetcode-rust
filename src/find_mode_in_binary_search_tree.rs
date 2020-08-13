@@ -49,6 +49,18 @@ pub mod solution_dfs {
             }
         }
     }
+
+    #[cfg(test)]
+    mod tests {
+        use super::*;
+
+        #[test]
+        fn basic_solution_dfs() {
+            use solution_dfs::Solution;
+            assert_eq!(vec![2], Solution::find_mode(convert_tree("[1,null,2,2]")));
+            assert_eq!(vec![1], Solution::find_mode(convert_tree("[1,1]")));
+        }
+    }
 }
 
 /// 总结
@@ -120,21 +132,24 @@ pub mod solution_dfs_follow_up {
     /// ## Submissions
     ///
     /// date=20200811, mem=3.1, mem_beats=100, runtime=4, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/96889428/
-    /// 
-    /// date=20200812, mem=3, mem_beats=100, runtime=4, runtime_beats=66.67, url=https://leetcode-cn.com/submissions/detail/97226821/
     ///
-    /// author=junstat, references=https://leetcode-cn.com/problems/find-mode-in-binary-search-tree/solution/er-cha-sou-suo-shu-zhong-de-zhong-shu-by-junstat/
+    /// date=20200812, mem=3, mem_beats=100, runtime=4, runtime_beats=66.67, url=https://leetcode-cn.com/submissions/detail/97226821/
     ///
     /// ## 复杂度
     ///
     /// - 时间：O(N)。如果树结点val在后面出现一次多一次，导致modes.clear()频繁更新，用时更多
     /// - 空间：O(log N)
+    ///
+    /// ## 参考
+    ///
+    /// - [Java 4ms Beats 100% Extra O(1) solution - No Map](https://leetcode.com/problems/find-mode-in-binary-search-tree/discuss/98100/Java-4ms-Beats-100-Extra-O(1)-solution-No-Map)
+    /// - [二叉搜索树中的众数](https://leetcode-cn.com/problems/find-mode-in-binary-search-tree/solution/er-cha-sou-suo-shu-zhong-de-zhong-shu-by-junstat/)
     pub struct Solution;
 
     impl Solution {
         pub fn find_mode(root: Option<Rc<RefCell<TreeNode>>>) -> Vec<i32> {
             let mut modes = vec![];
-            Self::find_mode_by_dfs_inorder(root, &mut None, &mut 1, &mut 0, &mut modes);
+            Self::find_mode_by_dfs_inorder(root, &mut None, &mut 0, &mut 0, &mut modes);
             modes
         }
 
@@ -148,13 +163,19 @@ pub mod solution_dfs_follow_up {
             if let Some(root) = root {
                 // pre在第一个叶子结点left时为None，
                 // 后面一直都是上个root
-                Self::find_mode_by_dfs_inorder(root.borrow().left.clone(), pre, cur_count, max_count, modes);
+                Self::find_mode_by_dfs_inorder(
+                    root.borrow().left.clone(),
+                    pre,
+                    cur_count,
+                    max_count,
+                    modes,
+                );
                 let root_val = root.borrow().val;
                 // 连续的相等的node
                 if let Some(pre) = pre {
                     if pre.borrow().val == root_val {
                         *cur_count += 1;
-                    } 
+                    }
                     // 新node
                     else {
                         *cur_count = 1;
@@ -168,32 +189,30 @@ pub mod solution_dfs_follow_up {
                     *max_count = *cur_count;
                 }
                 *pre = Some(root.clone());
-                Self::find_mode_by_dfs_inorder(root.borrow().right.clone(), pre, cur_count, max_count, modes);
+                Self::find_mode_by_dfs_inorder(
+                    root.borrow().right.clone(),
+                    pre,
+                    cur_count,
+                    max_count,
+                    modes,
+                );
             }
         }
     }
-}
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn basic_solution_dfs() {
-        use solution_dfs::Solution;
-        assert_eq!(vec![2], Solution::find_mode(convert_tree("[1,null,2,2]")));
-        assert_eq!(vec![1], Solution::find_mode(convert_tree("[1,1]")));
-    }
-
-    #[test]
-    fn basic_solution_dfs_follow_up() {
-        use solution_dfs_follow_up::Solution;
-        assert_eq!(vec![2], Solution::find_mode(convert_tree("[1,null,2,2]")));
-        assert!(is_included_vec(
-            &vec![1, 2],
-            &Solution::find_mode(convert_tree("[1,2]"))
-        ));
-        assert_eq!(vec![1], Solution::find_mode(convert_tree("[1,1]")));
-        assert_eq!(vec![-2], Solution::find_mode(convert_tree("[-2,-2,-2]")));
+    #[cfg(test)]
+    mod tests {
+        use super::*;
+        #[test]
+        fn basic_solution_dfs_follow_up() {
+            use solution_dfs_follow_up::Solution;
+            assert_eq!(vec![2], Solution::find_mode(convert_tree("[1,null,2,2]")));
+            assert!(is_included_vec(
+                &vec![1, 2],
+                &Solution::find_mode(convert_tree("[1,2]"))
+            ));
+            assert_eq!(vec![1], Solution::find_mode(convert_tree("[1,1]")));
+            assert_eq!(vec![-2], Solution::find_mode(convert_tree("[-2,-2,-2]")));
+        }
     }
 }
