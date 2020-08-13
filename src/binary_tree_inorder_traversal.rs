@@ -50,6 +50,8 @@ pub mod solution_stack {
     /// 
     /// date=20200812, mem=2, mem_beats=100, runtime=0, runtime_beats=2, url=https://leetcode-cn.com/submissions/detail/97285664/
     /// 
+    /// date=20200813, mem=2, mem_beats=100, runtime=0, runtime_beats=2, url=https://leetcode-cn.com/submissions/detail/97601369/
+    /// 
     /// ### 复杂度
     /// 
     /// - 时间：O(N)
