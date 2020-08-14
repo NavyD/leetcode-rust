@@ -37,5 +37,6 @@ pub mod find_mode_in_binary_search_tree;
 // tree traversal
 pub mod binary_tree_inorder_traversal;
 pub mod binary_tree_preorder_traversal;
+pub mod binary_tree_postorder_traversal;
 
 pub mod helper;

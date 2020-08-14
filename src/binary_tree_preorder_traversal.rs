@@ -5,6 +5,16 @@
 /// 
 /// bfs通常是用访问当前层所有结点，可这里用到了stack递归，
 /// 不好理解，但是这里bfs的代码更简洁。
+/// 
+/// ## 20200814
+/// 
+/// 对solution_stack方式不清楚
+/// 
+/// - stack push root与 vals push root.val先后顺序不清
+/// - root.right作为root访问，做出`stack.push_back(stack.pop_back().unwrap().borrow().right.clone())`
+/// 
+/// 对solution_bfs要注意先push_back(right)，再push left，下次先访问pop_back是left
+/// 否则是right了
 pub mod solution_dfs {
     use crate::helper::*;
 
@@ -60,6 +70,8 @@ pub mod solution_stack {
     ///
     /// date=20200813, mem=1.9, mem_beats=100, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/97579046/
     ///
+    /// date=20200814, mem=2.1, mem_beats=50, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/98199464/
+    /// 
     /// ### 复杂度
     ///
     /// - 时间：O(N)
@@ -112,6 +124,8 @@ pub mod solution_bfs {
     /// ### Submission
     ///
     /// date=20200813, mem=2, mem_beats=100, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/97585874/
+    /// 
+    /// date=20200814, mem=1.9, mem_beats=100, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/98202468/
     ///
     /// ### 复杂度
     ///
