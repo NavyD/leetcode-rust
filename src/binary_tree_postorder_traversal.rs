@@ -3,6 +3,10 @@
 /// 
 /// solution bfs和stack都不熟悉，5分钟没有想到，
 /// 要注意与先序的left, right相反位置
+/// 
+/// 20200815
+/// 
+/// 第2次没什么问题
 pub mod solution_recursive {
     use crate::helper::*;
 
@@ -49,6 +53,8 @@ pub mod solution_bfs {
     /// ### Submission
     ///
     /// date=20200814, mem=1.9, mem_beats=100, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/98194630/
+    /// 
+    /// date=20200815, mem=2.1, mem_beats=50, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/98283919/
     ///
     /// ### 参考
     ///
@@ -104,6 +110,8 @@ pub mod solution_stack {
     /// ### Submission
     /// 
     /// date=20200814, mem=2.1, mem_beats=50, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/98208131/
+    /// 
+    /// date=20200815, mem=1.9, mem_beats=50, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/98284899/
     /// 
     /// ### 复杂度
     /// 
