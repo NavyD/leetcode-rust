@@ -42,5 +42,6 @@ pub mod binary_tree_postorder_traversal;
 // array
 pub mod move_zeroes;
 pub mod container_with_most_water;
+pub mod two_sum;
 
 pub mod helper;
