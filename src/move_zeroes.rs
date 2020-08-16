@@ -83,6 +83,8 @@ pub mod solution_simple {
     /// 
     /// date=20200815, mem=2.2, mem_beats=28.57, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/98268704/
     /// 
+    /// date=20200816, mem=2.2, mem_beats=28.57, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/98491766/
+    /// 
     /// ### 复杂度
     /// 
     /// - 时间：O(n)
