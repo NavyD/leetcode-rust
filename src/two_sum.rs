@@ -46,13 +46,15 @@ pub mod solution_hash {
     ///
     /// 如果当前数没有进入hash map，target-时会无法获取，num存入后下次用到target-complement时可找到
     ///
-    /// 参考
+    /// 参考：
     /// 
     /// - [Accepted Java O(n) Solution](https://leetcode.com/problems/two-sum/discuss/3/Accepted-Java-O(n)-Solution)
     /// 
     /// ### Submissions
     ///
     /// date=20200816, mem=2.2, mem_beats=72.46, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/98495478/
+    /// 
+    /// date=20200817, mem=2.3, mem_beats=51.16, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/98887674/
     ///
     /// ### 复杂度
     ///
@@ -64,6 +66,7 @@ pub mod solution_hash {
         pub fn two_sum(nums: Vec<i32>, target: i32) -> Vec<i32> {
             let mut num_indices = std::collections::HashMap::with_capacity(nums.len());
             let mut indices = vec![];
+            // for (i, num) in nums.iter().enumerate() {
             for i in 0..nums.len() {
                 let complement = target - nums[i];
                 if let Some(complement_idx) = num_indices.get(&complement) {

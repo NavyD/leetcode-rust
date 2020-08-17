@@ -53,6 +53,14 @@ pub mod solution_double_points {
     /// 
     /// 即`h[left] < h[right]`不管如何移动right都会比当前area小
     /// 
+    /// 为何left+1,right-1后不需要再对right=len, left=0开始比较？
+    /// 
+    /// 由于left与right昰对称的，也就是从left看是`h[left] < h[right]`，移动left，那`h[left] > h[right]`
+    /// 就是移动right
+    /// 
+    /// 对称意味着如果`h[left] > h[right]`时right-1，如果left=0，left=0时最大值已被计算过，无论right是多少
+    /// 也不会大于，则从当前left开始
+    /// 
     /// 参考：
     /// 
     /// - [盛最多水的容器](https://leetcode-cn.com/problems/container-with-most-water/solution/sheng-zui-duo-shui-de-rong-qi-by-leetcode-solution/)
@@ -61,6 +69,8 @@ pub mod solution_double_points {
     /// ### Submissions
     /// 
     /// date=20200816, mem=2.2, mem_beats=33.33, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/98490187/
+    /// 
+    /// date=20200817, mem=2.2, mem_beats=45.45, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/98878548/
     /// 
     /// ### 复杂度
     /// 
@@ -79,6 +89,21 @@ pub mod solution_double_points {
                     left += 1;
                 } else {
                     right -= 1;
+                }
+            }
+            max_area
+        }
+
+        pub fn max_area1(height: Vec<i32>) -> i32 {
+            let mut max_area = 0;
+            let (mut lo, mut hi) = (0, height.len());
+            while lo < hi {
+                let area = height[lo].min(height[hi]) * (hi - lo) as i32;
+                max_area = max_area.max(area);
+                if height[lo] <= height[hi] {
+                    lo += 1;
+                } else {
+                    hi -= 1;
                 }
             }
             max_area

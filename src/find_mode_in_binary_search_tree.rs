@@ -110,6 +110,8 @@ pub mod solution_dfs_follow_up {
     /// - `cur_count > max_count`：表示之前的modes不正确，当前val出现更多
     ///
     /// ## 注意
+    /// 
+    /// 初始值max_count=1,cur_count=1，否则导致单个值[1,null,2]在第二轮被清空只有2了
     ///
     /// 该方法主要还是inorder，其中pre, cur_count, max_count都是引用，在整个
     /// 递归过程中不能被回溯时值覆盖已改变的值。
@@ -134,6 +136,8 @@ pub mod solution_dfs_follow_up {
     /// date=20200811, mem=3.1, mem_beats=100, runtime=4, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/96889428/
     ///
     /// date=20200812, mem=3, mem_beats=100, runtime=4, runtime_beats=66.67, url=https://leetcode-cn.com/submissions/detail/97226821/
+    /// 
+    /// date=20200817, mem=2.8, mem_beats=83.33, runtime=4, runtime_beats=87.50, url=https://leetcode-cn.com/submissions/detail/98892730/
     ///
     /// ## 复杂度
     ///
@@ -149,7 +153,7 @@ pub mod solution_dfs_follow_up {
     impl Solution {
         pub fn find_mode(root: Option<Rc<RefCell<TreeNode>>>) -> Vec<i32> {
             let mut modes = vec![];
-            Self::find_mode_by_dfs_inorder(root, &mut None, &mut 0, &mut 0, &mut modes);
+            Self::find_mode_by_dfs_inorder(root, &mut None, &mut 1, &mut 1, &mut modes);
             modes
         }
 
@@ -213,6 +217,7 @@ pub mod solution_dfs_follow_up {
             ));
             assert_eq!(vec![1], Solution::find_mode(convert_tree("[1,1]")));
             assert_eq!(vec![-2], Solution::find_mode(convert_tree("[-2,-2,-2]")));
+            assert_eq!(vec![1,2,], Solution::find_mode(convert_tree("[1,null,2]")));
         }
     }
 }
