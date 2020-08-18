@@ -1,6 +1,10 @@
 /// 总结
 /// 
 /// 没有思路
+/// 
+/// 20200818
+/// 
+/// 注意在left,right时不能重复`while left < right && nums[left + 1] == nums[left] {`
 pub mod solution_sort {
     /// # 思路
     ///
@@ -21,6 +25,8 @@ pub mod solution_sort {
     /// ### Submissions
     /// 
     /// date=20200817, mem=3.4, mem_beats=75, runtime=28, runtime_beats=77.7, url=https://leetcode-cn.com/submissions/detail/98864502/
+    /// 
+    /// date=20200818, mem=3.4, mem_beats=57.14, runtime=24, runtime_beats=95.68, url=https://leetcode-cn.com/submissions/detail/99437998/
     /// 
     /// ### 复杂度
     /// 

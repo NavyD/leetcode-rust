@@ -45,4 +45,7 @@ pub mod container_with_most_water;
 pub mod two_sum;
 pub mod three_sum;
 
+// linked list
+pub mod reverse_linked_list;
+
 pub mod helper;
