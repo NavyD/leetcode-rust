@@ -40,7 +40,7 @@ pub mod my_solution {
     }
 }
 
-pub mod solution_double_points {
+pub mod solution_double_pointer {
     /// # 思路 
     /// 
     /// `area=min(h[left], h[right])*(right-left)`如果当`h[left] < h[right]`时
@@ -72,6 +72,8 @@ pub mod solution_double_points {
     /// 
     /// date=20200817, mem=2.2, mem_beats=45.45, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/98878548/
     /// 
+    /// date=20200825, mem=2.1, mem_beats=53.33, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/101718090/
+    /// 
     /// ### 复杂度
     /// 
     /// - 时间：O(n)
@@ -89,21 +91,6 @@ pub mod solution_double_points {
                     left += 1;
                 } else {
                     right -= 1;
-                }
-            }
-            max_area
-        }
-
-        pub fn max_area1(height: Vec<i32>) -> i32 {
-            let mut max_area = 0;
-            let (mut lo, mut hi) = (0, height.len());
-            while lo < hi {
-                let area = height[lo].min(height[hi]) * (hi - lo) as i32;
-                max_area = max_area.max(area);
-                if height[lo] <= height[hi] {
-                    lo += 1;
-                } else {
-                    hi -= 1;
                 }
             }
             max_area
