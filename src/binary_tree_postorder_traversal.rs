@@ -55,6 +55,8 @@ pub mod solution_bfs {
     /// date=20200814, mem=1.9, mem_beats=100, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/98194630/
     /// 
     /// date=20200815, mem=2.1, mem_beats=50, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/98283919/
+    /// 
+    /// date=20200825, mem=2.1, mem_beats=14.29, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/101710776/
     ///
     /// ### 参考
     ///
@@ -112,6 +114,8 @@ pub mod solution_stack {
     /// date=20200814, mem=2.1, mem_beats=50, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/98208131/
     /// 
     /// date=20200815, mem=1.9, mem_beats=50, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/98284899/
+    /// 
+    /// date=20200825, mem=1.9, mem_beats=85.71, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/101709346/
     /// 
     /// ### 复杂度
     /// 

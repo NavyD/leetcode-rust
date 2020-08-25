@@ -43,6 +43,7 @@ pub mod solution_recursive {
     /// 递归。在递归回溯时做到`cur.next = pre; pre.next = null`
     /// 
     /// ```java
+    /// @Submission(date = "20200825", memory = 40, memoryBeatRate = 9.5, runtime = 0, runtimeBeatRate = 100, url = "https://leetcode-cn.com/submissions/detail/101700482/")
     /// public ListNode reverseList(ListNode head) {
     ///     if (head == null || head.next == null) {
     ///         return head;
