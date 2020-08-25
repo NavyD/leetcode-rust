@@ -7,6 +7,7 @@ pub struct ListNode {
 
 impl ListNode {
     #[inline]
+    #[allow(dead_code)]
     fn new(val: i32) -> Self {
         ListNode { next: None, val }
     }
@@ -15,6 +16,8 @@ impl ListNode {
 /// 总结
 ///
 /// 写不出rust的递归链表方式，现在是真不清楚
+/// 
+/// java可以写出递归方式
 pub mod solution_points {
     use super::*;
     ///
@@ -25,6 +28,8 @@ pub mod solution_points {
     /// date=20200818, mem=2.3, mem_beats=83.33, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/99449141/
     /// 
     /// date=20200819, mem=2.4, mem_beats=66.67, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/99630592/
+    /// 
+    /// date=20200825, mem=2.5, mem_beats=5.56, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/101696406/
     ///
     /// ### 复杂度
     ///
@@ -50,7 +55,7 @@ pub mod solution_recursive {
 
     /// # 思路
     /// 
-    /// 递归
+    /// 递归。在递归回溯时做到`cur.next = pre; pre.next = None`
     /// 
     /// 参考：
     /// 
