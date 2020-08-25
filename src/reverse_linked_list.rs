@@ -1,25 +1,10 @@
-// Definition for singly-linked list.
-#[derive(PartialEq, Eq, Clone, Debug)]
-pub struct ListNode {
-    pub val: i32,
-    pub next: Option<Box<ListNode>>,
-}
-
-impl ListNode {
-    #[inline]
-    #[allow(dead_code)]
-    fn new(val: i32) -> Self {
-        ListNode { next: None, val }
-    }
-}
-
 /// 总结
 ///
 /// 写不出rust的递归链表方式，现在是真不清楚
 /// 
 /// java可以写出递归方式
 pub mod solution_points {
-    use super::*;
+    use crate::helper::*;
     ///
     /// 参考：[反转链表](https://leetcode-cn.com/problems/reverse-linked-list/solution/fan-zhuan-lian-biao-by-leetcode/)
     ///
@@ -51,11 +36,24 @@ pub mod solution_points {
 }
 
 pub mod solution_recursive {
-    use super::*;
+    use crate::helper::*;
 
     /// # 思路
     /// 
-    /// 递归。在递归回溯时做到`cur.next = pre; pre.next = None`
+    /// 递归。在递归回溯时做到`cur.next = pre; pre.next = null`
+    /// 
+    /// ```java
+    /// public ListNode reverseList(ListNode head) {
+    ///     if (head == null || head.next == null) {
+    ///         return head;
+    ///     }
+    ///     ListNode cur = reverseList(head.next);
+    ///     // next = pre
+    ///     head.next.next = head;
+    ///     head.next = null;
+    ///     return cur;
+    /// }
+    /// ```
     /// 
     /// 参考：
     /// 
