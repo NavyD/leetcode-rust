@@ -5,6 +5,11 @@
 /// 20200818
 /// 
 /// 注意在left,right时不能重复`while left < right && nums[left + 1] == nums[left] {`
+/// 
+/// 20200825
+/// 
+/// 注意在去重时`while left < right && nums[right - 1] == nums[right] {`后一定要用
+/// `right -= 1;left += 1;`使left,right不处于重复的位置
 pub mod solution_sort {
     /// # 思路
     ///
@@ -16,17 +21,43 @@ pub mod solution_sort {
     /// - 对于连续出现的元素跳过`cur == nums[i - 1]`
     /// - 双指针left,right有`cur + nums[left] + nums[right]==0`时，
     /// 判断左界和右界是否和下一位置重复，去除重复解。并同时将 L,RL,R 移到下一位置，寻找新的解
+    /// 
+    /// 一点优化：有序的nums[i]>0时后面的数必定有sum>0
+    /// 
+    /// ```ignore
+    /// for i in 0..len {
+    ///     if nums[i] > 0 {
+    ///         break;
+    ///     } else if i != 0 && nums[i] == nums[i - 1] {
+    ///         continue;
+    ///     }
+    /// ```
+    /// 
+    /// 可用set去重而不是指针移动
+    /// 
+    /// ```java
+    /// while(j<k){
+    ///     int sum = nums[i]+nums[j]+nums[k];
+    ///     if(sum==0)res.add(Arrays.asList(nums[i],nums[j++],nums[k--]));
+    ///     else if ( sum >0) k--;
+    ///     else if (sum<0) j++;
+    /// }
+    /// ```
     ///
     /// 参考：
     /// 
     /// - [排序 + 双指针，逐行解释](https://leetcode-cn.com/problems/3sum/solution/pai-xu-shuang-zhi-zhen-zhu-xing-jie-shi-python3-by/)
     /// - [三数之和](https://leetcode-cn.com/problems/3sum/solution/san-shu-zhi-he-by-leetcode-solution/)
+    /// - [Concise O(N^2) Java solution](https://leetcode.com/problems/3sum/discuss/7380/Concise-O(N2)-Java-solution)
+    /// - [Java with set](https://leetcode.com/problems/3sum/discuss/143636/Java-with-set)
     /// 
     /// ### Submissions
     /// 
     /// date=20200817, mem=3.4, mem_beats=75, runtime=28, runtime_beats=77.7, url=https://leetcode-cn.com/submissions/detail/98864502/
     /// 
     /// date=20200818, mem=3.4, mem_beats=57.14, runtime=24, runtime_beats=95.68, url=https://leetcode-cn.com/submissions/detail/99437998/
+    /// 
+    /// date=20200825, mem=3.3, mem_beats=93.75, runtime=32, runtime_beats=49.59, url=https://leetcode-cn.com/submissions/detail/101728221/
     /// 
     /// ### 复杂度
     /// 
@@ -43,17 +74,20 @@ pub mod solution_sort {
             let mut res = vec![];
             if len >= 3 {
                 nums.sort();
-                for i in 0..len {
-                    let cur = nums[i];
+                for i in 0..len - 2 {
+                    // 有序
+                    if nums[i] > 0 {
+                        break;
+                    }
                     // 去重
-                    if i != 0 && cur == nums[i - 1] {
+                    if i != 0 && nums[i] == nums[i - 1] {
                         continue;
                     }
                     let (mut left, mut right) = (i + 1, len - 1);
                     while left < right {
-                        let sum = cur + nums[left] + nums[right];
+                        let sum = nums[i] + nums[left] + nums[right];
                         if sum == 0 {
-                            res.push(vec![cur, nums[left], nums[right]]);
+                            res.push(vec![nums[i], nums[left], nums[right]]);
                             // 去重
                             while left < right && nums[left + 1] == nums[left] {
                                 left += 1;
