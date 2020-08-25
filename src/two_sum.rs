@@ -55,6 +55,8 @@ pub mod solution_hash {
     /// date=20200816, mem=2.2, mem_beats=72.46, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/98495478/
     /// 
     /// date=20200817, mem=2.3, mem_beats=51.16, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/98887674/
+    /// 
+    /// date=20200825, mem=2.3, mem_beats=52, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/101721676/
     ///
     /// ### 复杂度
     ///
