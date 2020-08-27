@@ -48,5 +48,6 @@ pub mod three_sum;
 // linked list
 pub mod reverse_linked_list;
 pub mod swap_nodes_in_pairs;
+pub mod linked_list_cycle;
 
 pub mod helper;
