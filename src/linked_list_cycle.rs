@@ -38,6 +38,7 @@ pub mod solution_double_pointer {
     /// 
     /// ```java
     /// @Submission(date = "20200827", memory = 40.2, memoryBeatRate = 22.33, runtime = 0, runtimeBeatRate = 100, url = "https://leetcode-cn.com/submissions/detail/102147200/")
+    /// @Submission(date = "20200828", memory = 40, memoryBeatRate = 44.71, runtime = 0, runtimeBeatRate = 100, url = "https://leetcode-cn.com/submissions/detail/102425044/")
     /// // double pointer
     /// public boolean hasCycle(ListNode head) {
     ///     ListNode slow = head;
