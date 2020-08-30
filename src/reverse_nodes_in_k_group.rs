@@ -1,12 +1,12 @@
 pub mod solution_iterative {
-    use crate::helper::*;
+    use crate::prelude::*;
     /// # 思路
     ///
     /// 链表分区为已翻转部分+待翻转部分+未翻转部分
     ///
     /// 翻转类似[reverse_linked_list](https://leetcode-cn.com/problems/reverse-linked-list/)，
     /// 通过pre节点找出第k个tail节点，切断反转并重建链表
-    /// 
+    ///
     /// ```java
     /// // 移除
     ///             // 切断链表
@@ -14,7 +14,7 @@ pub mod solution_iterative {
     /// ListNode next = tail.next;
     /// tail.next = null;
     /// ```
-    /// 
+    ///
     /// 改进为不再先切断tail，而是用reverse head与nextHead关系会head.next=null切断，再用
     /// head.next = nextHead链接
     ///
@@ -46,7 +46,7 @@ pub mod solution_iterative {
     ///         pre = head;
     ///     }
     /// }
-    /// 
+    ///
     /// private ListNode reverse(ListNode head, ListNode nextHead) {
     ///     ListNode prev = null;
     ///     while (head != nextHead) {
@@ -71,6 +71,7 @@ pub mod solution_iterative {
     pub struct Solution;
 
     impl Solution {
+        #[allow(unused_variables)]
         pub fn reverse_k_group(head: Option<Box<ListNode>>, k: i32) -> Option<Box<ListNode>> {
             todo!()
         }
@@ -78,9 +79,20 @@ pub mod solution_iterative {
 }
 
 pub mod solution_recursive {
-    use crate::helper::*;
+    use crate::prelude::*;
 
     /// # 思路
+    /// 
+    /// rust所有权的方式不能在递归前反转链表，只能递归后返回反转的new_head作为next_head
+    /// 与上个head反转链接 
+    /// 
+    /// `head -> ... -x-> next_head -> tail` 反转链接 `tail <- head <- ... <- next_head` 并返回next_head
+    /// 
+    /// ```rust,ignore
+    /// Solution::reverse(head, next_head)
+    /// // cannot move out of `next_head` 
+    /// let next_head = Solution::reverse_k_group(next_head.take(), k);
+    /// ```
     ///
     /// 先反转每段k个链表，递归回溯时连接相邻链表
     ///
@@ -123,6 +135,7 @@ pub mod solution_recursive {
     ///
     /// - [递归思维：如何跳出细节？](https://leetcode-cn.com/problems/reverse-nodes-in-k-group/solution/di-gui-si-wei-ru-he-tiao-chu-xi-jie-by-labuladong/)
     /// - [递归java](https://leetcode-cn.com/problems/reverse-nodes-in-k-group/solution/di-gui-java-by-reedfan-2/)
+    /// - [4ms]()
     ///
     /// ### 复杂度
     ///
@@ -132,7 +145,43 @@ pub mod solution_recursive {
 
     impl Solution {
         pub fn reverse_k_group(head: Option<Box<ListNode>>, k: i32) -> Option<Box<ListNode>> {
-            todo!()
+            let mut head = head;
+            let mut next_head = &mut head;
+            for _ in 0..k {
+                if let Some(node) = next_head.as_mut() {
+                    next_head = &mut node.next;
+                } else {
+                    return head;
+                }
+            }
+            // 切断head -> ... -> tail -x-> next_head -> ...
+            let next_head = Solution::reverse_k_group(next_head.take(), k);
+            Solution::reverse(head, next_head)
+        }
+        
+        /// head -> ... -x-> next_head -> tail 反转链接 tail <- head <- ... <- next_head 并返回new_head
+        fn reverse(
+            mut head: Option<Box<ListNode>>,
+            mut next_head: Option<Box<ListNode>>,
+        ) -> Option<Box<ListNode>> {
+            while let Some(mut node) = head {
+                head = node.next.take();
+                node.next = next_head.take();
+                next_head = Some(node);
+            }
+            next_head
+        }
+    }
+
+    #[cfg(test)]
+    mod tests {
+        use super::*;
+        #[test]
+        fn basics() {
+            assert_eq!(
+                linkedlist![2, 1, 4, 3, 5],
+                Solution::reverse_k_group(linkedlist![1, 2, 3, 4, 5], 2)
+            );
         }
     }
 }
