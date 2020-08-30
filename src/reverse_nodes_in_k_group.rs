@@ -135,7 +135,7 @@ pub mod solution_recursive {
     ///
     /// - [递归思维：如何跳出细节？](https://leetcode-cn.com/problems/reverse-nodes-in-k-group/solution/di-gui-si-wei-ru-he-tiao-chu-xi-jie-by-labuladong/)
     /// - [递归java](https://leetcode-cn.com/problems/reverse-nodes-in-k-group/solution/di-gui-java-by-reedfan-2/)
-    /// - [4ms]()
+    /// - [4ms](https://leetcode.com/submissions/api/detail/25/rust/4/)
     ///
     /// ### 复杂度
     ///
