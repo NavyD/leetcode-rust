@@ -36,6 +36,10 @@ pub mod solution_double_pointer {
     ///
     /// date=20200830, mem=2.3, mem_beats=53.49, runtime=4, runtime_beats=30, url=https://leetcode-cn.com/submissions/detail/103003211/
     /// 
+    /// 很奇怪，同样的代码提交后runtime不一样 艹
+    /// 
+    /// date=20200831, mem=2.3, mem_beats=27.91, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/103290602/
+    /// 
     /// ### 复杂度
     /// 
     /// - 时间：O(n)
@@ -44,7 +48,7 @@ pub mod solution_double_pointer {
 
 
     impl Solution {
-        pub fn remove_duplicates(nums: &mut Vec<i32>) -> i32 {
+        pub fn remove_duplicates_4ms(nums: &mut Vec<i32>) -> i32 {
             if nums.len() == 0 {
                 return 0;
             }
@@ -58,22 +62,18 @@ pub mod solution_double_pointer {
             return i as i32 + 1;
         }
 
-        /// [来源](https://leetcode-cn.com/submissions/api/detail/26/rust/0)
-        #[allow(dead_code)]
-        fn remove_duplicates_0ms(nums: &mut Vec<i32>) -> i32 {
-            if nums.len() < 1 {
+        pub fn remove_duplicates(nums: &mut Vec<i32>) -> i32 {
+            if nums.is_empty() {
                 return 0;
             }
-            let mut tail = 1;
-            let mut las = nums[0];
-            for i in 1..nums.len() {
-                if nums[i] != las {
-                    las = nums[i];
-                    nums[tail] = nums[i];
-                    tail += 1;
+            let mut i = 0;
+            for j in 1..nums.len() {
+                if nums[i] != nums[j] {
+                    i += 1;
+                    nums[i] = nums[j];
                 }
             }
-            tail as i32
+            i as i32 + 1
         }
     }
 

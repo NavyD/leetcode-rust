@@ -45,6 +45,7 @@ pub mod container_with_most_water;
 pub mod two_sum;
 pub mod three_sum;
 pub mod remove_duplicates_from_sorted_array;
+pub mod rotate_array;
 
 // linked list
 pub mod reverse_linked_list;
