@@ -53,6 +53,7 @@ pub mod swap_nodes_in_pairs;
 pub mod linked_list_cycle;
 pub mod linked_list_cycle_ii;
 pub mod reverse_nodes_in_k_group;
+pub mod merge_two_sorted_lists;
 
 pub mod helper;
 

@@ -11,6 +11,8 @@ pub mod solution_copy {
     /// ### submissions
     ///
     /// date=20200831, mem=2.3, mem_beats=6.9, runtime=100, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/103236496/
+    /// 
+    /// date=20200901, mem=2.2, mem_beats=72.41, runtime=100, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/103602800/
     ///
     /// ### 复杂度
     ///
@@ -72,6 +74,8 @@ pub mod solution_ring {
     /// ### submissions
     ///
     /// date=20200831, mem=2.2, mem_beats=44.83, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/103257131/
+    /// 
+    /// date=20200831, mem=2.1, mem_beats=96.55, runtime=4, runtime_beats=47.27, url=https://leetcode-cn.com/submissions/detail/103606992/
     ///
     /// ### 复杂度
     ///
@@ -133,11 +137,13 @@ pub mod solution_reverse {
     /// rust api
     /// 
     /// ```rust,ignore
-    /// let len = nums.len();
-    /// let k = k as usize % len;
-    /// nums.reverse();
-    /// nums[..k].reverse();
-    /// nums[k..].reverse();
+    /// pub fn rotate(nums: &mut Vec<i32>, k: i32) {
+    ///     let len = nums.len();
+    ///     let k = k as usize % len;
+    ///     nums.reverse();
+    ///     nums[..k].reverse();
+    ///     nums[k..].reverse();
+    /// }
     /// ```
     /// 
     /// ```rust,ignore
@@ -157,6 +163,8 @@ pub mod solution_reverse {
     ///
     /// date=20200831, mem=2.3, mem_beats=27.59, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/103284789/
     /// 
+    /// date=20200831, mem=2.1, mem_beats=82.76, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/103610475/
+    /// 
     /// ### 复杂度
     ///
     /// - 时间：O(n)
@@ -175,13 +183,13 @@ pub mod solution_reverse {
             Self::reverse(nums, k, len - 1);
         }
 
-        fn reverse(nums: &mut Vec<i32>, mut start: usize, mut end: usize) {
-            while start < end {
-                let temp = nums[start];
-                nums[start] = nums[end];
-                nums[end] = temp;
-                start += 1;
-                end -= 1;
+        fn reverse(nums: &mut Vec<i32>, mut lo: usize, mut hi: usize) {
+            while lo < hi {
+                let temp = nums[lo];
+                nums[lo] = nums[hi];
+                nums[hi] = temp;
+                lo += 1;
+                hi -= 1;
             }
         }
     }
