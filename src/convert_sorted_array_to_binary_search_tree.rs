@@ -1,21 +1,3 @@
-//! Given an array where elements are sorted in ascending order, convert it to a height balanced BST.
-//!
-//! For this problem, a height-balanced binary tree is defined as a binary tree in which the depth of the two subtrees of every node never differ by more than 1.
-//!
-//! Example:
-//!
-//! Given the sorted array: [-10,-3,0,5,9],
-//!
-//! One possible answer is: [0,-3,9,-10,null,5], which represents the following height balanced BST:
-//!
-//! ```ignore
-//!       0
-//!      / \
-//!    -3   9
-//!    /   /
-//!  -10  5
-//! ```
-
 use std::cell::RefCell;
 use std::rc::Rc;
 
@@ -53,7 +35,7 @@ pub mod solution_bfs {
     /// 当lo=0, hi=1时，mid=1，left=0, root=1，这时递归用lo=0, hi=mid-1=0
     /// 有mid=0, 下次递归时lo=0, hi=mid-1=-1使得usize runtime error
     /// 
-    /// ```rust, no_run
+    /// ```rust, ignore
     /// fn dfs(nums: &Vec<i32>, lo: usize, hi: usize) -> Option<Rc<RefCell<TreeNode>>> {
     ///     if lo > hi {
     ///         return None;
@@ -74,7 +56,7 @@ pub mod solution_bfs {
     /// 
     /// 还可以用slice代替下标[参考](https://leetcode.com/problems/convert-sorted-array-to-binary-search-tree/discuss/326589/Rust-0ms-3.4MB)
     /// 
-    /// ```rust, no_run
+    /// ```rust, ignore
     /// fn create_bst(nums: &[i32]) -> Option<Rc<RefCell<TreeNode>>> {
     ///     let l = nums.len();
     ///     let mid = l / 2;
