@@ -10,8 +10,9 @@
 /// 
 /// 20200902
 /// 
-/// ListNode first = pre.next, second = first.next;判空
-/// while (head != null && head.next != null) {
+/// ListNode first = tail.next, second = first.next;判空
+/// 要用 while (head != null && head.next != null) {
+/// 而不是while (tail, tail.next)
 pub mod solution_iterative {
     use crate::helper::*;
     
