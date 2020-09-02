@@ -31,6 +31,8 @@ pub mod solution_iterative {
     /// 
     /// date=20200901, mem=2.1, mem_beats=11.11, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/103581670/
     /// 
+    /// date=20200902, mem=1.9, mem_beats=96.30, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/103965284/
+    /// 
     /// ### 复杂度
     /// 
     /// - 时间：O(n + m)
@@ -88,6 +90,8 @@ pub mod solution_recursive {
     /// ### Submissions
     /// 
     /// date=20200901, mem=2.1, mem_beats=11.11, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/103593396/
+    /// 
+    /// date=20200902, mem=2.1, mem_beats=48.15, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/103958845/
     /// 
     /// ### 复杂度
     /// 
