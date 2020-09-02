@@ -85,7 +85,7 @@ pub mod solution_simple {
     /// 
     /// date=20200816, mem=2.2, mem_beats=28.57, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/98491766/
     /// 
-    /// date=20200816, mem=2.3, mem_beats=8.7, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/101715181/
+    /// date=20200825, mem=2.3, mem_beats=8.7, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/101715181/
     /// 
     /// ### 复杂度
     /// 

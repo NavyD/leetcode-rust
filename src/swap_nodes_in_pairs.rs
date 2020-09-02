@@ -7,6 +7,11 @@
 /// 
 /// java递归返回的是new head，由old head -> new head, 
 /// swap后head.next是new head则返回的是next
+/// 
+/// 20200902
+/// 
+/// ListNode first = pre.next, second = first.next;判空
+/// while (head != null && head.next != null) {
 pub mod solution_iterative {
     use crate::helper::*;
     
@@ -20,6 +25,7 @@ pub mod solution_iterative {
     /// // iterative
     /// @Submission(date = "20200826", memory = 37.3, memoryBeatRate = 67.97, runtime = 0, runtimeBeatRate = 100, url = "https://leetcode-cn.com/submissions/detail/101838737/")
     /// @Submission(date = "20200827", memory = 37.4, memoryBeatRate = 55.37, runtime = 0, runtimeBeatRate = 100, url = "https://leetcode-cn.com/submissions/detail/102129664/")
+    /// @Submission(date = "20200902", memory = 37.4, memoryBeatRate = 58.84, runtime = 0, runtimeBeatRate = 100, url = "https://leetcode-cn.com/submissions/detail/103944482/")
     /// public ListNode swapPairs(ListNode head) {
     ///     ListNode dummy = new ListNode(0);
     ///     ListNode tail = dummy;
@@ -50,6 +56,8 @@ pub mod solution_iterative {
     /// date=20200826, mem=2, mem_beats=66.67, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/101843120/
     /// 
     /// date=20200827, mem=2.1, mem_beats=14.29, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/102126063/
+    /// 
+    /// date=20200902, mem=2, mem_beats=92.86, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/103948147/
     /// 
     /// ### 复杂度
     /// 
@@ -91,7 +99,7 @@ pub mod solution_recursive {
     /// 
     /// 更新每两个点的链表形态完成整个链表的调整
     /// 
-    /// - 调用单元：设需要交换的两个点为 head 和 next，head 连接后面交换完成的子链表，next 连接 head，完成交换
+    /// - 调用单元：设需要交换的两个点为 head 和 next，head 连接后面交换完成的子链表tail，next 连接 head，完成交换
     /// - 终止条件：head 为空指针或者 next 为空指针，也就是当前无节点或者只有一个节点，无法进行交换
     /// - 返回值：交换完成的子链表
     /// 
@@ -101,13 +109,14 @@ pub mod solution_recursive {
     /// ```java
     /// @Submission(date = "20200827", memory = 37.6, memoryBeatRate = 11.89, runtime = 0, runtimeBeatRate = 100, url = "https://leetcode-cn.com/submissions/detail/102116655/")
     /// @Submission(date = "20200826", memory = 37.4, memoryBeatRate = 51.44, runtime = 0, runtimeBeatRate = 100, url = "https://leetcode-cn.com/submissions/detail/101834628/")
+    /// @Submission(date = "20200902", memory = 37.7, memoryBeatRate = 6.44, runtime = 0, runtimeBeatRate = 100, url = "https://leetcode-cn.com/submissions/detail/103937741/")
     /// public ListNode swapPairs(ListNode head) {
     ///     if (head == null || head.next == null)
     ///         return head;
     ///     ListNode next = head.next;
-    ///     ListNode newHead = swapPairs(next.next);
+    ///     ListNode tail = swapPairs(next.next);
     ///     // swap
-    ///     head.next = newHead;
+    ///     head.next = tail;
     ///     next.next = head;
     ///     return next;
     /// }
@@ -125,6 +134,8 @@ pub mod solution_recursive {
     /// 
     /// date=20200827, mem=2.1, mem_beats=14.29, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/102121290/
     /// 
+    /// date=20200902, mem=2.1, mem_beats=35.71, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/103951055/
+    /// 
     /// ### 复杂度
     /// 
     /// - 时间：O(N)
@@ -135,8 +146,8 @@ pub mod solution_recursive {
         pub fn swap_pairs(head: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
             if let Some(mut head) = head {
                 if let Some(mut next) = head.next {
-                    let new_head = Self::swap_pairs(next.next);
-                    head.next = new_head;
+                    let tail = Self::swap_pairs(next.next);
+                    head.next = tail;
                     next.next = Some(head);
                     Some(next)
                 } else {
@@ -158,8 +169,8 @@ pub mod solution_recursive {
             }
             let mut head = head.unwrap();
             let mut next = head.next.unwrap();
-            let new_head = Self::swap_pairs_java(next.next);
-            head.next = new_head;
+            let tail = Self::swap_pairs_java(next.next);
+            head.next = tail;
             next.next = Some(head);
             Some(next)
         }
