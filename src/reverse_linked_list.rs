@@ -22,7 +22,8 @@ pub mod solution_points {
     /// date=20200819, mem=2.4, mem_beats=66.67, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/99630592/
     /// 
     /// date=20200825, mem=2.5, mem_beats=5.56, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/101696406/
-    ///
+    /// 
+    /// date=20200825, mem=2.4, mem_beats=33.33, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/104343441/
     /// ### 复杂度
     ///
     /// - 时间：O(n)
@@ -31,13 +32,13 @@ pub mod solution_points {
 
     impl Solution {
         pub fn reverse_list(mut head: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
-            let mut pre_node = None;
+            let mut prev = None;
             while let Some(mut node) = head {
-                head = node.next;
-                node.next = pre_node;
-                pre_node = Some(node);
+                head = node.next.take();
+                node.next = prev;
+                prev = Some(node);
             }
-            pre_node
+            prev
         }
     }
 }
@@ -49,22 +50,25 @@ pub mod solution_recursive {
     /// 
     /// 递归
     /// 
-    /// rust用prev移动重建新链表，与迭代方式一样。
+    /// rust用prev移动重建新链表，与迭代方式一样。不能与java版的一样，next不在回溯后
+    /// 存在
     /// 
     /// java是在原链表tail时移动指针next->head回溯，只要移动指针
+    /// reverseList在回溯时一直都返回的是head->tail的tail没变过，原tail是新head
     /// 
     /// ```java
     /// @Submission(date = "20200825", memory = 40, memoryBeatRate = 9.5, runtime = 0, runtimeBeatRate = 100, url = "https://leetcode-cn.com/submissions/detail/101700482/")
     /// @Submission(date = "20200827", memory = 40.1, memoryBeatRate = 5.19, runtime = 0, runtimeBeatRate = 100, url = "https://leetcode-cn.com/submissions/detail/102105920/")
+    /// @Submission(date = "20200903", memory = 40, memoryBeatRate = 9.52, runtime = 0, runtimeBeatRate = 100, url = "https://leetcode-cn.com/submissions/detail/104356834/")
     /// public ListNode reverseList(ListNode head) {
     ///     if (head == null || head.next == null) {
     ///         return head;
     ///     }
-    ///     ListNode newHead = reverseList(head.next);
+    ///     ListNode tail = reverseList(head.next);
     ///     // next = pre
     ///     head.next.next = head;
     ///     head.next = null;
-    ///     return newHead;
+    ///     return tail;
     /// }
     /// ```
     /// 

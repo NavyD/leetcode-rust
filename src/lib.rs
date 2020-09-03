@@ -47,6 +47,7 @@ pub mod three_sum;
 pub mod remove_duplicates_from_sorted_array;
 pub mod rotate_array;
 pub mod merge_sorted_array;
+pub mod plus_one;
 
 // linked list
 pub mod reverse_linked_list;
@@ -55,6 +56,9 @@ pub mod linked_list_cycle;
 pub mod linked_list_cycle_ii;
 pub mod reverse_nodes_in_k_group;
 pub mod merge_two_sorted_lists;
+
+// stack
+pub mod valid_parentheses;
 
 pub mod helper;
 
