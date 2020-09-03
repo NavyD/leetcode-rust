@@ -8,7 +8,7 @@
 /// 
 /// rust只能用重建链表方式实现
 pub mod solution_points {
-    use crate::helper::*;
+    use crate::prelude::*;
     /// # 思路
     /// 
     /// 用pre_node新建链表
@@ -41,10 +41,20 @@ pub mod solution_points {
             prev
         }
     }
+
+    #[cfg(test)]
+    mod tests {
+        use super::*;
+
+        #[test]
+        fn basics() {
+            assert_eq!(Solution::reverse_list(linkedlist![1, 2, 3, 4, 5]), linkedlist![5, 4, 3, 2, 1]);
+        }
+    }
 }
 
 pub mod solution_recursive {
-    use crate::helper::*;
+    use crate::prelude::*;
 
     /// # 思路
     /// 
@@ -103,6 +113,16 @@ pub mod solution_recursive {
             } else {
                 prev
             }
+        }
+    }
+
+    #[cfg(test)]
+    mod tests {
+        use super::*;
+
+        #[test]
+        fn basics() {
+            assert_eq!(Solution::reverse_list(linkedlist![1, 2, 3, 4, 5]), linkedlist![5, 4, 3, 2, 1]);
         }
     }
 }

@@ -14,7 +14,7 @@
 /// 要用 while (head != null && head.next != null) {
 /// 而不是while (tail, tail.next)
 pub mod solution_iterative {
-    use crate::helper::*;
+    use crate::prelude::*;
     
     /// # 思路
     /// 
@@ -94,7 +94,7 @@ pub mod solution_iterative {
 }
 
 pub mod solution_recursive {
-    use crate::helper::*;
+    use crate::prelude::*;
 
     /// # 思路
     /// 
