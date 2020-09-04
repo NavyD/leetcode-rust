@@ -59,6 +59,7 @@ pub mod merge_two_sorted_lists;
 
 // stack
 pub mod valid_parentheses;
+pub mod min_stack;
 
 pub mod helper;
 

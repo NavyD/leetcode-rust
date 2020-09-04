@@ -1,3 +1,8 @@
+/// 总结
+/// 
+/// 20200904
+/// 
+/// 第二次写的时候有点没搞清如何进位
 pub mod solution_iterative {
     /// # 思路
     /// 
@@ -5,9 +10,16 @@ pub mod solution_iterative {
     /// - 当digit=9时，向前进位1 digits[i-1] += 1;
     /// - 当i-1==0时，插入高位1
     /// 
+    /// 如何处理进位
+    /// 
+    /// 循环做+1，只有当digit>=9时循环。digits[i]=0, 
+    /// 在下个循环中处理digit[i-1] +=1
+    /// 
     /// ### Submissions
     /// 
-    /// date=20200902, mem=2.1, mem_beats=37.50, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/104312187/
+    /// date=20200903, mem=2.1, mem_beats=37.50, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/104312187/
+    /// 
+    /// date=20200904, mem=2.1, mem_beats=34.38, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/104671100/
     /// 
     /// ### 复杂度
     /// 

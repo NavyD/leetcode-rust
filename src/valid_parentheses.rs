@@ -16,10 +16,13 @@ pub mod solution_stack {
     ///
     /// - [Short java solution](https://leetcode.com/problems/valid-parentheses/discuss/9178/Short-java-solution)
     /// - [有效的括号（辅助栈法，极简+图解）](https://leetcode-cn.com/problems/valid-parentheses/solution/valid-parentheses-fu-zhu-zhan-fa-by-jin407891080/)
+    /// 
     /// ### Submissions
     ///
     /// date=20200903, mem=2.1, mem_beats=20.88, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/104330959/
     ///
+    /// date=20200904, mem=2.2, mem_beats=7.69, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/104667778/
+    /// 
     /// ### 复杂度
     ///
     /// - 时间：O(n)
