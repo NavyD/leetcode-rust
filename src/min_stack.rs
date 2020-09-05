@@ -4,6 +4,11 @@
 /// 
 /// 这里有个用链表实现的stack：[Clean 6ms Java solution](https://leetcode.com/problems/min-stack/discuss/49010/Clean-6ms-Java-solution)
 /// 相对于用std库，每个Node保存了当前的min值。
+/// 
+/// 20200905
+/// 
+/// 注意one stack时push的顺序，不要在push调用了self.push递归了。。。。
+/// push时先old min, 再push new x，当min==x时也是min值入栈
 pub mod solution_two_stack {
     /// # 思路
     /// 
@@ -32,6 +37,8 @@ pub mod solution_two_stack {
     /// ### Submissions
     /// 
     /// date=20200904, mem=6.5, mem_beats=9.09, runtime=8, runtime_beats=85.37, url=https://leetcode-cn.com/submissions/detail/104658333/
+    /// 
+    /// date=20200905, mem=6.5, mem_beats=9.09, runtime=8, runtime_beats=85.37, url=https://leetcode-cn.com/submissions/detail/104911435/
     /// 
     /// ### 复杂度
     /// 
@@ -99,6 +106,8 @@ pub mod solution_one_stack {
     /// 
     /// date=20200904, mem=6.4, mem_beats=9.09, runtime=8, runtime_beats=85.37, url=https://leetcode-cn.com/submissions/detail/104663220/
     /// 
+    /// date=20200905, mem=6.4, mem_beats=9.09, runtime=4, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/104904830/
+    /// 
     /// ### 复杂度
     /// 
     /// - 时间：O(1)
@@ -147,4 +156,3 @@ pub mod solution_one_stack {
         }
     }
 }
-

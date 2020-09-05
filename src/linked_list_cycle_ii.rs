@@ -65,6 +65,7 @@ pub mod solution_double_pointer {
     /// ```java
     /// @Submission(date = "20200828", memory = 39.8, memoryBeatRate = 68.29, runtime = 0, runtimeBeatRate = 100, url = "https://leetcode-cn.com/submissions/detail/102414197/")
     /// @Submission(date = "20200829", memory = 39.9, memoryBeatRate = 48.96, runtime = 0, runtimeBeatRate = 100, url = "https://leetcode-cn.com/submissions/detail/102762855/")
+    /// @Submission(date = "20200905", memory = 39.7, memoryBeatRate = 86.67, runtime = 0, runtimeBeatRate = 100, url = "https://leetcode-cn.com/submissions/detail/104913163/")
     /// public ListNode detectCycle(ListNode head) {
     ///     ListNode slow = head;
     ///     ListNode fast = head;

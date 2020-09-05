@@ -48,6 +48,7 @@ pub mod remove_duplicates_from_sorted_array;
 pub mod rotate_array;
 pub mod merge_sorted_array;
 pub mod plus_one;
+pub mod largest_rectangle_in_histogram;
 
 // linked list
 pub mod reverse_linked_list;
