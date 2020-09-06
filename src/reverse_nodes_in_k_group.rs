@@ -121,8 +121,8 @@ pub mod solution_recursive {
     ///         nextHead = nextHead.next;
     ///     }
     ///     // head is tail
-    ///     head.next = reverseKGroup(nextHead, k);
     ///     ListNode newHead = reverse(head, nextHead);
+    ///     head.next = reverseKGroup(nextHead, k);
     ///     return newHead;
     /// }
     ///
