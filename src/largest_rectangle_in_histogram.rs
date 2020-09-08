@@ -76,6 +76,8 @@ pub mod solution_violent_height {
     /// ### Submissions
     ///
     /// date=20200906, mem=2.2, mem_beats=93.75, runtime=880, runtime_beats=5.97, url=https://leetcode-cn.com/submissions/detail/105190091/
+    /// 
+    /// date=20200908, mem=2.3, mem_beats=77.78, runtime=884, runtime_beats=5.8, url=https://leetcode-cn.com/submissions/detail/105869662/
     ///
     /// ### 复杂度
     ///
@@ -171,6 +173,8 @@ pub mod solution_monotonous_stack {
     ///
     /// date=20200907, mem=2.4, mem_beats=29.41, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/105482050/
     ///
+    /// date=20200908, mem=2.5, mem_beats=27.78, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/105874885/
+    /// 
     /// ### 复杂度
     ///
     /// - 时间：O(n)
@@ -185,7 +189,7 @@ pub mod solution_monotonous_stack {
                 // 找可以确定面积heights[i] < last_height 之前的柱形，可能有多个比heights[i]大的柱形可确定
                 while let Some(last) = last_indices.last() {
                     let last_height = heights[*last];
-                    // height < last_height continue
+                    // 左边height <= 当前height不能确定左边height面积
                     if last_height <= heights[i] {
                         break;
                     }
@@ -223,42 +227,6 @@ pub mod solution_monotonous_stack {
                 }
                 // 最小的柱形 宽度是整个数组
                 else {
-                    heights.len()
-                };
-                max_area = max_area.max(width as i32 * height);
-            }
-            max_area
-        }
-
-        pub fn largest_rectangle_by_hand(heights: Vec<i32>) -> i32 {
-            let mut max_area = 0;
-            let mut last_indices = Vec::with_capacity(heights.len());
-            for (i, height) in heights.iter().enumerate() {
-                while !last_indices.is_empty() && heights[*last_indices.last().unwrap()] > *height {
-                    let height = heights[last_indices.pop().unwrap()];
-                    while !last_indices.is_empty()
-                        && height == heights[*last_indices.last().unwrap()]
-                    {
-                        last_indices.pop();
-                    }
-                    let width = if let Some(last) = last_indices.last() {
-                        i - last - 1
-                    } else {
-                        i
-                    };
-                    max_area = max_area.max(width as i32 * height);
-                }
-                last_indices.push(i);
-            }
-
-            while let Some(last) = last_indices.pop() {
-                let height = heights[last];
-                while !last_indices.is_empty() && height == heights[*last_indices.last().unwrap()] {
-                    last_indices.pop();
-                }
-                let width = if let Some(last) = last_indices.last() {
-                    heights.len() - last - 1
-                } else {
                     heights.len()
                 };
                 max_area = max_area.max(width as i32 * height);
@@ -317,7 +285,7 @@ pub mod solution_stack_sentinel {
                 // sentinel 0: i=len,height=0 最后一次for时while可处理 清空栈
                 while let Some(last) = last_indices.last() {
                     let last_height = heights[*last];
-                    // height < last_height continue
+                    // 左边height <= 当前height不能确定左边height面积
                     if heights[i] >= last_height {
                         break;
                     }

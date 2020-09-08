@@ -1,3 +1,10 @@
+/// 总结
+/// 
+/// 20200908
+/// 
+/// reverse要注意k = k % nums.len()。
+/// solution_ring忘记了怎么反转，看一眼还是能马上写出的，
+/// 环形移动还是比较特殊的
 pub mod solution_copy {
 
     /// # 思路
@@ -75,8 +82,10 @@ pub mod solution_ring {
     ///
     /// date=20200831, mem=2.2, mem_beats=44.83, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/103257131/
     /// 
-    /// date=20200831, mem=2.1, mem_beats=96.55, runtime=4, runtime_beats=47.27, url=https://leetcode-cn.com/submissions/detail/103606992/
+    /// date=20200901, mem=2.1, mem_beats=96.55, runtime=4, runtime_beats=47.27, url=https://leetcode-cn.com/submissions/detail/103606992/
     ///
+    /// date=20200908, mem=2.2, mem_beats=52.38, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/105887056/
+    /// 
     /// ### 复杂度
     ///
     /// - 时间：O(n)
@@ -163,7 +172,9 @@ pub mod solution_reverse {
     ///
     /// date=20200831, mem=2.3, mem_beats=27.59, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/103284789/
     /// 
-    /// date=20200831, mem=2.1, mem_beats=82.76, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/103610475/
+    /// date=20200901, mem=2.1, mem_beats=82.76, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/103610475/
+    /// 
+    /// date=20200908, mem=2.2, mem_beats=28.57, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/105880830/
     /// 
     /// ### 复杂度
     ///
