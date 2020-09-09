@@ -3,6 +3,11 @@
 /// 开始想用堆priority queue，rust BinaryHeap，但是这个题的意思是
 /// 要在一个k范围找最值，同时移动出k外元素，priority不能直接移出k外
 /// 的元素
+/// 
+/// 20200909
+/// 
+/// solution_monotonic_queue要注意先delete再push后add res，与下标对
+/// 应起来，删除时只有当`last + k - 1 < cur_idx`才行
 #[allow(dead_code)]
 pub mod my_solution {
     struct Solution;
@@ -80,6 +85,8 @@ pub mod solution_monotonic_queue {
     /// ### Submissions
     ///
     /// date=20200908, mem=2.9, mem_beats=60, runtime=16, runtime_beats=72.97, url=https://leetcode-cn.com/submissions/detail/105862456/
+    /// 
+    /// date=20200909, mem=2.9, mem_beats=60, runtime=16, runtime_beats=72.97, url=https://leetcode-cn.com/submissions/detail/106286541/
     ///
     /// ### 复杂度
     ///
@@ -127,7 +134,10 @@ pub mod solution_monotonic_queue {
                 vec![3, 3, 5, 5, 6, 7],
                 Solution::max_sliding_window(vec![1, 3, -1, -3, 5, 3, 6, 7], 3)
             );
-
+            assert_eq!(
+                vec![10,10,9,2],
+                Solution::max_sliding_window(vec![9,10,9,-7,-4,-8,2,-6], 5)
+            );
             assert_eq!(vec![1, -1], Solution::max_sliding_window(vec![1, -1], 1));
         }
     }

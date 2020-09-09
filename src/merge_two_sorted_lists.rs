@@ -15,6 +15,10 @@
 /// (l1, None) => l1,
 /// (None, l2) => l2,
 /// ```
+/// 
+/// 20200909
+/// 
+/// rust链表还是要有对应的思维，一步步切断
 pub mod solution_iterative {
     use crate::prelude::*;
 
@@ -32,6 +36,8 @@ pub mod solution_iterative {
     /// date=20200901, mem=2.1, mem_beats=11.11, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/103581670/
     /// 
     /// date=20200902, mem=1.9, mem_beats=96.30, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/103965284/
+    /// 
+    /// date=20200909, mem=2, mem_beats=91.18, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/106297679/
     /// 
     /// ### 复杂度
     /// 
@@ -92,6 +98,8 @@ pub mod solution_recursive {
     /// date=20200901, mem=2.1, mem_beats=11.11, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/103593396/
     /// 
     /// date=20200902, mem=2.1, mem_beats=48.15, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/103958845/
+    /// 
+    /// date=20200909, mem=2.1, mem_beats=32.35, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/106293054/
     /// 
     /// ### 复杂度
     /// 
