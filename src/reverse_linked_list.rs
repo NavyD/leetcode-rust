@@ -23,7 +23,8 @@ pub mod solution_points {
     /// 
     /// date=20200825, mem=2.5, mem_beats=5.56, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/101696406/
     /// 
-    /// date=20200825, mem=2.4, mem_beats=33.33, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/104343441/
+    /// date=20200903, mem=2.4, mem_beats=33.33, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/104343441/
+    /// 
     /// ### 复杂度
     ///
     /// - 时间：O(n)
