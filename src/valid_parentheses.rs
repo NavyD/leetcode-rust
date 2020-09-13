@@ -23,6 +23,8 @@ pub mod solution_stack {
     ///
     /// date=20200904, mem=2.2, mem_beats=7.69, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/104667778/
     /// 
+    /// date=20200913, mem=2.1, mem_beats=32。08, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/107687503/
+    /// 
     /// ### 复杂度
     ///
     /// - 时间：O(n)
@@ -31,15 +33,15 @@ pub mod solution_stack {
 
     impl Solution {
         pub fn is_valid(s: String) -> bool {
-            let mut stack = std::collections::VecDeque::new();
-            for left in s.chars() {
-                if left == '(' {
-                    stack.push_back(')');
-                } else if left == '[' {
-                    stack.push_back(']');
-                } else if left == '{' {
-                    stack.push_back('}');
-                } else if stack.is_empty() || left != stack.pop_back().unwrap() {
+            let mut stack = Vec::new();
+            for c in s.chars() {
+                if c == '(' {
+                    stack.push(')');
+                } else if c == '[' {
+                    stack.push(']');
+                } else if c == '{' {
+                    stack.push('}');
+                } else if stack.is_empty() || c != stack.pop().unwrap() {
                     return false;
                 }
             }
