@@ -48,7 +48,7 @@ pub mod remove_duplicates_from_sorted_array;
 pub mod rotate_array;
 pub mod merge_sorted_array;
 pub mod plus_one;
-
+pub mod design_circular_deque;
 
 // linked list
 pub mod reverse_linked_list;
