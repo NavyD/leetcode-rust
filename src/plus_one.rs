@@ -21,7 +21,7 @@ pub mod solution_iterative {
     /// 
     /// date=20200904, mem=2.1, mem_beats=34.38, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/104671100/
     /// 
-    /// date=20200904, mem=2.1, mem_beats=42.86, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/107842564/
+    /// date=202009014, mem=2.1, mem_beats=42.86, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/107842564/
     /// 
     /// ### 复杂度
     /// 

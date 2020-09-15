@@ -108,6 +108,8 @@ pub mod solution_one_stack {
     /// 
     /// date=20200905, mem=6.4, mem_beats=9.09, runtime=4, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/104904830/
     /// 
+    /// date=20200915, mem=6.5, mem_beats=11.11, runtime=8, runtime_beats=85.11, url=https://leetcode-cn.com/submissions/detail/108130236/
+    /// 
     /// ### 复杂度
     /// 
     /// - 时间：O(1)
