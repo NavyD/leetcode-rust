@@ -280,6 +280,8 @@ pub mod solution_stack_sentinel {
     /// 
     /// date=20200907, mem=2.4, mem_beats=29.41, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/105495785/
     /// 
+    /// date=20200916, mem=2.3, mem_beats=46.15, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/108503945/
+    /// 
     /// ### 复杂度
     /// 
     /// - 时间：O(n)
