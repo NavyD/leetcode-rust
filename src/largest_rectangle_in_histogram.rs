@@ -6,6 +6,10 @@
 /// 开始尝试用[container_with_most_water](https://leetcode-cn.com/problems/container-with-most-water/)这个双指针
 /// 解法，但发现其意思与该题不同，柱形面积不是两边最小的height*width，而是用当前
 /// 高度为最小相邻的有多少个柱形width
+/// 
+/// 20200916
+/// 
+/// 注意solution_stack_sentinel中`width=i-last-1 | i`的含义
 pub mod solution_violent_width {
     /// # 思路
     ///
@@ -259,6 +263,13 @@ pub mod solution_stack_sentinel {
     /// 因为它一定比输入数组里任何一个元素小，它会让所有输入数组里的元素出栈
     /// 
     /// 可以省略往前找的循环`while let Some(last) = last_indices.last() {`，外部循环while let可处理
+    /// 
+    /// 如何处理width与i的关系
+    /// 
+    /// - 当last_indices中还存在元素时，即`i.last.last`存在，last_heigth对应的`i.last`已经被pop了，则`i-last-1= i - i.last`
+    /// 如计算height=5的面积：`last_indices=1; last=1, i=4 ==> i-last-1 = 4 - 1 - 1 = 2`
+    /// 
+    /// 当last_indices没有元素时，表示当前last就是最后的也是最小的height，这个柱形的width就是最长的，整个未加sentinel的heigth.len()
     /// 
     /// 参考：
     /// 

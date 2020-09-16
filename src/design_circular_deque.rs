@@ -123,6 +123,8 @@ pub mod solution_array {
     /// 
     /// date=20200915, mem=2.3, mem_beats=100, runtime=8, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/108122161/
     /// 
+    /// date=20200916, mem=2.4, mem_beats=100, runtime=12, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/108482454/
+    /// 
     /// ### 复杂度
     /// 
     /// - 时间：O(1)。所有操作都是O(1)的

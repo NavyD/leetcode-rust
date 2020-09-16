@@ -49,6 +49,7 @@ pub mod rotate_array;
 pub mod merge_sorted_array;
 pub mod plus_one;
 pub mod design_circular_deque;
+pub mod trapping_rain_water;
 
 // linked list
 pub mod reverse_linked_list;
