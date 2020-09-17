@@ -8,6 +8,26 @@
 /// 
 /// solution_monotonic_queue要注意先delete再push后add res，与下标对
 /// 应起来，删除时只有当`last + k - 1 < cur_idx`才行
+/// 
+/// 20200917
+/// 
+/// 这是第3次写出的，很明显没记得了，只记得push要移动，没有考虑如何移除与
+/// 获取res，尝试一次`res.push(queue.pop_front().unwrap())`解决。
+/// 要注意下标的问题。。。。
+/// 
+/// ```ignore
+/// while let Some(back) = queue.back() {
+///     if back >= num {
+///         break;
+///     }
+///     queue.pop_back();
+/// }
+/// queue.push(num);
+/// count += 1;
+/// if count >= k {
+/// }
+/// ```
+/// 
 #[allow(dead_code)]
 pub mod my_solution {
     struct Solution;
@@ -87,6 +107,8 @@ pub mod solution_monotonic_queue {
     /// date=20200908, mem=2.9, mem_beats=60, runtime=16, runtime_beats=72.97, url=https://leetcode-cn.com/submissions/detail/105862456/
     /// 
     /// date=20200909, mem=2.9, mem_beats=60, runtime=16, runtime_beats=72.97, url=https://leetcode-cn.com/submissions/detail/106286541/
+    /// 
+    /// date=20200917, mem=2.7, mem_beats=87.50, runtime=20, runtime_beats=30, url=https://leetcode-cn.com/submissions/detail/108856621/
     ///
     /// ### 复杂度
     ///
