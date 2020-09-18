@@ -1,3 +1,12 @@
+/// 总结
+/// 
+/// 20200918
+/// 
+/// 在solution_row_dp中要注意对每个height column计算用max-min = diff，
+/// 可积水条件是min > cur height，计算积水量是用height_diff累积的
+/// 
+/// 在solution_double_pointer中是用height[left]<height[right]区分左右，
+/// `height[left] < max_left`作为可信条件，不能光分可信条件了，忘记左右
 pub mod solution_row {
     /// # 思路
     /// 
@@ -74,22 +83,23 @@ pub mod solution_column {
     /// 求每一列的水，我们只需要关注当前列，以及左边最高的墙，右边最高的墙就够了。
     /// 当然根据木桶效应，我们只需要看左边最高的墙和右边最高的墙中较矮的一个就够了。
     /// 
-    /// 1. 较矮的墙的高度大于当前列的墙的高度
+    /// - 较矮的墙的高度大于当前列的墙的高度
     /// 
-    ///     较矮的一边，也就是左边的墙的高度，减去当前列的高度就可以了
-    ///     
-    ///     ![](https://pic.leetcode-cn.com/542754f4431d93141920185252aee31664a96dd17285b92dfe390e9e977bebb1-image.png)
+    /// 较矮的一边，也就是左边的墙的高度，减去当前列的高度就可以了
+    /// 
+    /// ![](https://pic.leetcode-cn.com/542754f4431d93141920185252aee31664a96dd17285b92dfe390e9e977bebb1-image.png)
     /// 
     /// 
-    /// 2. 较矮的墙的高度小于当前列的墙的高度
+    /// - 较矮的墙的高度小于当前列的墙的高度
     /// 
-    ///     正在求的列不会有水，因为它大于了两边较矮的墙。
+    /// 正在求的列不会有水，因为它大于了两边较矮的墙。
     /// 
-    ///     ![](https://pic.leetcode-cn.com/19a50c8f4125c01349ad32d069f564b51fbb4347fd91eae079b6ec1a46c1ccee-image.png)
+    /// ![](https://pic.leetcode-cn.com/19a50c8f4125c01349ad32d069f564b51fbb4347fd91eae079b6ec1a46c1ccee-image.png)
     /// 
-    /// 3. 较矮的墙的高度等于当前列的墙的高度。
+    /// - 较矮的墙的高度等于当前列的墙的高度。
     /// 
-    ///     和上一种情况是一样的，不会有水。
+    /// 和上一种情况是一样的，不会有水。
+    /// 
     /// 参考：
     /// 
     /// - [详细通俗的思路分析，多解法](https://leetcode-cn.com/problems/trapping-rain-water/solution/xiang-xi-tong-su-de-si-lu-fen-xi-duo-jie-fa-by-w-8/)
@@ -148,7 +158,7 @@ pub mod solution_column {
     }
 }
 
-pub mod solution_row_dp {
+pub mod solution_column_dp {
     /// # 思路
     /// 
     /// 在solution_row中多次重复计算max left,right，对于当前列i，
@@ -169,6 +179,8 @@ pub mod solution_row_dp {
     /// ### Submissions
     /// 
     /// date=20200917, mem=2, mem_beats=61.11, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/108816444/
+    /// 
+    /// date=20200918, mem=2.2, mem_beats=5.56, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/109367289/
     /// 
     /// ### 复杂度
     /// 
@@ -245,6 +257,8 @@ pub mod solution_double_pointer {
     /// 
     /// date=20200917, mem=2, mem_beats=61.11, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/108826398/
     /// 
+    /// date=20200918, mem=1.9, mem_beats=100, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/109371378/
+    /// 
     /// ### 复杂度
     /// 
     /// - 时间：O(n)
@@ -280,6 +294,72 @@ pub mod solution_double_pointer {
                     }
                     right -= 1;
                 }
+            }
+            res
+        }
+    }
+
+    #[cfg(test)]
+    mod tests {
+        use super::*;
+    
+        #[test]
+        fn basics() {
+            assert_eq!(6, Solution::trap(vec![0,1,0,2,1,0,1,3,2,1,2,1]));
+            assert_eq!(0, Solution::trap(vec![]));
+        }
+    }
+}
+
+pub mod solution_monotonous_stack {
+    /// # 思路
+    /// 
+    /// 用栈来跟踪可能储水的最长的条形块，在两块间低的条块中
+    /// 
+    /// 如果当前的条形块小于或等于栈顶的条形块，我们将条形块的索引入栈，意思是当前的条形块被栈中的前一个条形块界定
+    /// 
+    /// 如果我们发现一个条形块长于栈顶，我们可以确定栈顶的条形块被当前条形块和栈的前一个条形块界定，
+    /// 因此我们可以弹出栈顶元素并且累加答案到res
+    /// 
+    /// 方式类似于找高度，遇到第一个计算高度差height_diff与width，stack新的top与当前height计算的
+    /// 高度差是不包含之前的高度，而是width包含，所以有：
+    /// `(height_diff = height[i].min(height[*last]) - height[cur])*(i - last - 1)`
+    /// 
+    /// 参考：
+    /// 
+    /// - [那么如何理解双指针法呢](https://leetcode-cn.com/problems/trapping-rain-water/solution/jie-yu-shui-by-leetcode/327718)
+    /// - [接雨水](https://leetcode-cn.com/problems/trapping-rain-water/solution/jie-yu-shui-by-leetcode/327718/)
+    /// 
+    /// ### Submissions
+    /// 
+    /// date=20200918, mem=1.9, mem_beats=100, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/109363764/
+    /// 
+    /// ### 复杂度
+    /// 
+    /// - 时间：O(n)
+    /// - 空间：O(n)
+    pub struct Solution;
+
+    impl Solution {
+        pub fn trap(height: Vec<i32>) -> i32 {
+            let mut stack = Vec::with_capacity(height.len());
+            let mut res = 0;
+            for i in 0..height.len() {
+                // while cur height > top stack height
+                while let Some(last) = stack.last() {
+                    if height[i] <= height[*last] {
+                        break;
+                    }
+                    let cur = stack.pop().unwrap();
+                    // break if stack has no elements. can not storage
+                    if let Some(last) = stack.last() {
+                        let width = i - last - 1;
+                        // get min height in between cur and stack new top
+                        let height_diff = height[i].min(height[*last]) - height[cur];
+                        res += width as i32 * height_diff;
+                    }
+                }
+                stack.push(i);
             }
             res
         }
