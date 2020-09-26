@@ -65,6 +65,9 @@ pub mod min_stack;
 pub mod largest_rectangle_in_histogram;
 pub mod sliding_window_maximum;
 
+// collection mapping
+pub mod valid_anagram;
+
 pub mod helper;
 
 pub use leetcode_prelude as prelude;
