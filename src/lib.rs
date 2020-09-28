@@ -3,7 +3,7 @@ pub mod count_of_smaller_numbers_after_self;
 pub mod reverse_pairs;
 pub mod random_pick_with_blacklist;
 pub mod maximum_profit_in_job_scheduling;
-
+pub mod sort_an_array;
 
 // dynamic programming
 pub mod maximum_subarray;
