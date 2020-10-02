@@ -11,6 +11,11 @@
 /// 20200928
 /// 
 /// solution_column_dp要注意在left right max与下标的关系会影响计算高度差时
+/// 
+/// 20201002
+/// 
+/// solution_double_pointer注意如何分开双指针left,right条件，是根据`left_max<right_max`
+/// 而不是`height[left]<height[right]`，`left==right`也要处理
 pub mod solution_row {
     /// # 思路
     ///
@@ -236,7 +241,7 @@ pub mod solution_column_dp {
 pub mod solution_double_pointer {
     /// # 思路
     ///
-    /// 在solution_row_dp中提到max_right从要从len-1后向前开始找，当我们从左往右处理到left下标时，
+    /// 在solution_column_dp中提到max_right从要从len-1后向前开始找，当我们从左往右处理到left下标时，
     /// 左边的最大值left_max对它而言是可信的，但right_max对它而言是不可信的。
     ///
     /// 当我们从右往左处理到right下标时，右边的最大值right_max对它而言是可信的，但left_max对它而言是不可信的。
@@ -253,7 +258,29 @@ pub mod solution_double_pointer {
     /// 对于位置left而言，它左边最大值一定是left_max，右边最大值“大于等于”right_max，
     /// 如果left_max<right_max成立，那么它就知道自己能存多少水了。无论右边将来会不会出现更大的right_max，
     /// 都不影响这个结果。 所以当left_max<right_max时，我们就希望去处理left下标，
-    /// 反之，我们希望去处理right下标。
+    /// 反之，我们希望去处理right下标
+    /// 
+    /// ```ignore
+    /// while left <= right {
+    ///     // left max is trusted
+    ///     if left_max < right_max {
+    ///         // ...
+    ///     } 
+    ///     // right max is trusted
+    ///     else {
+    ///         // ...
+    ///     }
+    /// }
+    /// // 这种方式不如上面的容易理解
+    /// while left < right {
+    ///     if height[left] < height[right] {
+    ///         if max_left > height[left] {
+    ///     }//...
+    /// }
+    /// ```
+    /// 
+    /// 注意要处理`while left <= right {`，当`left==right`时，有left_max, right_max都是不包括当前
+    /// 下标`left==right`的值，所以应有条件处理`left==right`
     ///
     /// 参考：
     ///
@@ -265,6 +292,8 @@ pub mod solution_double_pointer {
     /// date=20200917, mem=2, mem_beats=61.11, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/108826398/
     ///
     /// date=20200918, mem=1.9, mem_beats=100, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/109371378/
+    /// 
+    /// date=20201002, mem=2.1, mem_beats=56.25, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/112844228/
     ///
     /// ### 复杂度
     ///
@@ -274,30 +303,30 @@ pub mod solution_double_pointer {
 
     impl Solution {
         pub fn trap(height: Vec<i32>) -> i32 {
-            if height.len() == 0 {
+            if height.len() <= 1 {
                 return 0;
             }
-            // left start at 0, right start at height.len()-1
-            let (mut left, mut right) = (0, height.len() - 1);
-            let (mut max_left, mut max_right) = (0, 0);
             let mut res = 0;
-            while left < right {
-                // left max is trusted if height[left]<height[right]
-                if height[left] < height[right] {
+            let (mut left, mut right) = (0, height.len() - 1);
+            let (mut left_max, mut right_max) = (0, 0);
+            while left <= right {
+                // left max is trusted
+                if left_max < right_max {
                     // get res if  cur column is smaller
-                    if max_left > height[left] {
-                        res += max_left - height[left];
+                    if height[left] < left_max {
+                        res += left_max - height[left];
                     } else {
-                        max_left = height[left];
+                        // update max if left is bigger
+                        left_max = height[left];
                     }
                     left += 1;
-                }
-                // right max is trusted if height[left] >= height[right]
+                } 
+                // right max is trusted
                 else {
-                    if max_right > height[right] {
-                        res += max_right - height[right];
+                    if height[right] < right_max {
+                        res += right_max - height[right];
                     } else {
-                        max_right = height[right];
+                        right_max = height[right];
                     }
                     right -= 1;
                 }
@@ -320,15 +349,23 @@ pub mod solution_monotonous_stack {
     /// 方式类似于找高度，遇到第一个计算高度差height_diff与width，stack新的top与当前height计算的
     /// 高度差是不包含之前的高度，而是width包含，所以有：
     /// `(height_diff = height[i].min(height[*last]) - height[cur])*(i - last - 1)`
+    /// 
+    /// 以solution_column_dp来看，`height[i]`表示柱子right_max, `height[last]`表示可接雨水的柱子，stack.pop后的last`height[last]`
+    /// 表示left_max柱子。是以last为接雨水的柱子计算的
     ///
+    /// 栈内元素是单调递减的如：`[4, 3, 1, 0]`，如果是`height=[1,2,3]`则stack中不会存在任何元素，
+    /// 每一次都有`height[i] > height[*last]`导致stack.pop()一直为空
+    /// 
     /// 参考：
     ///
-    /// - [那么如何理解双指针法呢](https://leetcode-cn.com/problems/trapping-rain-water/solution/jie-yu-shui-by-leetcode/327718)
+    /// - [单调栈O(n)解决，动图预警](https://leetcode-cn.com/problems/trapping-rain-water/solution/dan-diao-zhan-jie-jue-jie-yu-shui-wen-ti-by-sweeti/)
     /// - [接雨水](https://leetcode-cn.com/problems/trapping-rain-water/solution/jie-yu-shui-by-leetcode/327718/)
     ///
     /// ### Submissions
     ///
     /// date=20200918, mem=1.9, mem_beats=100, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/109363764/
+    /// 
+    /// date=20201002, mem=2, mem_beats=71.88, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/112851473/
     ///
     /// ### 复杂度
     ///
@@ -349,7 +386,7 @@ pub mod solution_monotonous_stack {
                     let cur = stack.pop().unwrap();
                     // break if stack has no elements. can not storage
                     if let Some(last) = stack.last() {
-                        let width = i - last - 1;
+                        let width = i - *last - 1;
                         // get min height in between cur and stack new top
                         let height_diff = height[i].min(height[*last]) - height[cur];
                         res += width as i32 * height_diff;
@@ -378,5 +415,6 @@ mod tests {
     fn test<F: Fn(Vec<i32>) -> i32>(func: F) {
         assert_eq!(6, func(vec![0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1]));
         assert_eq!(0, func(vec![]));
+        assert_eq!(0, func(vec![0]));
     }
 }
