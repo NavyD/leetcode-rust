@@ -47,6 +47,8 @@ pub mod solution_hash {
     ///
     /// date=20200928, mem=2, mem_beats=95.65, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/112090969/
     /// 
+    /// date=20201004, mem=2.2, mem_beats=46.43, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/113152313/
+    /// 
     /// ### 复杂度
     ///
     /// - 时间：O(n)
@@ -81,11 +83,29 @@ mod tests {
     #[test]
     fn basics() {
         test(solution_hash::Solution::is_anagram);
+        test(is_anagram);
     }
 
     fn test<F: Fn(String, String) -> bool>(func: F) {
         assert!(func("anagram".to_string(), "nagaram".to_string()));
         assert!(!func("rat".to_string(), "car".to_string()));
         assert!(!func("ab".to_string(), "a".to_string()));
+    }
+
+    pub fn is_anagram(s: String, t: String) -> bool {
+        if s.len() != t.len() {
+            false
+        } else {
+            let mut counts = vec![0; 26];
+            s.as_bytes().iter().for_each(|b| counts[*b as usize - 'a' as usize] += 1);
+            for b in t.as_bytes() {
+                let i = *b as usize - 'a' as usize;
+                if counts[i] <= 0 {
+                    return false;
+                }
+                counts[i] -= 1;
+            }
+            true
+        }
     }
 }

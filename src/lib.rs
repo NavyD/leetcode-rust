@@ -67,6 +67,7 @@ pub mod sliding_window_maximum;
 
 // collection mapping
 pub mod valid_anagram;
+pub mod group_anagrams;
 
 pub mod helper;
 
