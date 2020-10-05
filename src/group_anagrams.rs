@@ -38,6 +38,8 @@ pub mod solution_sort {
     ///
     /// date=20201004, mem=4.6, mem_beats=62.50, runtime=20, runtime_beats=36.84, url=https://leetcode-cn.com/submissions/detail/113177175/
     /// 
+    /// date=20201005, mem=4.6, mem_beats=62.50, runtime=12, runtime_beats=97.37, url=https://leetcode-cn.com/submissions/detail/113361476/
+    /// 
     /// ### 复杂度
     /// 
     /// - 时间：O(N*K log K)： K 是 strs 中字符串的最大长度
@@ -59,7 +61,7 @@ pub mod solution_sort {
     }
 }
 
-pub mod solution_count {
+pub mod solution_hash {
     /// # 思路
     /// 
     /// 不同的anagram计数后的数组是相同的，使用相同的array作为key关联对应的anagram
@@ -72,6 +74,8 @@ pub mod solution_count {
     /// ### Submissions
     /// 
     /// date=20201004, mem=6.1, mem_beats=12.50, runtime=12, runtime_beats=97.37, url=https://leetcode-cn.com/submissions/detail/113175459/
+    /// 
+    /// date=20201005, mem=6.2, mem_beats=12.50, runtime=8, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/113361742/
     /// 
     /// ### 复杂度
     /// 
@@ -100,7 +104,7 @@ mod tests {
     #[test]
     fn basics() {
         test(solution_sort::Solution::group_anagrams);
-        test(solution_count::Solution::group_anagrams);
+        test(solution_hash::Solution::group_anagrams);
     }
 
     fn test<F: Fn(Vec<String>) -> Vec<Vec<String>>>(func: F) {
