@@ -38,6 +38,7 @@ pub mod find_mode_in_binary_search_tree;
 pub mod binary_tree_inorder_traversal;
 pub mod binary_tree_preorder_traversal;
 pub mod binary_tree_postorder_traversal;
+pub mod n_ary_tree_postorder_traversal;
 
 // array
 pub mod move_zeroes;
@@ -72,3 +73,4 @@ pub mod group_anagrams;
 pub mod helper;
 
 pub use leetcode_prelude as prelude;
+

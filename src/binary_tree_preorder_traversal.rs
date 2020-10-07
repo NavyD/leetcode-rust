@@ -1,3 +1,7 @@
+use crate::prelude::*;
+use std::cell::RefCell;
+use std::rc::Rc;
+
 /// 总结
 /// 
 /// stack与用bfs的方式相比，该方式更符合递归的思路，
@@ -15,8 +19,8 @@
 /// 
 /// 对solution_bfs要注意先push_back(right)，再push left，下次先访问pop_back是left
 /// 否则是right了
-pub mod solution_dfs {
-    use crate::helper::*;
+pub mod solution_recursive {
+    use super::*;
 
     /// ### Submission
     ///
@@ -44,23 +48,10 @@ pub mod solution_dfs {
             }
         }
     }
-
-    #[cfg(test)]
-    mod tests {
-        use super::*;
-
-        #[test]
-        fn basics() {
-            assert_eq!(
-                vec![1, 2, 3],
-                Solution::preorder_traversal(convert_tree("[1,null,2,3]"))
-            );
-        }
-    }
 }
 
 pub mod solution_stack {
-    use crate::helper::*;
+    use super::*;
 
     /// # 思路
     /// 
@@ -83,37 +74,24 @@ pub mod solution_stack {
     impl Solution {
         pub fn preorder_traversal(root: Option<Rc<RefCell<TreeNode>>>) -> Vec<i32> {
             let mut vals = vec![];
-            let mut stack = std::collections::VecDeque::new();
+            let mut stack = vec![];
             let mut cur_node = root;
             while cur_node.is_some() || !stack.is_empty() {
                 while let Some(root) = cur_node.clone() {
-                    stack.push_back(root.clone());
+                    stack.push(root.clone());
                     let root = root.borrow();
                     vals.push(root.val);
                     cur_node = root.left.clone();
                 }
-                cur_node = stack.pop_back().unwrap().borrow().right.clone();
+                cur_node = stack.pop().unwrap().borrow().right.clone();
             }
             vals
-        }
-    }
-
-    #[cfg(test)]
-    mod tests {
-        use super::*;
-
-        #[test]
-        fn basics() {
-            assert_eq!(
-                vec![1, 2, 3],
-                Solution::preorder_traversal(convert_tree("[1,null,2,3]"))
-            );
         }
     }
 }
 
 pub mod solution_bfs {
-    use crate::helper::*;
+    use super::*;
 
     /// # 思路
     /// 
@@ -141,33 +119,38 @@ pub mod solution_bfs {
         pub fn preorder_traversal(root: Option<Rc<RefCell<TreeNode>>>) -> Vec<i32> {
             let mut vals = vec![];
             if let Some(root) = root {
-                let mut stack = std::collections::VecDeque::new();
-                stack.push_back(root.clone());
-                while let Some(root) = stack.pop_back() {
+                let mut stack = vec![];
+                stack.push(root.clone());
+                while let Some(root) = stack.pop() {
                     let root = root.borrow();
                     vals.push(root.val);
                     if let Some(right) = root.right.clone() {
-                        stack.push_back(right);
+                        stack.push(right);
                     }
                     if let Some(left) = root.left.clone() {
-                        stack.push_back(left);
+                        stack.push(left);
                     }
                 }
             }
             vals
         }
     }
+}
 
-    #[cfg(test)]
-    mod tests {
-        use super::*;
+#[cfg(test)]
+mod tests {
+    use super::*;
 
-        #[test]
-        fn basics() {
-            assert_eq!(
-                vec![1, 2, 3],
-                Solution::preorder_traversal(convert_tree("[1,null,2,3]"))
-            );
-        }
+    #[test]
+    fn basics() {
+        test(solution_bfs::Solution::preorder_traversal);
+        test(solution_stack::Solution::preorder_traversal);
+        test(solution_recursive::Solution::preorder_traversal);
+    }
+
+    fn test<F: Fn(Option<Rc<RefCell<TreeNode>>>) -> Vec<i32>>(func: F) {
+        assert_eq!(vec![1,2,3], func(btree![1,null,2,3]));
+        assert_eq!(vec![3,1,2], func(btree![3, 1, 2]));
+        assert_eq!(vec![1], func(btree![1]));
     }
 }
