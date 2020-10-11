@@ -36,20 +36,6 @@ pub mod solution_dp {
             dp[n]
         }
     }
-
-    #[cfg(test)]
-    mod tests {
-        use super::*;
-
-        #[test]
-        fn basics() {
-            assert_eq!(Solution::climb_stairs(0), 1);
-            assert_eq!(Solution::climb_stairs(1), 1);
-            assert_eq!(Solution::climb_stairs(2), 2);
-            assert_eq!(Solution::climb_stairs(3), 3);
-            assert_eq!(Solution::climb_stairs(4), 5);
-        }
-    }
 }
 
 pub mod solution_dp_optimized {
@@ -57,6 +43,8 @@ pub mod solution_dp_optimized {
     /// 
     /// date=20200621, mem=2.1, mem_beats=22.22, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/98491120/
     /// 
+    /// date=20201011, mem=2.1, mem_beats=6.98, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/114824244/
+    ///
     /// ### 复杂度
     /// 
     /// - 时间：O(n)
@@ -68,28 +56,32 @@ pub mod solution_dp_optimized {
             if n <= 1 {
                 return 1;
             }
-            let mut prev_prev = 1;
-            let mut prev = 1;
+            let (mut prev1, mut prev2, mut cur) = (1, 1, 1);
             for _ in 2..=n {
-                let temp = prev;
-                prev += prev_prev;
-                prev_prev = temp;
+                cur = prev1 + prev2;
+                prev1 = prev2;
+                prev2 = cur;
             }
-            prev
+            cur
         }
     }
+}
 
-    #[cfg(test)]
-    mod tests {
-        use super::*;
+#[cfg(test)]
+mod tests {
+    use super::*;
 
-        #[test]
-        fn basics() {
-            assert_eq!(Solution::climb_stairs(0), 1);
-            assert_eq!(Solution::climb_stairs(1), 1);
-            assert_eq!(Solution::climb_stairs(2), 2);
-            assert_eq!(Solution::climb_stairs(3), 3);
-            assert_eq!(Solution::climb_stairs(4), 5);
-        }
+    #[test]
+    fn basics() {
+        test(solution_dp::Solution::climb_stairs);
+        test(solution_dp_optimized::Solution::climb_stairs);
+    }
+
+    fn test<F: Fn(i32) -> i32>(func: F) {
+        assert_eq!(func(0), 1);
+        assert_eq!(func(1), 1);
+        assert_eq!(func(2), 2);
+        assert_eq!(func(3), 3);
+        assert_eq!(func(4), 5);
     }
 }

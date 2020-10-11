@@ -23,6 +23,7 @@ pub mod solution_dfs {
     /// 
     /// ```java
     /// @Submission(date = "20201007", memory = 39.8, memoryBeatRate = 45.30, runtime = 4, runtimeBeatRate = 40.71, url = "https://leetcode-cn.com/submissions/detail/113783882/")
+    /// @Submission(date = "20201011", memory = 40, memoryBeatRate = 20.71, runtime = 4, runtimeBeatRate = 40.75, url = "https://leetcode-cn.com/submissions/detail/114834554/")
     /// public List<Integer> postorder(Node root) {
     ///     // Avoid using Collections.reverse()
     ///     LinkedList<Integer> res = new LinkedList<>();
