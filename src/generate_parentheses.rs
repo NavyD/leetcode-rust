@@ -6,13 +6,19 @@
 pub mod solution_dfs {
     /// # 思路
     ///
-    /// [pic](https://pic.leetcode-cn.com/7ec04f84e936e95782aba26c4663c5fe7aaf94a2a80986a97d81574467b0c513-LeetCode%20%E7%AC%AC%2022%20%E9%A2%98%EF%BC%9A%E2%80%9C%E6%8B%AC%E5%8F%B7%E7%94%9F%E5%87%BA%E2%80%9D%E9%A2%98%E8%A7%A3%E9%85%8D%E5%9B%BE.png)
+    /// ![](https://pic.leetcode-cn.com/7ec04f84e936e95782aba26c4663c5fe7aaf94a2a80986a97d81574467b0c513-LeetCode%20%E7%AC%AC%2022%20%E9%A2%98%EF%BC%9A%E2%80%9C%E6%8B%AC%E5%8F%B7%E7%94%9F%E5%87%BA%E2%80%9D%E9%A2%98%E8%A7%A3%E9%85%8D%E5%9B%BE.png)
     /// 
     /// 当前左右括号都有大于 0 个可以使用的时候，才产生分支；
     /// 
-    /// - 产生左分支的时候，只看当前是否还有左括号可以使用；
+    /// - 产生左分支的时候，只受n个左括号的限制
     /// - 产生右分支的时候，还受到左分支的限制，右边剩余可以使用的括号数量一定得在严格大于左边剩余的数量的时候，才可以产生分支；
-    /// - 在左边和右边剩余的括号数都等于 0 的时候结算。
+    /// - 在左边和右边剩余的括号数用完时generate完成
+    /// 
+    /// `if right < left`可限制`right<left<n`
+    /// 
+    /// 可以有对树加法或减法，上面是用减法，下面是加法
+    /// 
+    /// ![](https://pic.leetcode-cn.com/efbe574e5e6addcd1c9dc5c13a50c6f162a2b14a95d6aed2c394e18287a067fa-image.png)
     /// 
     /// 参考：
     /// 
@@ -21,6 +27,12 @@ pub mod solution_dfs {
     /// ### Submissions
     /// 
     /// date=20201013, mem=2.2, mem_beats=5.88, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/115365774/
+    /// 
+    /// date=20201014, mem=2.1, mem_beats=61.76, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/115655272/
+    /// 
+    /// ### 复杂度
+    /// 
+    /// 参考：[括号生成](https://leetcode-cn.com/problems/generate-parentheses/solution/gua-hao-sheng-cheng-by-leetcode-solution/)
     pub struct Solution;
     impl Solution {
         pub fn generate_parenthesis(n: i32) -> Vec<String> {
@@ -34,7 +46,6 @@ pub mod solution_dfs {
                 res.push(s);
                 return;
             }
-
             if left < n {
                 Self::generate(left + 1, right, s.clone() + "(", n, res);
             }
@@ -43,6 +54,17 @@ pub mod solution_dfs {
             }
         }
     }
+}
+
+pub mod solution_dp {
+    // todo
+    pub struct Solution;
+    // impl Solution {
+    //     pub fn generate_parenthesis(n: i32) -> Vec<String> {
+    //         let mut res = vec![];
+    //         res
+    //     }
+    // }
 }
 
 #[cfg(test)]
