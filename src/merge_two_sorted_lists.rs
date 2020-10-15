@@ -7,7 +7,7 @@
 /// ```ignore
 /// while let (Some(head1), Some(head2)) = (l1, l2) {
 /// }
-/// 
+/// ```
 /// rust模式匹配可有不用再写(None, None) => None
 /// 
 /// ```ignore
