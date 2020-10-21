@@ -24,7 +24,9 @@ pub mod solution_bfs {
     ///
     /// date=20200730, mem=2.5, mem_beats=100, runtime=0, runtime_beats=100, url=https://leetcode.com/submissions/detail/373480219/
     ///
-    /// date=20200730, mem=3.4, mem_beats=5.88, runtime=28, runtime_beats=5.66, url=https://leetcode-cn.com/submissions/detail/116940727/
+    /// date=20201019, mem=3.4, mem_beats=5.88, runtime=28, runtime_beats=5.66, url=https://leetcode-cn.com/submissions/detail/116940727/
+    /// 
+    /// date=20201021, mem=3.4, mem_beats=5.88, runtime=28, runtime_beats=5.66, url=https://leetcode-cn.com/submissions/detail/117422208/
     /// 
     /// ## 复杂度
     ///
@@ -96,6 +98,8 @@ pub mod solution_dfs {
     /// date=20200730, mem=2.9, mem_beats=100, runtime=0, runtime_beats=100, url=https://leetcode.com/submissions/detail/373460334/
     ///
     /// date=20201019, mem=3.7, mem_beats=5.88, runtime=32, runtime_beats=5.66, url=https://leetcode-cn.com/submissions/detail/116902948/
+    /// 
+    /// date=20201021, mem=3.7, mem_beats=5.88, runtime=32, runtime_beats=5.66, url=https://leetcode-cn.com/submissions/detail/117414522/
     ///
     /// ## 复杂度
     ///
