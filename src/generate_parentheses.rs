@@ -18,6 +18,11 @@ pub mod solution_dfs {
     /// 
     /// 可以有对树加法或减法，上面是用减法，下面是加法
     /// 
+    /// 注意：谨慎使用`s: &mut String`作为generate参数，可能导致下层递归被上层的环境被影响`s.push('(')`，在同层时
+    /// s.push前应该clone: s.clone().push('(')，不能影响同层后面的right写为`()`导致错误
+    /// 
+    /// `fn generate(left: i32, right: i32, n: i32, res: &mut Vec<String>, s: &mut String) {`
+    /// 
     /// ![](https://pic.leetcode-cn.com/efbe574e5e6addcd1c9dc5c13a50c6f162a2b14a95d6aed2c394e18287a067fa-image.png)
     /// 
     /// 参考：
@@ -29,6 +34,8 @@ pub mod solution_dfs {
     /// date=20201013, mem=2.2, mem_beats=5.88, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/115365774/
     /// 
     /// date=20201014, mem=2.1, mem_beats=61.76, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/115655272/
+    /// 
+    /// date=20201025, mem=2.2, mem_beats=47.5, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/118434839/
     /// 
     /// ### 复杂度
     /// 
