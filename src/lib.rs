@@ -37,6 +37,7 @@ pub mod find_mode_in_binary_search_tree;
 pub mod validate_binary_search_tree;
 pub mod serialize_and_deserialize_binary_tree;
 pub mod lowest_common_ancestor_of_a_binary_tree;
+pub mod construct_binary_tree_from_preorder_and_inorder_traversal;
 
 // tree traversal
 pub mod binary_tree_inorder_traversal;
