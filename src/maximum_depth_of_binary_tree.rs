@@ -1,5 +1,5 @@
 //! 如何计算树深度
-//! 
+//!
 //! dfs递归回溯统计或bfs层层遍历
 
 use crate::prelude::*;
@@ -11,7 +11,7 @@ pub mod solution_dfs {
     /// # 思路
     ///
     /// 递归回溯时计算出深度
-    /// 
+    ///
     /// - 当root=None时终止返回0
     /// - 计算root.left子树与root.right子树最大深度max_depth
     /// - root层尝试是子树深度`max_depth+1`
@@ -19,11 +19,13 @@ pub mod solution_dfs {
     /// ## Submissions
     ///
     /// date=20200713, mem=2.7, mem_beats=80.95, runtime=0, runtime_beats=100, url=https://leetcode.com/submissions/detail/365857015/
-    /// 
+    ///
     /// date=20201016, mem=2.5, mem_beats=92, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/116131087/
     ///
     /// date=20201018, mem=2.6, mem_beats=81.48, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/116632580/
     /// 
+    /// date=20201027, mem=2.6， mem_beats=83.53, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/118930896/
+    ///
     /// ## 复杂度
     ///
     /// - 时间：O(N)
@@ -52,9 +54,9 @@ pub mod solution_bfs {
     ///
     /// 注意在平级结点中存在后面子结点push_back，不能pop出子结点作为平级结点用，
     /// 应该用size个数限制
-    /// 
+    ///
     /// 参考：
-    /// 
+    ///
     ///- [My code of C++, Depth-first-search and Breadth-first-search](https://leetcode.com/problems/maximum-depth-of-binary-tree/discuss/34207/My-code-of-C%2B%2B-Depth-first-search-and-Breadth-first-search)
     ///
     /// ## Submissions
@@ -62,9 +64,9 @@ pub mod solution_bfs {
     /// date=20200713, mem=2.5， mem_beats=100, runtime=0, runtime_beats=100, url=https://leetcode.com/submissions/detail/365882616/
     ///
     /// date=20201016, mem=2.6， mem_beats=82.72, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/116132950/
-    /// 
-    /// date=20201017, mem=2.3， mem_beats=97.53, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/116634700/
     ///
+    /// date=20201017, mem=2.3， mem_beats=97.53, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/116634700/
+    /// 
     /// ## 复杂度
     ///
     /// - 时间：O(N)
@@ -94,7 +96,6 @@ pub mod solution_bfs {
             })
         }
     }
-
 }
 
 #[cfg(test)]

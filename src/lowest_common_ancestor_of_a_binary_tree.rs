@@ -58,7 +58,6 @@ pub mod solution_dfs {
     pub struct Solution;
 
     impl Solution {
-        // error
         pub fn lowest_common_ancestor(
             root: Option<Rc<RefCell<TreeNode>>>,
             p: Option<Rc<RefCell<TreeNode>>>,

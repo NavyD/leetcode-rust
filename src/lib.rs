@@ -45,6 +45,9 @@ pub mod binary_tree_preorder_traversal;
 pub mod binary_tree_postorder_traversal;
 pub mod n_ary_tree_postorder_traversal;
 
+// recursive
+pub mod combinations;
+
 // array
 pub mod move_zeroes;
 pub mod container_with_most_water;
