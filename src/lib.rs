@@ -47,6 +47,7 @@ pub mod n_ary_tree_postorder_traversal;
 
 // recursive
 pub mod combinations;
+pub mod permutations;
 
 // array
 pub mod move_zeroes;

@@ -100,6 +100,8 @@ pub mod solution_dfs {
     /// date=20201019, mem=3.7, mem_beats=5.88, runtime=32, runtime_beats=5.66, url=https://leetcode-cn.com/submissions/detail/116902948/
     /// 
     /// date=20201021, mem=3.7, mem_beats=5.88, runtime=32, runtime_beats=5.66, url=https://leetcode-cn.com/submissions/detail/117414522/
+    /// 
+    /// date=20201028, mem=12.8, mem_beats=5.71, runtime=44, runtime_beats=5.56, url=https://leetcode-cn.com/submissions/detail/119194666/
     ///
     /// ## 复杂度
     ///
