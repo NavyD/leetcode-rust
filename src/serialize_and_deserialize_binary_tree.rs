@@ -4,14 +4,19 @@ use crate::prelude::*;
 use std::cell::RefCell;
 use std::rc::Rc;
 
+const DELIMITER: &'static str = ",";
+const NONE: &'static str = "null";
+
 pub mod solution_dfs {
     use super::*;
-    const DELIMITER: &'static str = ",";
-    const NONE: &'static str = "null";
 
     /// # 思路
     ///
-    /// DFS（递归）
+    /// 使用前序 DFS（递归）
+    /// 
+    /// 选择前序遍历是因为 根|左|右 的打印顺序，在反序列化时更容易定位出根节点的值。
+    /// 
+    /// 注意：DELIMITER
     ///
     /// 参考：
     ///
@@ -22,6 +27,8 @@ pub mod solution_dfs {
     /// date=20201021, mem=3.2, mem_beats=100, runtime=8, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/117405446/
     ///
     /// date=20201022, mem=3.1, mem_beats=100, runtime=8, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/117716368/
+    /// 
+    /// date=20201031, mem=3, mem_beats=66.67, runtime=12, runtime_beats=33.33, url=https://leetcode-cn.com/submissions/detail/119963318/
     struct Codec {}
 
     /**
@@ -45,16 +52,19 @@ pub mod solution_dfs {
 
         fn deserialize(&self, data: String) -> Option<Rc<RefCell<TreeNode>>> {
             // data.remove(data.len() - DELIMITER.len());
-            Self::de(&mut data.split(DELIMITER))
+            self.de(&mut data.split(DELIMITER))
         }
 
-        fn de<'a>(iter: &mut impl Iterator<Item = &'a str>) -> Option<Rc<RefCell<TreeNode>>> {
-            iter.next().and_then(|s| s.parse::<i32>().ok()).map(|v| {
-                let root = Rc::new(RefCell::new(TreeNode::new(v)));
-                root.borrow_mut().left = Self::de(iter);
-                root.borrow_mut().right = Self::de(iter);
-                root
-            })
+        fn de<'a>(&self, iter: &mut impl Iterator<Item = &'a str>) -> Option<Rc<RefCell<TreeNode>>> {
+            iter
+                .next()
+                .and_then(|v| v.parse().ok())
+                .map(|v| {
+                    let mut root = TreeNode::new(v);
+                    root.left = self.de(iter);
+                    root.right = self.de(iter);
+                    Rc::new(RefCell::new(root))
+                })
         }
     }
     #[cfg(test)]
@@ -72,24 +82,22 @@ pub mod solution_dfs {
 
 mod solution_bfs {
     use super::*;
-    const DELIMITER: &str = ",";
-    const NONE: &str = "null";
 
     /// # 思路
-    /// 
+    ///
     /// 层序序列化
-    /// 
+    ///
     /// 注意不需要在一般的层序遍历中`for _ in `，只要用`while let Some(root) = queue.pop_back()`就可以连续
     /// 找到所有节点
-    /// 
+    ///
     /// 在反序列化时queue要保存d所有节点，包括None，所以用`queue.push_back(root: Option<Rc<RefCell<TreeNode>>>)`
-    /// 
+    ///
     /// 参考：
-    /// 
+    ///
     /// - [『手画图解』二叉树的序列化与反序列化 | 剖析两种解法](https://leetcode-cn.com/problems/serialize-and-deserialize-binary-tree/solution/shou-hui-tu-jie-gei-chu-dfshe-bfsliang-chong-jie-f/)
-    /// 
+    ///
     /// ### Submissions
-    /// 
+    ///
     /// date=20201022, mem=3, mem_beats=100, runtime=8, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/117749759/
     struct Codec {}
 

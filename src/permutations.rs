@@ -20,6 +20,8 @@ pub mod solution_dfs {
     /// 当[1,2,3]在第二层递归时，[1,2,3]要选择的是3到下层，则swap(1, 2) =>
     /// 到下层时nums= [1,3,2]。当第1层用选择的是2而不是1时，swap(0, 1) => 在第2层
     /// 时：nums=[2,1,3]
+    /// 
+    /// 注意使用的是start: `Self::helper(nums, start + 1, res);`而不是i+1
     ///
     /// 下面这个是迭代方式
     /// 
@@ -47,6 +49,8 @@ pub mod solution_dfs {
     /// ### Submissions
     ///
     /// date=20201028, mem=2, mem_beats=68.89, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/119179633/
+    /// 
+    /// date=20201031, mem=2, mem_beats=61.7, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/119955012/
     pub struct Solution;
 
     impl Solution {
@@ -67,5 +71,24 @@ pub mod solution_dfs {
                 nums.swap(start, i);
             }
         }
+    }
+}
+
+
+pub fn permute(mut nums: Vec<i32>) -> Vec<Vec<i32>> {
+    let mut res = vec![];
+    helper(&mut nums, 0, &mut res);
+    res
+}
+
+fn helper(nums: &mut [i32], start: usize, res: &mut Vec<Vec<i32>>) {
+    if start == nums.len() {
+        res.push(nums.to_vec());
+        return;
+    }
+    for i in start..nums.len() {
+        nums.swap(start, i);
+        helper(nums, i + 1, res);
+        nums.swap(start, i);
     }
 }
