@@ -64,7 +64,8 @@ pub mod solution_dfs {
     pub struct Solution;
     impl Solution {
         pub fn is_valid_bst(root: Option<Rc<RefCell<TreeNode>>>) -> bool {
-            Self::valid_bst(root, &mut std::i64::MIN)
+            let mut pre_val = std::i64::MIN;
+            Self::valid_bst(root, &mut pre_val)
         }
 
         pub fn valid_bst(root: Option<Rc<RefCell<TreeNode>>>, pre_val: &mut i64) -> bool {
