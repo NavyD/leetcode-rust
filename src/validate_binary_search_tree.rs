@@ -28,6 +28,75 @@ use std::rc::Rc;
 ///     true
 /// }
 /// ```
+///
+/// 第二次没有任何提高。思路还是递归的比较root与left,right节点
+///
+/// ```ignore
+/// pub fn is_valid_bst(root: Option<Rc<RefCell<TreeNode>>>) -> bool {
+///     root.map_or(true, |root| {
+///         let root = root.borrow();
+///
+///         if let Some(left) = &root.left {
+///             if root.val <= left.borrow().val {
+///                 return false;
+///             }
+///         }
+///
+///         if let Some(right) = &root.right {
+///             if root.val >= right.borrow().val {
+///                 return false;
+///             }
+///         }
+///         is_valid_bst(root.left.clone()) && is_valid_bst(root.right.clone())
+///     })
+/// }
+/// ```
+///
+/// 问题在于没有考虑中序比较大小 或 递归时限制当前节点的大小：如下面的图片中：6所在的节点应该
+/// 存在满足： 6 < 15 && 6 > 10。6作为root:10的右子树节点应该比root大，显然6是不合法的，
+/// 所以上面的递归思路不对
+///
+/// ![](https://pic.leetcode-cn.com/1602255638-CdMLrU-image.png)
+///
+/// 参考：
+///
+/// [三种解决方式，两种击败了100%的用户](https://leetcode-cn.com/problems/validate-binary-search-tree/solution/san-chong-jie-jue-fang-shi-liang-chong-ji-bai-liao/)
+pub mod solution_recursive {
+    use super::*;
+
+    /// # 思路
+    /// 
+    /// 使用递归与root对应范围限制检查
+    /// 
+    /// 注意：lower,upper必须比i32更大，使用i64。对一个子树，最小最大的val可用root.val确定
+    /// 
+    /// 参考：
+    /// 
+    /// - [三种解决方式，两种击败了100%的用户](https://leetcode-cn.com/problems/validate-binary-search-tree/solution/san-chong-jie-jue-fang-shi-liang-chong-ji-bai-liao/)
+    /// - [验证二叉搜索树](https://leetcode-cn.com/problems/validate-binary-search-tree/solution/yan-zheng-er-cha-sou-suo-shu-by-leetcode-solution/)
+    /// 
+    /// ### Submissions
+    /// 
+    /// date=20201124, mem=3, mem_beats=43, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/125867022/
+    pub struct Solution;
+
+    impl Solution {
+        pub fn is_valid_bst(root: Option<Rc<RefCell<TreeNode>>>) -> bool {
+            fn helper(root: Option<Rc<RefCell<TreeNode>>>, lower: i64, upper: i64) -> bool {
+                root.map_or(true, |root| {
+                    let root = root.borrow();
+                    let val = root.val as i64;
+                    val > lower
+                        && val < upper
+                        && helper(root.left.clone(), lower, val)
+                        && helper(root.right.clone(), val, upper)
+                })
+            }
+            helper(root, i64::MIN, i64::MAX)
+        }
+    }
+}
+
 pub mod solution_dfs {
     use super::*;
 
@@ -61,22 +130,26 @@ pub mod solution_dfs {
     ///
     /// date=20201016, mem=3.2, mem_beats=7.41, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/116145829/
     ///
+    /// date=20201124, mem=3.1, mem_beats=10, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/125872012/
     pub struct Solution;
     impl Solution {
         pub fn is_valid_bst(root: Option<Rc<RefCell<TreeNode>>>) -> bool {
-            let mut pre_val = std::i64::MIN;
-            Self::valid_bst(root, &mut pre_val)
-        }
-
-        pub fn valid_bst(root: Option<Rc<RefCell<TreeNode>>>, pre_val: &mut i64) -> bool {
-            root.map_or(true, |root| {
-                let root = root.borrow();
-                if !Self::valid_bst(root.left.clone(), pre_val) || root.val as i64 <= *pre_val {
-                    return false;
-                }
-                *pre_val = root.val as i64;
-                Self::valid_bst(root.right.clone(), pre_val)
-            })
+            fn helper(root: Option<Rc<RefCell<TreeNode>>>, pre_val: &mut Option<i32>) -> bool {
+                root.map_or(true, |root| {
+                    let root = root.borrow();
+                    if !helper(root.left.clone(), pre_val) {
+                        return false;
+                    }
+                    if let Some(pre_val) = pre_val {
+                        if *pre_val >= root.val {
+                            return false;
+                        }
+                    }
+                    *pre_val = Some(root.val);
+                    helper(root.right.clone(), pre_val)
+                })
+            }
+            helper(root, &mut None)
         }
     }
 }
@@ -84,7 +157,7 @@ pub mod solution_dfs {
 /// 20201016
 /// 第二次 注意不能让`root = node.borrow().right.clone()`用下面代码替换，
 /// 还有`while root.is_some() || !stack.is_empty()`条件不能忘记
-/// 
+///
 /// ```rust, ignore
 /// while !stack.is_empty() {
 ///     if let Some(right) = node.borrow().right.clone() {
@@ -105,13 +178,15 @@ pub mod solution_dfs_iterative {
     /// ### Submissions
     ///
     /// date=20201015, mem=3.1, mem_beats=100, runtime=0, runtime_beats=100, url=https://leetcode.com/submissions/detail/408900690/
-    /// 
+    ///
     /// date=20201016, mem=2.7, mem_beats=96.3, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/116151516/
+    /// 
+    /// date=20201124, mem=2.8, mem_beats=86, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/125875758/
     pub struct Solution;
     impl Solution {
         pub fn is_valid_bst(mut root: Option<Rc<RefCell<TreeNode>>>) -> bool {
             let mut stack = vec![];
-            let mut pre_node: Option<Rc<RefCell<TreeNode>>> = None;
+            let mut pre_node = None as Option<Rc<RefCell<TreeNode>>>;
             while root.is_some() || !stack.is_empty() {
                 if let Some(node) = root.clone() {
                     root = node.borrow().left.clone();
@@ -138,6 +213,7 @@ mod tests {
     fn basics() {
         test(solution_dfs::Solution::is_valid_bst);
         test(solution_dfs_iterative::Solution::is_valid_bst);
+        test(solution_recursive::Solution::is_valid_bst);
     }
 
     fn test<F: Fn(Option<Rc<RefCell<TreeNode>>>) -> bool>(func: F) {

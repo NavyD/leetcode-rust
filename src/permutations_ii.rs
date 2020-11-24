@@ -8,7 +8,7 @@
 //! - 递归回溯
 
 pub mod solution_sort {
-    /// 
+    /// `println!("swap: {},{} {:?}", i, cur_idx, nums);`
     /// sort                    set
     /// swap: 0,0 [1, 2, 2]     swap: 0,0 [1, 2, 2]
     /// swap: 1,1 [1, 2, 2]     swap: 1,1 [1, 2, 2]
@@ -65,6 +65,8 @@ pub mod solution_sort {
     /// date=20201118, mem=2.1, mem_beats=96, runtime=4, runtime_beats=95, url=https://leetcode-cn.com/submissions/detail/124411651/
     /// 
     /// date=20201123, mem=2, mem_beats=97, runtime=4, runtime_beats=95, url=https://leetcode-cn.com/submissions/detail/125656670/
+    /// 
+    /// date=20201124, mem=2, mem_beats=79, runtime=4, runtime_beats=95, url=https://leetcode-cn.com/submissions/detail/125888656/
     pub struct Solution;
 
     impl Solution {
@@ -121,7 +123,6 @@ pub mod solution_set {
                 }
                 for i in cur_idx..nums.len() {
                     nums.swap(i, cur_idx);
-                    println!("swap: {},{} {:?}", i, cur_idx, nums);
                     helper(nums, cur_idx + 1, res);
                     nums.swap(i, cur_idx);
                 }

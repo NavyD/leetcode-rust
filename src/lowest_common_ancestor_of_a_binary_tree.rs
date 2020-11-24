@@ -8,13 +8,13 @@ pub mod solution_dfs {
     use super::*;
 
     ///
-    /// owest common ancestor (LCA)
+    /// lowest common ancestor (LCA)
     ///
     /// 若 root 是 p, q 的 最近公共祖先 ，则只可能为以下情况之一：
     ///
-    /// p 和 q 在 root 的子树中，且分列 root 的 异侧（即分别在左、右子树中）；
-    /// p = root ，且 q 在 root 的左或右子树中；
-    /// q = root ，且 p 在 root 的左或右子树中；
+    /// - p 和 q 在 root 的子树中，且分列 root 的 异侧（即分别在左、右子树中）
+    /// - p = root ，且 q 在 root 的左或右子树中；
+    /// - q = root ，且 p 在 root 的左或右子树中；
     ///
     /// 考虑通过递归对二叉树进行后序遍历，当遇到节点 p 或 q 时返回。从底至顶回溯，当节点 p,q 在节点 root 的异侧时，节点 root 即为最近公共祖先，则向上返回 root 。
     ///
@@ -53,8 +53,10 @@ pub mod solution_dfs {
     /// ### Submissions
     ///
     /// date=20201025, mem=4.6, mem_beats=100, runtime=4, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/118425007/
-    /// 
+    ///
     /// date=20201025, mem=4.4, mem_beats=50, runtime=4, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/118661709/
+    /// 
+    /// date=20201124, mem=4.5, mem_beats=20, runtime=8, runtime_beats=93, url=https://leetcode-cn.com/submissions/detail/125885807/
     pub struct Solution;
 
     impl Solution {
@@ -63,16 +65,16 @@ pub mod solution_dfs {
             p: Option<Rc<RefCell<TreeNode>>>,
             q: Option<Rc<RefCell<TreeNode>>>,
         ) -> Option<Rc<RefCell<TreeNode>>> {
-            // root == none || root == q || root == p
-            if root.as_ref().map_or(true, |root| {
-                let root = root.borrow();
-                root.val == p.as_ref().unwrap().borrow().val
-                    || root.val == q.as_ref().unwrap().borrow().val
-            }) {
-                return root;
+            if root.is_none() {
+                return None;
             }
             let root = root.unwrap();
             let root_ref = root.borrow();
+            if root_ref.val == p.as_ref().unwrap().borrow().val
+                || root_ref.val == q.as_ref().unwrap().borrow().val
+            {
+                return Some(root.clone());
+            }
             let left = Self::lowest_common_ancestor(root_ref.left.clone(), p.clone(), q.clone());
             let right = Self::lowest_common_ancestor(root_ref.right.clone(), p, q);
             if left.is_none() {
