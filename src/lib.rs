@@ -45,10 +45,13 @@ pub mod binary_tree_preorder_traversal;
 pub mod binary_tree_postorder_traversal;
 pub mod n_ary_tree_postorder_traversal;
 
-// recursive
+// recursive backtracking
 pub mod combinations;
 pub mod permutations;
 pub mod permutations_ii;
+pub mod subsets;
+
+// divide
 pub mod powx_n;
 
 // array

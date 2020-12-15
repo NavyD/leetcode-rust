@@ -1,11 +1,14 @@
+//! 如何快速的计算出pow。O(n)的算法不能通过测试。
+//! 
+//! 可以考虑分治思想，如要计算x^9 => x^4*x^4*x => 变成计算x^4，x^4 => x^2*x^2
 pub mod solution_recursive {
     /// # 思路
     /// 
     /// 快速幂算法
     ///
-    /// 如果要计算`x^16`: `x => x^2 => x^4 => x^8 => x^16`
+    /// 如果要计算`x^16`: `x^0 => x^2 => x^4 => x^8 => x^16`
     /// 
-    /// 如果要计算`x^15`: `x => x^2 => x^3 => x^7 => x^15`。对于x的奇数次方，当前结果=(上次的结果 ^2) *x
+    /// 如果要计算`x^15`: `x^0 => x^1 => x^3 => x^7 => x^15`。对于x的奇数次方，当前结果=(上次的结果 ^2) *x
     /// 
     /// 直接从左到右进行推导看上去很困难，因为在每一步中，我们不知道在将上一次的结果平方之后，还需不需要额外乘 xx。
     /// 但如果我们从右往左看，分治的思想就十分明显了
@@ -43,25 +46,27 @@ pub mod solution_recursive {
     /// 
     /// date=20201213, mem_beats=38, mem=2, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/130726928/
     /// 
+    /// date=20201215, mem_beats=33, mem=2, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/131203027/
+    /// 
     /// ### 复杂度
     /// 
-    /// 时间：O(log n)
-    /// 空间：O(log n)
+    /// - 时间：O(log n)
+    /// - 空间：O(log n)
     pub struct Solution;
     impl Solution {
         pub fn my_pow(x: f64, n: i32) -> f64 {
             fn _quick_pow(x: f64, n: u32) -> f64 {
-                if n == 0 {
-                    return 1.0;
-                }
-                let sub_pow = _quick_pow(x, n / 2);
-                if n & 1 == 0 {
-                    sub_pow * sub_pow
+                if n <= 0 {
+                    1.0
                 } else {
-                    sub_pow * sub_pow * x
+                    let sub_pow = _quick_pow(x, n / 2);
+                    if n & 1 == 1 {
+                        sub_pow * sub_pow * x
+                    } else {
+                        sub_pow * sub_pow
+                    }
                 }
             }
-
             if n < 0 {
                 1.0 / _quick_pow(x, -n as u32)
             } else {
@@ -87,6 +92,8 @@ pub mod solution_iterative {
     /// ### Submissions
     /// 
     /// date=20201213, mem=2, mem_beats=47, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/130735989/
+    /// 
+    /// date=20201215, mem=1.9, mem_beats=72, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/131208050/
     pub struct Solution;
     impl Solution {
         pub fn my_pow(x: f64, n: i32) -> f64 {
