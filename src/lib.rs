@@ -53,7 +53,7 @@ pub mod subsets;
 
 // divide
 pub mod powx_n;
-
+pub mod majority_element;
 // array
 pub mod move_zeroes;
 pub mod container_with_most_water;
