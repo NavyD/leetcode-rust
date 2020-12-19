@@ -51,6 +51,7 @@ pub mod permutations;
 pub mod permutations_ii;
 pub mod subsets;
 pub mod letter_combinations_of_a_phone_number;
+pub mod n_queens;
 
 // divide
 pub mod powx_n;

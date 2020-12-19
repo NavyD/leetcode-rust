@@ -1,0 +1,204 @@
+//! 如果处理皇后不能被攻击问题
+
+/// 总结
+/// 
+/// 回溯还是简单，但是如何处理问题才是关键。如何将不能被攻击转换为
+/// 对应数组下标关系还是不行
+pub mod solution_backtracking {
+    /// # 思路
+    ///
+    /// 对每一个棋子不断的试错，找出所有的解法。对每一行放一个棋子在不同位置，递归下去判断是否在
+    /// 列、45对角线上、135对角线上能被攻击。
+    ///
+    /// 回溯递归树：
+    ///
+    /// ![](https://pic.leetcode-cn.com/1598117469-RXhjxi-image.png)
+    ///
+    /// 如何判断在当前位置时可能被攻击：使用row递归下去，每一行只有一个棋子，行不可能被攻击；
+    ///
+    /// 对于维护一个cols, left right diagonals数组，表示列、左右对角线是否被攻击；
+    ///
+    /// 对于列，长度为n只要对应位置已棋子，left_diagonals[col]=true就可以判断，不管多少行，一列只有一个棋子；
+    ///
+    /// 对于对角线，一个n大小的棋盘有2*n - 1个对角线（左右都是）。假设有一个n=2的棋盘：如何判断在一条对角线上
+    /// left45(row,col)：  [(1,0), (0,1)], [(0,0)], [(1,1)]
+    /// right135(row,col): [(0,0), (1,1)], [(1,0)], [(0, 1)]
+    ///
+    /// 在left时：left_diagonals[row + col]=true表示在一条对角线上
+    /// 在right时：right_diagonals[n - 1 + col - row]=true表示在一条角线上
+    ///
+    /// 一个n=4的对角线：
+    ///
+    /// ![](https://pic.leetcode-cn.com/1599142979-VEuEDb-image.png)
+    ///
+    /// 参考：
+    ///
+    /// - [回溯算法（转换成全排列问题 + 剪枝）- 题解后有相关问题](https://leetcode-cn.com/problems/n-queens/solution/gen-ju-di-46-ti-quan-pai-lie-de-hui-su-suan-fa-si-/)
+    ///
+    /// ### Submissions
+    ///
+    /// date=20201219, mem=2.2, mem_beats=63, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/132179132/
+    pub struct Solution;
+
+    impl Solution {
+        pub fn solve_n_queens(n: i32) -> Vec<Vec<String>> {
+            const QUEEN: u8 = 'Q' as u8;
+            const EMPTY: u8 = '.' as u8;
+            fn _backtrack(
+                n: usize,
+                row: usize,
+                cols: &mut Vec<bool>,
+                left_diagonals: &mut Vec<bool>,
+                right_diagonals: &mut Vec<bool>,
+                path: &mut Vec<Vec<u8>>,
+                res: &mut Vec<Vec<String>>,
+            ) {
+                if row >= n {
+                    res.push(
+                        // u8 to string
+                        path.clone()
+                            .into_iter()
+                            .map(|bs| String::from_utf8(bs).unwrap())
+                            .collect(),
+                    );
+                    return;
+                }
+                for col in 0..n {
+                    let col = col as usize;
+                    // 对角线对应下标
+                    let (left_idx, right_idx) = (col + row, n - 1 + row - col);
+                    // 不能攻击
+                    if !cols[col] && !left_diagonals[left_idx] && !right_diagonals[right_idx] {
+                        // used
+                        cols[col] = true;
+                        left_diagonals[left_idx] = true;
+                        right_diagonals[right_idx] = true;
+                        path[row][col] = QUEEN;
+                        // next
+                        _backtrack(n, row + 1, cols, left_diagonals, right_diagonals, path, res);
+                        // unused
+                        cols[col] = false;
+                        left_diagonals[left_idx] = false;
+                        right_diagonals[right_idx] = false;
+                        path[row][col] = EMPTY;
+                    }
+                }
+            }
+            let n = n as usize;
+            let mut res = vec![];
+            _backtrack(
+                n,
+                0,
+                // 默认false表示对应位置没有占用 不能攻击到
+                &mut vec![false; n],
+                // 对角线个数为2*n - 1
+                &mut vec![false; 2 * n - 1],
+                &mut vec![false; 2 * n - 1],
+                &mut vec![vec![EMPTY; n]; n],
+                &mut res,
+            );
+            res
+        }
+    }
+}
+
+pub mod solution_backtracking_each_position {
+    /// # 思路
+    /// 
+    /// 对每个位置上迭代检查每个列、对角线
+    /// 
+    /// 参考：
+    /// 
+    /// [Accepted 4ms c++ solution use backtracking and bitmask, easy understand.](https://leetcode.com/problems/n-queens/discuss/19808/Accepted-4ms-c%2B%2B-solution-use-backtracking-and-bitmask-easy-understand.)
+    /// 
+    /// ### Submissions
+    /// 
+    /// date=20201219, mem=2.4, mem_beats=9, runtime=4, runtime_beats=69, url=https://leetcode-cn.com/submissions/detail/132198620/
+    pub struct Solution;
+
+    impl Solution {
+        pub fn solve_n_queens(n: i32) -> Vec<Vec<String>> {
+            const QUEEN: u8 = 'Q' as u8;
+            const EMPTY: u8 = '.' as u8;
+            fn _backtrack(
+                n: usize,
+                row: usize,
+                path: &mut Vec<Vec<u8>>,
+                res: &mut Vec<Vec<String>>,
+            ) {
+                if row >= n {
+                    res.push(
+                        path.clone()
+                            .into_iter()
+                            .map(|a| String::from_utf8(a).unwrap())
+                            .collect(),
+                    );
+                    return;
+                }
+                for col in 0..n {
+                    if _is_valid(path, row, col, n) {
+                        path[row][col] = QUEEN;
+                        _backtrack(n, row + 1, path, res);
+                        path[row][col] = EMPTY;
+                    }
+                }
+            }
+            fn _is_valid(path: &Vec<Vec<u8>>, row: usize, col: usize, n: usize) -> bool {
+                // check cols
+                for i in 0..n {
+                    if path[i][col] == QUEEN {
+                        return false;
+                    }
+                }
+                let (mut i, mut j) = (row, col);
+                // check 45 diagonal
+                while i > 0 && j > 0 {
+                    i -= 1;
+                    j -= 1;
+                    if path[i][j] == QUEEN {
+                        return false;
+                    }
+                }
+                let (mut i, mut j) = (row, col);
+                // check 135 diagonal
+                let n = n - 1;
+                while i > 0 && j < n {
+                    i -= 1;
+                    j += 1;
+                    if path[i][j] == QUEEN {
+                        return false;
+                    }
+                }
+                true
+            }
+            let mut res = vec![];
+            let n = n as usize;
+            _backtrack(n, 0, &mut vec![vec![EMPTY; n]; n], &mut res);
+            res
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::i32;
+
+    #[test]
+    fn basic() {
+        fn test<F: Fn(i32) -> Vec<Vec<String>>>(func: F) {
+            assert_eq!(func(1), vec![vec!["Q".to_string()]]);
+            let a = [
+                [".Q..", "...Q", "Q...", "..Q."],
+                ["..Q.", "Q...", "...Q", ".Q.."],
+            ]
+            .iter()
+            .map(|a| a.iter().map(|e| e.to_string()).collect::<Vec<_>>())
+            .collect::<Vec<_>>();
+            assert_eq!(func(4), a);
+        }
+
+        test(solution_backtracking::Solution::solve_n_queens);
+        test(solution_backtracking_each_position::Solution::solve_n_queens)
+    }
+}

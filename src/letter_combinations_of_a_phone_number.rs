@@ -19,58 +19,62 @@ pub mod solution_backtracking {
     ///
     /// [「手画图解」两种解法：DFS回溯、BFS。我理解的回溯](https://leetcode-cn.com/problems/letter-combinations-of-a-phone-number/solution/shou-hua-tu-jie-liang-chong-jie-fa-dfshui-su-bfsya/)
     ///
+    /// 可以使用macro对literal简化map.insert方式
+    ///
+    /// ```ignore
+    /// #[macro_export]
+    /// macro_rules! map {
+    ///     ( $( $k:tt:  $v:tt),* ) => {
+    ///         {
+    ///             let mut map = std::collections::HashMap::new();
+    ///             $(
+    ///                 map.insert($k, $v);
+    ///             )*
+    ///             map
+    ///         }
+    ///     };
+    /// }
+    /// // use macro
+    /// map!{ '2': "abc", '3': "def" }
+    /// ```
+    /// 
+    /// rust中string取出char没有直接Index的方式，对于ascii直接用byte数组
+    ///
     /// ### Submissions
     ///
     /// date=20201218, mem=2.2, mem_beats=5, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/132095917/
+    /// 
+    /// date=20201219, mem=1.9, mem_beats=78, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/132222590/
     pub struct Solution;
 
     impl Solution {
         pub fn letter_combinations(digits: String) -> Vec<String> {
-            use std::collections::HashMap;
             fn _backtrack(
-                digits: &Vec<char>,
+                number_letters: &Vec<&str>,
+                digits: &[u8],
                 cur_idx: usize,
-                number_letters: &HashMap<char, String>,
-                path: &mut String,
+                path: &mut Vec<u8>,
                 res: &mut Vec<String>,
             ) {
                 if cur_idx == digits.len() {
-                    res.push(path.clone());
+                    res.push(String::from_utf8(path.clone()).unwrap());
                     return;
-                } else {
-                    let letters = number_letters.get(&digits[cur_idx]).unwrap();
-                    for letter in letters.chars() {
-                        path.push(letter);
-                        _backtrack(digits, cur_idx + 1, number_letters, path, res);
-                        path.pop();
-                    }
                 }
+                let digit = digits[cur_idx];
+                // 重建索引
+                let letters: &str = number_letters[digit as usize - '2' as usize];
+                letters.bytes().for_each(|letter| {
+                    path.push(letter);
+                    _backtrack(number_letters, digits, cur_idx + 1, path, res);
+                    path.pop();
+                });
             }
-
             let mut res = vec![];
-            if digits.is_empty() {
-                return res;
+            if !digits.is_empty() {
+                // number-letter: 2-abc, 3-def => 重建索引
+                let number_letters = vec!["abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"];
+                _backtrack(&number_letters, digits.as_bytes(), 0, &mut vec![], &mut res);
             }
-            let number_letters = [
-                ('2', "abc"),
-                ('3', "def"),
-                ('4', "ghi"),
-                ('5', "jkl"),
-                ('6', "mno"),
-                ('7', "pqrs"),
-                ('8', "tuv"),
-                ('9', "wxyz"),
-            ]
-            .iter()
-            .map(|(k, v)| (k.to_owned(), v.to_string()))
-            .collect::<HashMap<char, String>>();
-            _backtrack(
-                &digits.chars().collect(),
-                0,
-                &number_letters,
-                &mut String::new(),
-                &mut res,
-            );
             res
         }
     }
