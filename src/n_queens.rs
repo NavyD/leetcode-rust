@@ -1,7 +1,7 @@
-//! 如果处理皇后不能被攻击问题
+//! 如何处理皇后不能被攻击问题
 
 /// 总结
-/// 
+///
 /// 回溯还是简单，但是如何处理问题才是关键。如何将不能被攻击转换为
 /// 对应数组下标关系还是不行
 pub mod solution_backtracking {
@@ -38,6 +38,8 @@ pub mod solution_backtracking {
     /// ### Submissions
     ///
     /// date=20201219, mem=2.2, mem_beats=63, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/132179132/
+    /// 
+    /// date=20201220, mem=2.3, mem_beats=50, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/132332061/
     pub struct Solution;
 
     impl Solution {
@@ -104,15 +106,15 @@ pub mod solution_backtracking {
 
 pub mod solution_backtracking_each_position {
     /// # 思路
-    /// 
+    ///
     /// 对每个位置上迭代检查每个列、对角线
-    /// 
+    ///
     /// 参考：
-    /// 
+    ///
     /// [Accepted 4ms c++ solution use backtracking and bitmask, easy understand.](https://leetcode.com/problems/n-queens/discuss/19808/Accepted-4ms-c%2B%2B-solution-use-backtracking-and-bitmask-easy-understand.)
-    /// 
+    ///
     /// ### Submissions
-    /// 
+    ///
     /// date=20201219, mem=2.4, mem_beats=9, runtime=4, runtime_beats=69, url=https://leetcode-cn.com/submissions/detail/132198620/
     pub struct Solution;
 
@@ -199,6 +201,61 @@ mod tests {
         }
 
         test(solution_backtracking::Solution::solve_n_queens);
-        test(solution_backtracking_each_position::Solution::solve_n_queens)
+        test(solution_backtracking_each_position::Solution::solve_n_queens);
+        test(solve_n_queens)
+    }
+
+    pub fn solve_n_queens(n: i32) -> Vec<Vec<String>> {
+        const QUEEN: u8 = 'Q' as u8;
+        const EMPTY: u8 = '.' as u8;
+
+        fn _backtrack(
+            n: usize,
+            row: usize,
+            cols: &mut Vec<bool>,
+            left_diagonals: &mut Vec<bool>,
+            right_diagonals: &mut Vec<bool>,
+            path: &mut Vec<Vec<u8>>,
+            res: &mut Vec<Vec<String>>,
+        ) {
+            if row >= n {
+                res.push(
+                    path.clone()
+                        .into_iter()
+                        .map(|bytes| String::from_utf8(bytes).unwrap())
+                        .collect(),
+                );
+            } else {
+                for col in 0..n {
+                    // check attackable
+                    let (left_idx, right_idx) = (col + row, n - 1 + col - row);
+                    if !cols[col] && !left_diagonals[left_idx] && !right_diagonals[right_idx] {
+                        path[row][col] = QUEEN;
+                        cols[col] = true;
+                        left_diagonals[left_idx] = true;
+                        right_diagonals[right_idx] = true;
+
+                        _backtrack(n, row + 1, cols, left_diagonals, right_diagonals, path, res);
+
+                        path[row][col] = EMPTY;
+                        cols[col] = false;
+                        left_diagonals[left_idx] = false;
+                        right_diagonals[right_idx] = false;
+                    }
+                }
+            }
+        }
+        let mut res = vec![];
+        let n = n as usize;
+        _backtrack(
+            n,
+            0,
+            &mut vec![false; n],
+            &mut vec![false; 2 * n - 1],
+            &mut vec![false; 2 * n - 1],
+            &mut vec![vec![EMPTY; n]; n],
+            &mut res,
+        );
+        res
     }
 }

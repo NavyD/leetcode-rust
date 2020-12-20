@@ -44,6 +44,7 @@ pub mod binary_tree_inorder_traversal;
 pub mod binary_tree_preorder_traversal;
 pub mod binary_tree_postorder_traversal;
 pub mod n_ary_tree_postorder_traversal;
+pub mod binary_tree_level_order_traversal;
 
 // recursive backtracking
 pub mod combinations;
@@ -56,6 +57,7 @@ pub mod n_queens;
 // divide
 pub mod powx_n;
 pub mod majority_element;
+
 // array
 pub mod move_zeroes;
 pub mod container_with_most_water;
