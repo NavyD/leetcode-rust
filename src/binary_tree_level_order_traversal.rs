@@ -9,6 +9,8 @@ pub mod solution_bfs {
     /// ### Submissions
     /// 
     /// date=20201220, mem=2.2, mem_beats=26, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/132326653/
+    /// 
+    /// date=20201220, mem=2.2, mem_beats=26, runtime=0, runtime_beats=100, url=
     pub struct Solution;
     impl Solution {
         pub fn level_order(root: Option<Rc<RefCell<TreeNode>>>) -> Vec<Vec<i32>> {

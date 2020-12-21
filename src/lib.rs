@@ -58,6 +58,9 @@ pub mod n_queens;
 pub mod powx_n;
 pub mod majority_element;
 
+// dfs/bfs
+pub mod minimum_genetic_mutation;
+
 // array
 pub mod move_zeroes;
 pub mod container_with_most_water;
