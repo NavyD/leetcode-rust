@@ -177,3 +177,54 @@ mod tests {
 }
 
 // Some(RefCell { value: TreeNode { val: 1, left: None, right: Some(RefCell { value: TreeNode { val: 2, left: Some(RefCell { value: TreeNode { val: 2, left: None, right: None } }), right: None } }) } })
+
+
+pub mod utils {
+    #[cfg(test)]
+    mod tests {
+        use super::*;
+
+        #[test]
+        fn basic() {
+            assert!(is_contains(&vec![2321, 2, 2, 2, 1], &vec![]));
+            let a = vec![vec![1, 1], vec![2], vec![3], vec![2, 3]];
+            let b = vec![vec![1], vec![2], vec![5]];
+            assert!(!is_contains_vec2(&a, &b));
+
+            assert!(is_contains(&vec![2321, 2, 2, 2, 1], &vec![]));
+            assert!(is_contains_vec2(&vec![vec![1,2], vec![4,5]], &vec![]));
+            assert!(!is_contains_vec2(&vec![vec![1,2], vec![4,5]], &vec![vec![10]]));
+            assert!(!is_contains_vec2(&vec![vec![1,2], vec![4,5]], &vec![vec![1], vec![10]]));
+        }
+    }
+
+    /// 如果o包含other则返回true。o的长度元素可以多于other，只要other的元素都在o中即可
+    pub fn is_contains_vec2<T: Eq>(o: &Vec<Vec<T>>, other: &Vec<Vec<T>>) -> bool {
+        if o.len() < other.len() {
+            return false;
+        }
+        for a in other {
+            if o.iter().find(|b| is_contains(*b, a)).is_none() {
+                return false;
+            }
+        }
+        true
+    }
+
+    fn is_contains<'a, I, T: 'a>(o: I, other: I) -> bool
+    where
+        T: Eq,
+        I: IntoIterator<Item = &'a T> + Copy,
+    {
+        if o.into_iter().count() < other.into_iter().count() {
+            return false;
+        }
+        let mut o_iter = o.into_iter();
+        for b in other.into_iter() {
+            if !o_iter.find(|a| *a == b).is_some() {
+                return false;
+            }
+        }
+        true
+    }
+}

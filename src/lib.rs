@@ -92,6 +92,7 @@ pub mod valid_anagram;
 pub mod group_anagrams;
 
 pub mod helper;
+pub use helper::utils as utils;
 
 pub use leetcode_prelude as prelude;
 
