@@ -15,6 +15,8 @@ pub mod solution_recursive {
     /// date=20201215, mem=2.1, mem_beats=21, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/131175081/
     ///
     /// date=20201217, mem=2.1, mem_beats=30, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/131761719/
+    /// 
+    /// date=20201223, mem=2.1, mem_beats=16, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/133216203/
     pub struct Solution;
 
     impl Solution {
@@ -36,5 +38,31 @@ pub mod solution_recursive {
             _backtrack(&nums, 0, &mut vec![], &mut res);
             res
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::utils::*;
+
+    #[test]
+    fn basic() {
+        fn test<F: Fn(Vec<i32>) -> Vec<Vec<i32>>>(func: F) {
+            assert!(is_contains_vec2(
+                &vec![
+                    vec![3],
+                    vec![1],
+                    vec![2],
+                    vec![1, 2, 3],
+                    vec![1, 3],
+                    vec![2, 3],
+                    vec![1, 2],
+                    vec![]
+                ],
+                &func(vec![1, 2, 3]),
+            ));
+        }
+        test(solution_recursive::Solution::subsets);
     }
 }

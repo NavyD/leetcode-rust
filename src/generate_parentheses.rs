@@ -42,39 +42,43 @@ pub mod solution_dfs {
     ///
     /// date=20201222, mem=2.2, mem_beats=25, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/132817432/
     ///
+    /// date=20201223, mem=2.1, mem_beats=85, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/133181240/
+    ///
     /// ### 复杂度
     ///
     /// 参考：[括号生成 复杂度](https://leetcode-cn.com/problems/generate-parentheses/solution/gua-hao-sheng-cheng-by-leetcode-solution/)
     pub struct Solution;
+
     impl Solution {
         pub fn generate_parenthesis(n: i32) -> Vec<String> {
-            const LEFT_PARENTHESIS: u8 = '(' as u8;
-            const RIGHT_PARENTHESIS: u8 = ')' as u8;
-            fn _dfs(
+            const LEFT_PARENTHESIS: char = '(';
+            const RIGHT_PARENTHESIS: char = ')';
+
+            fn _backtrack(
                 left_count: i32,
                 right_count: i32,
-                parentheses: &mut Vec<u8>,
+                path: &mut String,
                 res: &mut Vec<String>,
             ) {
                 if left_count == 0 && right_count == 0 {
-                    res.push(String::from_utf8(parentheses.clone()).unwrap());
+                    res.push(path.clone());
                     return;
                 }
 
                 if left_count > 0 {
-                    parentheses.push(LEFT_PARENTHESIS);
-                    _dfs(left_count - 1, right_count, parentheses, res);
-                    parentheses.pop();
+                    path.push(LEFT_PARENTHESIS);
+                    _backtrack(left_count - 1, right_count, path, res);
+                    path.pop();
                 }
-
                 if right_count > left_count {
-                    parentheses.push(RIGHT_PARENTHESIS);
-                    _dfs(left_count, right_count - 1, parentheses, res);
-                    parentheses.pop();
+                    path.push(RIGHT_PARENTHESIS);
+                    _backtrack(left_count, right_count - 1, path, res);
+                    path.pop();
                 }
             }
+
             let mut res = vec![];
-            _dfs(n, n, &mut vec![], &mut res);
+            _backtrack(n, n, &mut String::new(), &mut res);
             res
         }
     }
@@ -82,9 +86,9 @@ pub mod solution_dfs {
 
 pub mod solution_bfs {
     /// # 思路
-    /// 
+    ///
     /// 下面是n=3的过程中queue结果
-    /// 
+    ///
     /// ```ignore
     /// 0:
     /// (
@@ -113,9 +117,9 @@ pub mod solution_bfs {
     /// ()(())
     /// ()()()
     /// ```
-    /// 
+    ///
     /// 下面这个部分更容易理解
-    /// 
+    ///
     /// ```ignore
     /// let mut n = n * 2;
     /// while n > 0 {
@@ -141,29 +145,59 @@ pub mod solution_bfs {
     ///     res.push(String::from_utf8(node.parentheses).unwrap());
     /// }
     /// ```
-    /// 
+    ///
+    /// 注意：在while中的node.parentheses使用任何顺序都是可以的，如下面的方式。
+    /// 只要node的count计数正确
+    ///
+    /// ```rust,ignore
+    /// while !stack.is_empty() {
+    //      for _ in 0..stack.len() {
+    //          let node = stack.pop().unwrap();
+    //          if node.left_count == 0 && node.right_count == 0 {
+    //              res.push(node.parentheses);
+    //              continue;
+    //          }
+    //          if node.left_count > 0 {
+    //              let mut next = node.clone();
+    //              next.parentheses.push(LEFT_PARENTHESIS);
+    //              next.left_count -= 1;
+    //              stack.push(next);
+    //          }
+    //          if node.right_count > node.left_count {
+    //              let mut next = node;
+    //              next.parentheses.push(RIGHT_PARENTHESIS);
+    //              next.right_count -= 1;
+    //              stack.push(next);
+    //          }
+    //      }
+    //  }
+    /// ```
+    ///
     /// 参考：
-    /// 
+    ///
     /// - [回溯算法（深度优先遍历）+ 广度优先遍历 + 动态规划](https://leetcode-cn.com/problems/generate-parentheses/solution/hui-su-suan-fa-by-liweiwei1419/)
-    /// 
+    ///
     /// ### Submissions
-    /// 
+    ///
     /// date=20201222, mem=2.2, mem_beats=22, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/132839666/
+    ///
+    /// date=20201223, mem=2.2, mem_beats=53, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/133191328/
     pub struct Solution;
+
     impl Solution {
         pub fn generate_parenthesis(n: i32) -> Vec<String> {
-            const LEFT_PARENTHESIS: u8 = '(' as u8;
-            const RIGHT_PARENTHESIS: u8 = ')' as u8;
+            const LEFT_PARENTHESIS: char = '(';
+            const RIGHT_PARENTHESIS: char = ')';
             // 表示一个生成的括号
-            #[derive(Debug, Clone)]
+            #[derive(Clone)]
             struct Node {
-                parentheses: Vec<u8>,
+                parentheses: String,
                 left_count: i32,
                 right_count: i32,
             }
             let mut queue = std::collections::VecDeque::new();
             queue.push_back(Node {
-                parentheses: vec![],
+                parentheses: String::new(),
                 left_count: n,
                 right_count: n,
             });
@@ -171,7 +205,7 @@ pub mod solution_bfs {
             while let Some(node) = queue.pop_front() {
                 // node结果完成
                 if node.left_count == 0 && node.right_count == 0 {
-                    res.push(String::from_utf8(node.parentheses).unwrap());
+                    res.push(node.parentheses.clone());
                     continue;
                 }
                 // 左括号
@@ -197,6 +231,7 @@ pub mod solution_bfs {
 #[allow(unused)]
 pub mod solution_dp {
     pub struct Solution;
+
     impl Solution {
         pub fn generate_parenthesis(n: i32) -> Vec<String> {
             todo!()
@@ -223,7 +258,7 @@ mod tests {
                 "()(())".to_string(),
                 "()()()".to_string()
             ],
-            func(3)
+            func(3),
         ))
     }
 
