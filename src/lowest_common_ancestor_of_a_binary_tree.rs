@@ -55,8 +55,10 @@ pub mod solution_dfs {
     /// date=20201025, mem=4.6, mem_beats=100, runtime=4, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/118425007/
     ///
     /// date=20201025, mem=4.4, mem_beats=50, runtime=4, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/118661709/
-    /// 
+    ///
     /// date=20201124, mem=4.5, mem_beats=20, runtime=8, runtime_beats=93, url=https://leetcode-cn.com/submissions/detail/125885807/
+    /// 
+    /// date=20201124, mem=4, mem_beats=76, runtime=4, runtime_beats=95, url=https://leetcode-cn.com/submissions/detail/133524720/ 
     pub struct Solution;
 
     impl Solution {
@@ -65,25 +67,28 @@ pub mod solution_dfs {
             p: Option<Rc<RefCell<TreeNode>>>,
             q: Option<Rc<RefCell<TreeNode>>>,
         ) -> Option<Rc<RefCell<TreeNode>>> {
-            if root.is_none() {
-                return None;
+            fn _helper(
+                root: Option<Rc<RefCell<TreeNode>>>,
+                p_val: i32,
+                q_val: i32,
+            ) -> Option<Rc<RefCell<TreeNode>>> {
+                if root.as_ref().map_or(true, |root| {
+                    root.borrow().val == p_val || root.borrow().val == q_val
+                }) {
+                    return root;
+                }
+                let root = root.unwrap();
+                let left = _helper(root.borrow().left.clone(), p_val, q_val);
+                let right = _helper(root.borrow().right.clone(), p_val, q_val);
+                if left.is_none() {
+                    right
+                } else if right.is_none() {
+                    left
+                } else {
+                    Some(root.clone())
+                }
             }
-            let root = root.unwrap();
-            let root_ref = root.borrow();
-            if root_ref.val == p.as_ref().unwrap().borrow().val
-                || root_ref.val == q.as_ref().unwrap().borrow().val
-            {
-                return Some(root.clone());
-            }
-            let left = Self::lowest_common_ancestor(root_ref.left.clone(), p.clone(), q.clone());
-            let right = Self::lowest_common_ancestor(root_ref.right.clone(), p, q);
-            if left.is_none() {
-                right
-            } else if right.is_none() {
-                left
-            } else {
-                Some(root.clone())
-            }
+            _helper(root, p.unwrap().borrow().val, q.unwrap().borrow().val)
         }
     }
 }
