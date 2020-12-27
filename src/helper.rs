@@ -211,7 +211,7 @@ pub mod utils {
         true
     }
 
-    fn is_contains<'a, I, T: 'a>(o: I, other: I) -> bool
+    pub fn is_contains<'a, I, T: 'a>(o: I, other: I) -> bool
     where
         T: Eq,
         I: IntoIterator<Item = &'a T> + Copy,

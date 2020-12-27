@@ -37,43 +37,48 @@ pub mod solution_backtracking {
     /// // use macro
     /// map!{ '2': "abc", '3': "def" }
     /// ```
-    /// 
-    /// rust中string取出char没有直接Index的方式，对于ascii直接用byte数组
+    ///
+    /// rust中string取出char没有直接Index的方式，对于ascii直接用byte数组。
+    ///
+    /// 使用path.len()可以替换cur_idx作为索引下个digit
     ///
     /// ### Submissions
     ///
     /// date=20201218, mem=2.2, mem_beats=5, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/132095917/
-    /// 
+    ///
     /// date=20201219, mem=1.9, mem_beats=78, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/132222590/
     pub struct Solution;
 
     impl Solution {
         pub fn letter_combinations(digits: String) -> Vec<String> {
             fn _backtrack(
-                number_letters: &Vec<&str>,
                 digits: &[u8],
-                cur_idx: usize,
-                path: &mut Vec<u8>,
+                number_letters: &Vec<&str>,
+                path: &mut String,
                 res: &mut Vec<String>,
             ) {
-                if cur_idx == digits.len() {
-                    res.push(String::from_utf8(path.clone()).unwrap());
+                if path.len() == digits.len() {
+                    res.push(path.clone());
                     return;
                 }
-                let digit = digits[cur_idx];
                 // 重建索引
-                let letters: &str = number_letters[digit as usize - '2' as usize];
-                letters.bytes().for_each(|letter| {
+                let letters = number_letters[digits[path.len()] as usize - '2' as usize];
+                for letter in letters.chars() {
                     path.push(letter);
-                    _backtrack(number_letters, digits, cur_idx + 1, path, res);
+                    _backtrack(digits, number_letters, path, res);
                     path.pop();
-                });
+                }
             }
+
             let mut res = vec![];
             if !digits.is_empty() {
-                // number-letter: 2-abc, 3-def => 重建索引
-                let number_letters = vec!["abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"];
-                _backtrack(&number_letters, digits.as_bytes(), 0, &mut vec![], &mut res);
+                _backtrack(
+                    digits.as_bytes(),
+                    // number-letter: 2-abc, 3-def => 重建索引
+                    &vec!["abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"],
+                    &mut String::new(),
+                    &mut res,
+                );
             }
             res
         }
@@ -83,11 +88,19 @@ pub mod solution_backtracking {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::utils::*;
 
     #[test]
     fn basic() {
         fn test<F: Fn(String) -> Vec<String>>(func: F) {
             assert_eq!(func("".to_string()), vec![] as Vec<String>);
+            let res = func("23".to_string());
+            let expected = ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"]
+                .iter()
+                .map(|e| e.to_string())
+                .collect::<Vec<_>>();
+            assert_eq!(res.len(), expected.len());
+            assert!(is_contains(&res, &expected));
         };
         test(solution_backtracking::Solution::letter_combinations);
     }

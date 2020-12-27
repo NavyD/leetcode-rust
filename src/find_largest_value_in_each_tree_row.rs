@@ -9,6 +9,8 @@ pub mod solution_bfs {
     /// ### Submissions
     /// 
     /// date=20201225, mem=2.8, mem_beats=100, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/133615166/
+    /// 
+    /// date=20201227, mem=2.9, mem_beats=60, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/134083520/
     pub struct Solution;
 
     impl Solution {
@@ -51,6 +53,8 @@ pub mod solution_dfs {
     /// ### Submissions
     /// 
     /// date=20201225, mem=3.1, mem_beats=14, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/133620233/
+    /// 
+    /// date=20201227, mem=2.9, mem_beats=70, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/134082381/
     pub struct Solution;
 
     impl Solution {
@@ -89,4 +93,5 @@ mod tests {
         test(solution_bfs::Solution::largest_values);
         test(solution_dfs::Solution::largest_values);
     }
+    
 }
