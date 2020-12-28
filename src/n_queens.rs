@@ -38,35 +38,36 @@ pub mod solution_backtracking {
     /// ### Submissions
     ///
     /// date=20201219, mem=2.2, mem_beats=63, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/132179132/
-    /// 
+    ///
     /// date=20201220, mem=2.3, mem_beats=50, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/132332061/
+    /// 
+    /// date=20201228, mem=2.2, mem_beats=92, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/134422730/
     pub struct Solution;
 
     impl Solution {
         pub fn solve_n_queens(n: i32) -> Vec<Vec<String>> {
-            const QUEEN: u8 = 'Q' as u8;
-            const EMPTY: u8 = '.' as u8;
+            const QUEEN: char = 'Q';
+            const EMPTY: char = '.';
             fn _backtrack(
                 n: usize,
                 row: usize,
                 cols: &mut Vec<bool>,
                 left_diagonals: &mut Vec<bool>,
                 right_diagonals: &mut Vec<bool>,
-                path: &mut Vec<Vec<u8>>,
+                path: &mut Vec<Vec<char>>,
                 res: &mut Vec<Vec<String>>,
             ) {
-                if row >= n {
+                if row == n {
                     res.push(
-                        // u8 to string
                         path.clone()
                             .into_iter()
-                            .map(|bs| String::from_utf8(bs).unwrap())
+                            .map(|e| e.into_iter().collect())
                             .collect(),
                     );
                     return;
                 }
+
                 for col in 0..n {
-                    let col = col as usize;
                     // 对角线对应下标
                     let (left_idx, right_idx) = (col + row, n - 1 + row - col);
                     // 不能攻击
@@ -120,19 +121,19 @@ pub mod solution_backtracking_each_position {
 
     impl Solution {
         pub fn solve_n_queens(n: i32) -> Vec<Vec<String>> {
-            const QUEEN: u8 = 'Q' as u8;
-            const EMPTY: u8 = '.' as u8;
+            const QUEEN: char = 'Q';
+            const EMPTY: char = '.';
             fn _backtrack(
                 n: usize,
                 row: usize,
-                path: &mut Vec<Vec<u8>>,
+                path: &mut Vec<Vec<char>>,
                 res: &mut Vec<Vec<String>>,
             ) {
                 if row >= n {
                     res.push(
                         path.clone()
                             .into_iter()
-                            .map(|a| String::from_utf8(a).unwrap())
+                            .map(|e| e.into_iter().collect())
                             .collect(),
                     );
                     return;
@@ -145,7 +146,8 @@ pub mod solution_backtracking_each_position {
                     }
                 }
             }
-            fn _is_valid(path: &Vec<Vec<u8>>, row: usize, col: usize, n: usize) -> bool {
+
+            fn _is_valid(path: &Vec<Vec<char>>, row: usize, col: usize, n: usize) -> bool {
                 // check cols
                 for i in 0..n {
                     if path[i][col] == QUEEN {
@@ -188,74 +190,19 @@ mod tests {
 
     #[test]
     fn basic() {
-        fn test<F: Fn(i32) -> Vec<Vec<String>>>(func: F) {
-            assert_eq!(func(1), vec![vec!["Q".to_string()]]);
-            let a = [
-                [".Q..", "...Q", "Q...", "..Q."],
-                ["..Q.", "Q...", "...Q", ".Q.."],
-            ]
-            .iter()
-            .map(|a| a.iter().map(|e| e.to_string()).collect::<Vec<_>>())
-            .collect::<Vec<_>>();
-            assert_eq!(func(4), a);
-        }
-
         test(solution_backtracking::Solution::solve_n_queens);
         test(solution_backtracking_each_position::Solution::solve_n_queens);
-        test(solve_n_queens)
     }
 
-    pub fn solve_n_queens(n: i32) -> Vec<Vec<String>> {
-        const QUEEN: u8 = 'Q' as u8;
-        const EMPTY: u8 = '.' as u8;
-
-        fn _backtrack(
-            n: usize,
-            row: usize,
-            cols: &mut Vec<bool>,
-            left_diagonals: &mut Vec<bool>,
-            right_diagonals: &mut Vec<bool>,
-            path: &mut Vec<Vec<u8>>,
-            res: &mut Vec<Vec<String>>,
-        ) {
-            if row >= n {
-                res.push(
-                    path.clone()
-                        .into_iter()
-                        .map(|bytes| String::from_utf8(bytes).unwrap())
-                        .collect(),
-                );
-            } else {
-                for col in 0..n {
-                    // check attackable
-                    let (left_idx, right_idx) = (col + row, n - 1 + col - row);
-                    if !cols[col] && !left_diagonals[left_idx] && !right_diagonals[right_idx] {
-                        path[row][col] = QUEEN;
-                        cols[col] = true;
-                        left_diagonals[left_idx] = true;
-                        right_diagonals[right_idx] = true;
-
-                        _backtrack(n, row + 1, cols, left_diagonals, right_diagonals, path, res);
-
-                        path[row][col] = EMPTY;
-                        cols[col] = false;
-                        left_diagonals[left_idx] = false;
-                        right_diagonals[right_idx] = false;
-                    }
-                }
-            }
-        }
-        let mut res = vec![];
-        let n = n as usize;
-        _backtrack(
-            n,
-            0,
-            &mut vec![false; n],
-            &mut vec![false; 2 * n - 1],
-            &mut vec![false; 2 * n - 1],
-            &mut vec![vec![EMPTY; n]; n],
-            &mut res,
-        );
-        res
+    fn test<F: Fn(i32) -> Vec<Vec<String>>>(func: F) {
+        assert_eq!(func(1), vec![vec!["Q".to_string()]]);
+        let a = [
+            [".Q..", "...Q", "Q...", "..Q."],
+            ["..Q.", "Q...", "...Q", ".Q.."],
+        ]
+        .iter()
+        .map(|a| a.iter().map(|e| e.to_string()).collect::<Vec<_>>())
+        .collect::<Vec<_>>();
+        assert_eq!(func(4), a);
     }
 }

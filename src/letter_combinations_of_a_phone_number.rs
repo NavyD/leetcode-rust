@@ -21,7 +21,7 @@ pub mod solution_backtracking {
     ///
     /// 可以使用macro对literal简化map.insert方式
     ///
-    /// ```ignore
+    /// ```
     /// #[macro_export]
     /// macro_rules! map {
     ///     ( $( $k:tt:  $v:tt),* ) => {
@@ -35,7 +35,9 @@ pub mod solution_backtracking {
     ///     };
     /// }
     /// // use macro
-    /// map!{ '2': "abc", '3': "def" }
+    /// let map = map!{ '2': "abc", '3': "def" };
+    /// assert_eq!(map.len(), 2);
+    /// assert_eq!(map[&'2'], "abc");
     /// ```
     ///
     /// rust中string取出char没有直接Index的方式，对于ascii直接用byte数组。
@@ -47,6 +49,8 @@ pub mod solution_backtracking {
     /// date=20201218, mem=2.2, mem_beats=5, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/132095917/
     ///
     /// date=20201219, mem=1.9, mem_beats=78, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/132222590/
+    /// 
+    /// date=20201227, mem=2.1, mem_beats=20, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/134091077/
     pub struct Solution;
 
     impl Solution {

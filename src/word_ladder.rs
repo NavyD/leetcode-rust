@@ -3,7 +3,7 @@
 #![allow(dead_code)]
 mod solution_dfs {
     /// # 思路
-    /// 
+    ///
     /// 超过时间限制。在word_list.len()>10时几乎不可用
     pub struct Solution;
 
@@ -60,12 +60,14 @@ mod solution_dfs {
 
 pub mod solution_bfs {
     /// # 思路
-    /// 
+    ///
     /// 注意：count=1开始是题目要求
     ///
     /// ### Submissions
     ///
     /// date=20201227, mem=2.4, mem_beats=96, runtime=88, runtime_beats=21, url=https://leetcode-cn.com/submissions/detail/134057724/
+    ///
+    /// date=20201228, mem=2.4, mem_beats=93, runtime=88, runtime_beats=21, url=https://leetcode-cn.com/submissions/detail/134406528/
     pub struct Solution;
 
     impl Solution {
@@ -109,21 +111,23 @@ pub mod solution_bfs {
 
 pub mod solution_bfs_two_end {
     /// # 思路
-    /// 
+    ///
     /// 双向广度优先遍历
-    /// 
+    ///
     /// - 已知目标顶点的情况下，可以分别从起点和目标顶点（终点）执行广度优先遍历，直到遍历的部分有交集。这种方式搜索的单词数量会更小一些；
     /// - 更合理的做法是，每次从单词数量小的集合开始扩散；
     /// - 这里 beginVisited 和 endVisited 交替使用，等价于单向 BFS 里使用队列，每次扩散都要加到总的 visited 里。
-    /// 
+    ///
     /// 参考：
-    /// 
+    ///
     /// - [广度优先遍历、双向广度优先遍历（Java）](https://leetcode-cn.com/problems/word-ladder/solution/yan-du-you-xian-bian-li-shuang-xiang-yan-du-you-2/)
     /// - [4 ms](https://leetcode-cn.com/submissions/api/detail/127/rust/4/)
-    /// 
+    ///
     /// ### Submissions
-    /// 
+    ///
     /// date=20201227, mem=2.4, mem_beats=97, runtime=12, runtime_beats=75, url=https://leetcode-cn.com/submissions/detail/134072129/
+    /// 
+    /// date=20201228, mem=2.5, mem_beats=66, runtime=12, runtime_beats=75, url=https://leetcode-cn.com/submissions/detail/134409400/
     pub struct Solution;
 
     impl Solution {
@@ -157,7 +161,7 @@ pub mod solution_bfs_two_end {
                             // 与后遍历相交时返回
                             if end_visited.contains(&new_word) {
                                 return count;
-                            } 
+                            }
                             // 添加到下层
                             else if unvisited.remove(&new_word) {
                                 next_begin_visited.insert(new_word);
@@ -209,7 +213,6 @@ mod tests {
             ),
             5
         );
-
         assert_eq!(
             func(
                 "hit".to_string(),
@@ -221,7 +224,17 @@ mod tests {
             ),
             0
         );
-
+        assert_eq!(
+            func(
+                "hit".to_string(),
+                "cog".to_string(),
+                ["hot", "dot", "tog", "cog"]
+                    .iter()
+                    .map(|e| e.to_string())
+                    .collect()
+            ),
+            0
+        );
         assert_eq!(
             func(
                 "qa".to_string(),
