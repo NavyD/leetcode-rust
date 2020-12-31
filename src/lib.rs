@@ -62,6 +62,7 @@ pub mod majority_element;
 pub mod minimum_genetic_mutation;
 pub mod find_largest_value_in_each_tree_row;
 pub mod word_ladder;
+pub mod word_ladder_ii;
 
 // array
 pub mod move_zeroes;
