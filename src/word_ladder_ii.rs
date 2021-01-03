@@ -26,227 +26,38 @@
 //!
 //! - 只需要考虑最短的层：BFS计算最短路径的高度dfs递归不能超过这个高度
 //! - 提前计算dfs中的递归树中每个节点对应的相邻节点：BFS计算出每个节点的successors map
+//!
+//! 由于要记录所有的路径，广度优先遍历「当前层」到「下一层」的所有路径都得记录下来。
+//! 因此找到下一层的结点 wordA 以后，不能马上添加到 visited 哈希表里，
+//! 还需要检查当前队列中未出队的单词是否还能与 wordA 建立联系。
+//!
+//! 所以可以在当前层用next_visited临时保存当前层与next_word的联系，不能直接visited.insert影响
+//! 当前层后面的word与next_word的关系。当前层与当前层word间联系也不能被记录，
+//! 由于同一层的连接肯定不是起点到终点的最短路径的边，所以使用 `next_visited: HashSet<String>`
+//! （避免同层word的next_words出现相同的当前层word，同层相连）
+//!
+//! ![](https://pic.leetcode-cn.com/da957ec0ab9fe9eda166acab86ba9fca8b6b0f6b04bda3e35677a46fb53d7d17-image.png)
+//!
+//! word_successors表示使用BFS遍历找到的最短路径中的word，每个word联系着最短路径中的next_words
+//!
 //! - 考虑第 k 层的某一个单词，如果这个单词在第 1 到 k-1 层已经出现过，我们其实就不过继续向下探索了。方式：
 //!   - distances map word <=> depth
 //!   - visited hashset word: 当保存之前遍历过的word。如果不存在set中才计算next words
 //!
+//! 参考：
 //!
+//! [单双向广度优先遍历 + 回溯算法（Java、Python）](https://leetcode-cn.com/problems/word-ladder-ii/solution/yan-du-you-xian-bian-li-shuang-xiang-yan-du-you--2/)
 
-pub mod solution_dfs_general {
-
+pub mod solution_dfs_bfs {
     /// # 思路
     ///
-    /// dfs如何保存找到最短路径
-    ///
-    /// 在找path时维护一个min_count，如果path.len() > min_count时表示这个path
-    /// 当前不是最短的。如果path.len() == min_count个表示这个path是一样短的，
-    /// 加入已有的res中。如果path.len() < min_count 表示这个path是最短的且
-    /// 之前的res不再有效，清空
-    ///
-    /// 使用begin_word开始找递归树方式
-    ///
-    /// 可以通过从word_list中递归找 或
-    pub struct Solution;
-
-    impl Solution {
-        pub fn find_ladders(
-            begin_word: String,
-            end_word: String,
-            word_list: Vec<String>,
-        ) -> Vec<Vec<String>> {
-            use std::collections::HashSet;
-            fn _backtrack(
-                cur: &str,
-                end: &str,
-                word_list: &HashSet<String>,
-                min_count: &mut usize,
-                path: &mut Vec<String>,
-                res: &mut Vec<Vec<String>>,
-            ) {
-                if path.len() > *min_count {
-                    return;
-                }
-                if cur == end {
-                    if path.len() < *min_count {
-                        res.clear();
-                        *min_count = path.len();
-                    }
-                    res.push(path.clone());
-                    return;
-                }
-
-                for next in _get_next_words(cur, word_list) {
-                    if !path.contains(&next) {
-                        path.push(next.clone());
-                        _backtrack(&next, end, word_list, min_count, path, res);
-                        path.pop();
-                    }
-                }
-            }
-
-            fn _get_next_words(cur: &str, word_list: &HashSet<String>) -> Vec<String> {
-                let mut word = cur.chars().collect::<Vec<_>>();
-                let mut next_words = vec![];
-                for i in 0..word.len() {
-                    let old = word[i];
-                    for letter in 'a'..='z' {
-                        if letter == old {
-                            continue;
-                        }
-                        word[i] = letter;
-                        let next_word = word.iter().collect::<String>();
-                        if word_list.contains(&next_word) {
-                            next_words.push(next_word);
-                        }
-                    }
-                    word[i] = old;
-                }
-                next_words
-            }
-
-            let mut res = vec![];
-            if word_list.is_empty() {
-                return res;
-            }
-            let word_list = word_list.into_iter().collect::<HashSet<_>>();
-            if !word_list.contains(&end_word) {
-                return res;
-            }
-            let mut min_count = std::usize::MAX;
-            _backtrack(
-                &begin_word,
-                &end_word,
-                &word_list,
-                &mut min_count,
-                &mut vec![begin_word.clone()],
-                &mut res,
-            );
-            res
-        }
-    }
-}
-
-pub mod solution_dfs_optimized {
-    pub struct Solution;
-
-    impl Solution {
-        pub fn find_ladders(
-            begin_word: String,
-            end_word: String,
-            word_list: Vec<String>,
-        ) -> Vec<Vec<String>> {
-            use std::collections::{HashMap, HashSet, VecDeque};
-
-            fn _backtrack(
-                cur: &str,
-                end: &str,
-                word_list: &HashSet<String>,
-                path: &mut Vec<String>,
-                next_successors: &HashMap<String, Vec<String>>,
-                min_count: usize,
-                res: &mut Vec<Vec<String>>,
-            ) {
-                if cur == end {
-                    res.push(path.clone());
-                    return;
-                }
-                // 不能先判断
-                if path.len() > min_count {
-                    return;
-                }
-                if let Some(successors) = next_successors.get(cur) {
-                    for next in successors {
-                        if !path.contains(next) {
-                            path.push(next.clone());
-                            _backtrack(next, end, word_list, path, next_successors, min_count, res);
-                            path.pop();
-                        }
-                    }
-                }
-            }
-
-            fn _get_next_words(cur: &str, word_list: &HashSet<String>) -> Vec<String> {
-                let mut word = cur.chars().collect::<Vec<_>>();
-                let mut next_words = vec![];
-                for i in 0..word.len() {
-                    let old = word[i];
-                    for letter in 'a'..='z' {
-                        if letter == old {
-                            continue;
-                        }
-                        word[i] = letter;
-                        let next_word = word.iter().collect::<String>();
-                        if word_list.contains(&next_word) {
-                            next_words.push(next_word);
-                        }
-                    }
-                    word[i] = old;
-                }
-                next_words
-            }
-
-            fn _get_word_successors_and_min_count(
-                begin_word: &str,
-                end_word: &str,
-                word_list: &HashSet<String>,
-            ) -> (HashMap<String, Vec<String>>, usize) {
-                let mut successors = HashMap::with_capacity(word_list.len());
-                let mut queue: VecDeque<String> = VecDeque::new();
-                queue.push_back(begin_word.to_owned());
-                let mut min_count = 0;
-                let mut found = false;
-                while !queue.is_empty() {
-                    min_count += 1;
-                    for _ in 0..queue.len() {
-                        let word = queue.pop_front().unwrap();
-                        let next_words = _get_next_words(&word, word_list);
-                        for next_word in &next_words {
-                            if next_word == end_word {
-                                found = true;
-                            }
-                            queue.push_back(next_word.clone());
-                        }
-                        successors.insert(word, next_words);
-                    }
-                    if found {
-                        break;
-                    }
-                }
-                (successors, min_count)
-            }
-
-            let mut res = vec![];
-            if word_list.is_empty() {
-                return res;
-            }
-            let word_list = word_list.into_iter().collect::<HashSet<_>>();
-            dbg!(&word_list);
-            if !word_list.contains(&end_word) {
-                return res;
-            }
-            let (next_successors, min_count) =
-                _get_word_successors_and_min_count(&begin_word, &end_word, &word_list);
-            _backtrack(
-                &begin_word,
-                &end_word,
-                &word_list,
-                // path从begin开始
-                &mut vec![begin_word.clone()],
-                &next_successors,
-                min_count,
-                &mut res,
-            );
-            res
-        }
-    }
-}
-
-pub mod solution_dfs {
-    /// # 思路
+    /// _get_word_successors中的next_visited用于保存
     ///
     /// ### Submissions
     ///
     /// date=20201231, mem=4.3, mem_beats=62, runtime=104, runtime_beats=37.5, url=https://leetcode-cn.com/submissions/detail/135135940/
+    ///
+    /// date=20210103, mem=3.6, mem_beats=92, runtime=108, runtime_beats=57, url=https://leetcode-cn.com/submissions/detail/135720501/
     pub struct Solution;
 
     impl Solution {
@@ -257,22 +68,19 @@ pub mod solution_dfs {
         ) -> Vec<Vec<String>> {
             use std::collections::{HashMap, HashSet, VecDeque};
 
-            fn _backtrack(
+            fn _backtrack<'a>(
                 cur: &str,
                 end: &str,
-                word_list: &HashSet<String>,
-                path: &mut Vec<String>,
-                word_successors: &HashMap<String, Vec<String>>,
+                word_successors: &'a HashMap<String, Vec<String>>,
+                path: &mut Vec<&'a str>,
                 res: &mut Vec<Vec<String>>,
             ) {
                 if cur == end {
-                    res.push(path.clone());
-                    return;
-                }
-                if let Some(successors) = word_successors.get(cur) {
+                    res.push(path.iter().map(|e| e.to_string()).collect());
+                } else if let Some(successors) = word_successors.get(cur) {
                     for next in successors {
-                        path.push(next.clone());
-                        _backtrack(next, end, word_list, path, word_successors, res);
+                        path.push(next);
+                        _backtrack(next, end, word_successors, path, res);
                         path.pop();
                     }
                 }
@@ -297,66 +105,60 @@ pub mod solution_dfs {
                 next_words
             }
 
+            // bfs
             fn _get_word_successors(
-                begin_word: &str,
-                end_word: &str,
+                begin: &str,
+                end: &str,
                 word_list: &HashSet<String>,
             ) -> HashMap<String, Vec<String>> {
-                let mut successors = HashMap::with_capacity(word_list.len());
+                let mut word_successors = HashMap::new();
 
                 let mut visited = HashSet::new();
-                let mut queue: VecDeque<String> = VecDeque::new();
-                queue.push_back(begin_word.to_string());
-                let mut is_found = false;
+                visited.insert(begin.to_string());
+                let mut queue = VecDeque::new();
+                queue.push_back(begin.to_string());
 
+                let mut is_found = false;
                 while !queue.is_empty() {
-                    // 保存已找过的words
-                    queue.iter().for_each(|e| {
-                        visited.insert(e.to_string());
-                    });
+                    let mut next_visited = HashSet::new();
                     for _ in 0..queue.len() {
-                        let word = queue.pop_front().unwrap();
-                        // 剪枝：不重复计算相同的next_words
-                        if !successors.contains_key(&word) {
-                            let mut next_words = _get_next_words(&word, word_list);
-                            next_words.retain(|next| {
-                                // 剪枝：移除所有之前path出现的word后继节点
-                                if !visited.contains(next) {
-                                    if next == end_word {
-                                        is_found = true;
-                                    }
-                                    queue.push_back(next.clone());
-                                    true
-                                } else {
-                                    false
+                        let cur_word = queue.pop_front().unwrap();
+                        for next_word in _get_next_words(&cur_word, word_list) {
+                            if next_word == end {
+                                is_found = true;
+                            }
+                            if !visited.contains(&next_word) {
+                                // 避免下层元素重复加入队列
+                                if next_visited.insert(next_word.clone()) {
+                                    queue.push_back(next_word.clone());
                                 }
-                            });
-                            successors.insert(word, next_words);
+                                word_successors
+                                    .entry(cur_word.clone())
+                                    .or_insert(vec![])
+                                    .push(next_word);
+                            }
                         }
                     }
                     if is_found {
                         break;
                     }
+                    next_visited.into_iter().for_each(|e| {
+                        visited.insert(e);
+                    });
                 }
-                successors
+                word_successors
             }
 
             let mut res = vec![];
-            if word_list.is_empty() {
-                return res;
-            }
             let word_list = word_list.into_iter().collect::<HashSet<_>>();
-            if !word_list.contains(&end_word) {
+            if word_list.is_empty() || !word_list.contains(&end_word) {
                 return res;
             }
-            let word_successors = _get_word_successors(&begin_word, &end_word, &word_list);
             _backtrack(
                 &begin_word,
                 &end_word,
-                &word_list,
-                // path从begin开始
-                &mut vec![begin_word.clone()],
-                &word_successors,
+                &_get_word_successors(&begin_word, &end_word, &word_list),
+                &mut vec![&begin_word],
                 &mut res,
             );
             res
@@ -364,8 +166,12 @@ pub mod solution_dfs {
     }
 }
 
-pub mod solution_bfs_wait {
-    use std::collections::{HashMap, HashSet, VecDeque};
+pub mod solution_dfs_bfs_two_end {
+    /// # 思路
+    ///
+    /// ### Submissions
+    ///
+    /// date=20210103, mem=2.6, mem_beats=100, runtime=16, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/135723941/
     pub struct Solution;
 
     impl Solution {
@@ -374,8 +180,26 @@ pub mod solution_bfs_wait {
             end_word: String,
             word_list: Vec<String>,
         ) -> Vec<Vec<String>> {
-            use std::collections::{HashMap, HashSet, VecDeque};
-
+            use std::collections::{HashMap, HashSet};
+    
+            fn _backtrack<'a>(
+                cur: &str,
+                end: &str,
+                word_successors: &'a HashMap<String, Vec<String>>,
+                path: &mut Vec<&'a str>,
+                res: &mut Vec<Vec<String>>,
+            ) {
+                if cur == end {
+                    res.push(path.iter().map(|e| e.to_string()).collect());
+                } else if let Some(successors) = word_successors.get(cur) {
+                    for next in successors {
+                        path.push(next);
+                        _backtrack(next, end, word_successors, path, res);
+                        path.pop();
+                    }
+                }
+            }
+    
             fn _get_next_words(cur: &str, word_list: &HashSet<String>) -> Vec<String> {
                 let mut word = cur.chars().collect::<Vec<_>>();
                 let mut next_words = vec![];
@@ -394,50 +218,82 @@ pub mod solution_bfs_wait {
                 }
                 next_words
             }
-
-            let word_list = word_list.into_iter().collect::<HashSet<_>>();
-            if !word_list.contains(&end_word) {
-                return vec![];
-            }
-
-            let mut path_queue = VecDeque::new();
-            path_queue.push_back(vec![begin_word]);
-            let mut visited = HashSet::new();
-            let mut is_found = false;
-
-            while !path_queue.is_empty() {
-                path_queue.iter().flatten().for_each(|e| {
-                    if !visited.contains(e) {
-                        visited.insert(e.clone());
+    
+            /// with bfs two end
+            fn _get_word_successors(
+                begin: &str,
+                end: &str,
+                word_list: &HashSet<String>,
+            ) -> HashMap<String, Vec<String>> {
+                let mut word_successors = HashMap::new();
+    
+                let mut visited = HashSet::new();
+                visited.insert(begin.to_string());
+                visited.insert(end.to_string());
+    
+                let (mut begin_visited, mut end_visited) = (HashSet::new(), HashSet::new());
+                begin_visited.insert(begin.to_string());
+                end_visited.insert(end.to_string());
+                let mut is_forward = true;
+                let mut is_found = false;
+    
+                // 将word为key的successors中插入next_word。
+                // 如果is_forward=false则反向插入：successors[next_word].push(word)
+                let mut successors_insert =
+                    |mut word: String, mut next_word: String, is_forward: bool| {
+                        if !is_forward {
+                            std::mem::swap(&mut word, &mut next_word);
+                        }
+                        word_successors.entry(word).or_insert(vec![]).push(next_word);
+                    };
+                // 在保证了 beginVisited 总是较小（可以等于）大小的集合前提下，
+                // && !endVisited.isEmpty() 可以省略
+                while !begin_visited.is_empty() {
+                    // 默认 beginVisited 是小集合
+                    if begin_visited.len() > end_visited.len() {
+                        std::mem::swap(&mut begin_visited, &mut end_visited);
+                        // 每次改变都对应 begin_visited 的方向
+                        is_forward = !is_forward;
                     }
-                });
-                for _ in 0..path_queue.len() {
-                    let mut path = path_queue.pop_front().unwrap();
-                    if let Some(cur_word) = path.last() {
-                        // if visited.contains(cur_word) {
-                        //     continue;
-                        // }
-                        for next in _get_next_words(cur_word, &word_list) {
-                            if !visited.contains(&next) {
-                                if next == end_word {
-                                    is_found = true;
-                                    path.push(next.clone());
-                                    path_queue.push_back(path.clone());
-                                    path.pop();
-                                }
-
-                                path.push(next);
-                                path_queue.push_back(path.clone());
-                                path.pop();
+                    // 临时保存当前层对应的下层words
+                    let mut next_visited = HashSet::new();
+                    for word in begin_visited {
+                        for next_word in _get_next_words(&word, word_list) {
+                            // 在另一侧找到单词以后，还需把这一层关系添加到「后继结点列表」
+                            if end_visited.contains(&next_word) {
+                                is_found = true;
+                                successors_insert(word.clone(), next_word.clone(), is_forward);
+                            }
+                            if !visited.contains(&next_word) {
+                                next_visited.insert(next_word.clone());
+                                successors_insert(word.clone(), next_word.clone(), is_forward);
                             }
                         }
                     }
+                    if is_found {
+                        break;
+                    }
+                    next_visited.iter().for_each(|e| {
+                        visited.insert(e.clone());
+                    });
+                    begin_visited = next_visited;
                 }
-                if is_found {
-                    break;
-                }
+                word_successors
             }
-            path_queue.into_iter().collect()
+    
+            let mut res = vec![];
+            let word_list = word_list.into_iter().collect::<HashSet<_>>();
+            if word_list.is_empty() || !word_list.contains(&end_word) {
+                return res;
+            }
+            _backtrack(
+                &begin_word,
+                &end_word,
+                &_get_word_successors(&begin_word, &end_word, &word_list),
+                &mut vec![&begin_word],
+                &mut res,
+            );
+            res
         }
     }
 }
@@ -449,9 +305,9 @@ mod tests {
 
     #[test]
     fn basic() {
-        test(solution_dfs::Solution::find_ladders);
-        // test(solution_bfs_wait::Solution::find_ladders);
-        // test(solution_dfs_optimized::Solution::find_ladders);
+        test(solution_dfs_bfs::Solution::find_ladders);
+        test(solution_dfs_bfs_two_end::Solution::find_ladders);
+
     }
 
     fn test<F: Fn(String, String, Vec<String>) -> Vec<Vec<String>>>(func: F) {
