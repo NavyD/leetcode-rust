@@ -1,4 +1,6 @@
 //! 与[minimum_genetic_mutation](crate::minimum_genetic_mutation)一样
+//! 
+//! 与[word_ladder_ii]的区别：bfs中的next_visited设计为何在这里没有
 
 #![allow(dead_code)]
 mod solution_dfs {
@@ -126,7 +128,7 @@ pub mod solution_bfs_two_end {
     /// ### Submissions
     ///
     /// date=20201227, mem=2.4, mem_beats=97, runtime=12, runtime_beats=75, url=https://leetcode-cn.com/submissions/detail/134072129/
-    /// 
+    ///
     /// date=20201228, mem=2.5, mem_beats=66, runtime=12, runtime_beats=75, url=https://leetcode-cn.com/submissions/detail/134409400/
     pub struct Solution;
 
@@ -187,10 +189,75 @@ pub mod solution_bfs_two_end {
 mod tests {
     use super::*;
 
+    // bfs
+    pub fn ladder_length(begin_word: String, end_word: String, word_list: Vec<String>) -> i32 {
+        use std::collections::HashSet;
+        const NOT_FOUND: i32 = 0;
+
+        fn _get_next_words(cur: &str, word_list: &HashSet<String>) -> Vec<String> {
+            let mut word = cur.chars().collect::<Vec<_>>();
+            let mut next_words = vec![];
+            for i in 0..word.len() {
+                let old = word[i];
+                for letter in 'a'..='z' {
+                    if letter != old {
+                        word[i] = letter;
+                        let next_word = word.iter().collect::<String>();
+                        if word_list.contains(&next_word) {
+                            next_words.push(next_word);
+                        }
+                    }
+                }
+                word[i] = old;
+            }
+            next_words
+        }
+
+        let word_list = word_list.into_iter().collect::<HashSet<_>>();
+        if word_list.is_empty() || !word_list.contains(&end_word) {
+            return NOT_FOUND;
+        }
+
+        let mut queue = std::collections::VecDeque::new();
+        queue.push_back(begin_word.to_string());
+
+        let mut visited = HashSet::new();
+        visited.insert(begin_word.to_string());
+
+        let mut depth = 1;
+        // todo
+        while !queue.is_empty() {
+            depth += 1;
+            let mut next_visited = HashSet::new();
+            for _ in 0..queue.len() {
+                let mut cur_word = queue.pop_front().unwrap().chars().collect::<Vec<_>>();
+                for i in 0..cur_word.len() {
+                    let old = cur_word[i];
+                    for letter in 'a'..='z' {
+                        if letter != old {
+                            let next_word = cur_word.iter().collect::<String>();
+                            if next_word == end_word {
+                                return depth;
+                            }
+                            // if 
+                        }
+                    }
+                    cur_word[i] = old;
+                }
+            }
+
+            next_visited.into_iter().for_each(|e| {
+                visited.insert(e);
+            });
+        }
+        todo!()
+    }
+
     #[test]
     fn basic() {
         test(solution_bfs::Solution::ladder_length);
         test(solution_bfs_two_end::Solution::ladder_length);
+        test(ladder_length)
     }
 
     fn test<F: Fn(String, String, Vec<String>) -> i32>(func: F) {

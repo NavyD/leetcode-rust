@@ -2,6 +2,24 @@
 //!
 //! 如何剪枝
 
+/// 总结
+/// 
+/// 回溯：
+/// 
+/// 关键在于没有搞清如何传入下层cur的是什么：cur+1还是i+1。
+/// 
+/// ```ignore
+/// 
+/// cur:    [[1,2],[1,3],[1,4],[2,2],[2,3],[2,4],[3,2],[3,3],[3,4],[4,2],[4,3],[4,4]]
+/// i:      [[1,2],[1,3],[1,4],[2,3],[2,4],[3,4]]
+/// ```
+/// 
+/// cur+1会在第一层cur=1时表现正常，当cur=2时会出现重复。第一层是cur=1，i=2，下层就是
+/// cur=2,i=2开始
+/// 
+/// 但如果是用i传入。后面可选的就只有i+1..n，下层不会和上层出现重复
+/// 
+/// 剪枝：当还要的元素数量k - path.len() > 剩下的数量 n - cur时提前退出
 pub mod solution_dfs {
     /// # 思路
     ///
@@ -82,6 +100,8 @@ pub mod solution_dfs {
     /// date=20201028, mem=2.7, mem_beats=98.43, runtime=8, runtime_beats=99, url=https://leetcode-cn.com/submissions/detail/119148220/
     /// 
     /// date=20201222, mem=2.8, mem_beats=72, runtime=8, runtime_beats=99, url=https://leetcode-cn.com/submissions/detail/133001533/
+    /// 
+    /// date=20201222, mem=2.9, mem_beats=28, runtime=8, runtime_beats=97, url=https://leetcode-cn.com/submissions/detail/135964556/
     pub struct Solution;
 
     impl Solution {

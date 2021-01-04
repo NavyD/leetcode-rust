@@ -58,6 +58,8 @@ pub mod solution_dfs_bfs {
     /// date=20201231, mem=4.3, mem_beats=62, runtime=104, runtime_beats=37.5, url=https://leetcode-cn.com/submissions/detail/135135940/
     ///
     /// date=20210103, mem=3.6, mem_beats=92, runtime=108, runtime_beats=57, url=https://leetcode-cn.com/submissions/detail/135720501/
+    ///
+    /// date=20210104, mem=3.6, mem_beats=92, runtime=112, runtime_beats=50, url=https://leetcode-cn.com/submissions/detail/135893824/
     pub struct Solution;
 
     impl Solution {
@@ -172,6 +174,8 @@ pub mod solution_dfs_bfs_two_end {
     /// ### Submissions
     ///
     /// date=20210103, mem=2.6, mem_beats=100, runtime=16, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/135723941/
+    /// 
+    /// date=20210104, mem=2.6, mem_beats=100, runtime=28, runtime_beats=85, url=https://leetcode-cn.com/submissions/detail/135902953/
     pub struct Solution;
 
     impl Solution {
@@ -181,7 +185,7 @@ pub mod solution_dfs_bfs_two_end {
             word_list: Vec<String>,
         ) -> Vec<Vec<String>> {
             use std::collections::{HashMap, HashSet};
-    
+
             fn _backtrack<'a>(
                 cur: &str,
                 end: &str,
@@ -199,7 +203,7 @@ pub mod solution_dfs_bfs_two_end {
                     }
                 }
             }
-    
+
             fn _get_next_words(cur: &str, word_list: &HashSet<String>) -> Vec<String> {
                 let mut word = cur.chars().collect::<Vec<_>>();
                 let mut next_words = vec![];
@@ -218,7 +222,7 @@ pub mod solution_dfs_bfs_two_end {
                 }
                 next_words
             }
-    
+
             /// with bfs two end
             fn _get_word_successors(
                 begin: &str,
@@ -226,17 +230,17 @@ pub mod solution_dfs_bfs_two_end {
                 word_list: &HashSet<String>,
             ) -> HashMap<String, Vec<String>> {
                 let mut word_successors = HashMap::new();
-    
+
                 let mut visited = HashSet::new();
                 visited.insert(begin.to_string());
                 visited.insert(end.to_string());
-    
+
                 let (mut begin_visited, mut end_visited) = (HashSet::new(), HashSet::new());
                 begin_visited.insert(begin.to_string());
                 end_visited.insert(end.to_string());
                 let mut is_forward = true;
                 let mut is_found = false;
-    
+
                 // 将word为key的successors中插入next_word。
                 // 如果is_forward=false则反向插入：successors[next_word].push(word)
                 let mut successors_insert =
@@ -244,7 +248,10 @@ pub mod solution_dfs_bfs_two_end {
                         if !is_forward {
                             std::mem::swap(&mut word, &mut next_word);
                         }
-                        word_successors.entry(word).or_insert(vec![]).push(next_word);
+                        word_successors
+                            .entry(word)
+                            .or_insert(vec![])
+                            .push(next_word);
                     };
                 // 在保证了 beginVisited 总是较小（可以等于）大小的集合前提下，
                 // && !endVisited.isEmpty() 可以省略
@@ -260,9 +267,12 @@ pub mod solution_dfs_bfs_two_end {
                     for word in begin_visited {
                         for next_word in _get_next_words(&word, word_list) {
                             // 在另一侧找到单词以后，还需把这一层关系添加到「后继结点列表」
+                            // 当找到时必定存在`visited.contains(&next_word) = true`。end与begin
+                            // visited相交表示visited之前已经相遇过
                             if end_visited.contains(&next_word) {
                                 is_found = true;
                                 successors_insert(word.clone(), next_word.clone(), is_forward);
+                                dbg!(visited.contains(&next_word));
                             }
                             if !visited.contains(&next_word) {
                                 next_visited.insert(next_word.clone());
@@ -280,7 +290,7 @@ pub mod solution_dfs_bfs_two_end {
                 }
                 word_successors
             }
-    
+
             let mut res = vec![];
             let word_list = word_list.into_iter().collect::<HashSet<_>>();
             if word_list.is_empty() || !word_list.contains(&end_word) {
@@ -307,7 +317,6 @@ mod tests {
     fn basic() {
         test(solution_dfs_bfs::Solution::find_ladders);
         test(solution_dfs_bfs_two_end::Solution::find_ladders);
-
     }
 
     fn test<F: Fn(String, String, Vec<String>) -> Vec<Vec<String>>>(func: F) {
@@ -335,6 +344,82 @@ mod tests {
         .iter()
         .map(|a| a.iter().map(|e| e.to_string()).collect())
         .collect();
+        assert_eq!(res.len(), expected.len());
+        assert!(is_contains_vec2(&res, &expected));
+
+        let res = func(
+            "qa".to_string(),
+            "sq".to_string(),
+            [
+                "si", "go", "se", "cm", "so", "ph", "mt", "db", "mb", "sb", "kr", "ln", "tm", "le",
+                "av", "sm", "ar", "ci", "ca", "br", "ti", "ba", "to", "ra", "fa", "yo", "ow", "sn",
+                "ya", "cr", "po", "fe", "ho", "ma", "re", "or", "rn", "au", "ur", "rh", "sr", "tc",
+                "lt", "lo", "as", "fr", "nb", "yb", "if", "pb", "ge", "th", "pm", "rb", "sh", "co",
+                "ga", "li", "ha", "hz", "no", "bi", "di", "hi", "qa", "pi", "os", "uh", "wm", "an",
+                "me", "mo", "na", "la", "st", "er", "sc", "ne", "mn", "mi", "am", "ex", "pt", "io",
+                "be", "fm", "ta", "tb", "ni", "mr", "pa", "he", "lr", "sq", "ye",
+            ]
+            .iter()
+            .map(|e| e.to_string())
+            .collect(),
+        );
+        let expected: Vec<Vec<String>> = [
+            ["qa", "ba", "be", "se", "sq"],
+            ["qa", "ba", "bi", "si", "sq"],
+            ["qa", "ba", "br", "sr", "sq"],
+            ["qa", "ca", "cm", "sm", "sq"],
+            ["qa", "ca", "co", "so", "sq"],
+            ["qa", "la", "ln", "sn", "sq"],
+            ["qa", "la", "lt", "st", "sq"],
+            ["qa", "ma", "mb", "sb", "sq"],
+            ["qa", "pa", "ph", "sh", "sq"],
+            ["qa", "ta", "tc", "sc", "sq"],
+            ["qa", "fa", "fe", "se", "sq"],
+            ["qa", "ga", "ge", "se", "sq"],
+            ["qa", "ha", "he", "se", "sq"],
+            ["qa", "la", "le", "se", "sq"],
+            ["qa", "ma", "me", "se", "sq"],
+            ["qa", "na", "ne", "se", "sq"],
+            ["qa", "ra", "re", "se", "sq"],
+            ["qa", "ya", "ye", "se", "sq"],
+            ["qa", "ca", "ci", "si", "sq"],
+            ["qa", "ha", "hi", "si", "sq"],
+            ["qa", "la", "li", "si", "sq"],
+            ["qa", "ma", "mi", "si", "sq"],
+            ["qa", "na", "ni", "si", "sq"],
+            ["qa", "pa", "pi", "si", "sq"],
+            ["qa", "ta", "ti", "si", "sq"],
+            ["qa", "ca", "cr", "sr", "sq"],
+            ["qa", "fa", "fr", "sr", "sq"],
+            ["qa", "la", "lr", "sr", "sq"],
+            ["qa", "ma", "mr", "sr", "sq"],
+            ["qa", "fa", "fm", "sm", "sq"],
+            ["qa", "pa", "pm", "sm", "sq"],
+            ["qa", "ta", "tm", "sm", "sq"],
+            ["qa", "ga", "go", "so", "sq"],
+            ["qa", "ha", "ho", "so", "sq"],
+            ["qa", "la", "lo", "so", "sq"],
+            ["qa", "ma", "mo", "so", "sq"],
+            ["qa", "na", "no", "so", "sq"],
+            ["qa", "pa", "po", "so", "sq"],
+            ["qa", "ta", "to", "so", "sq"],
+            ["qa", "ya", "yo", "so", "sq"],
+            ["qa", "ma", "mn", "sn", "sq"],
+            ["qa", "ra", "rn", "sn", "sq"],
+            ["qa", "ma", "mt", "st", "sq"],
+            ["qa", "pa", "pt", "st", "sq"],
+            ["qa", "na", "nb", "sb", "sq"],
+            ["qa", "pa", "pb", "sb", "sq"],
+            ["qa", "ra", "rb", "sb", "sq"],
+            ["qa", "ta", "tb", "sb", "sq"],
+            ["qa", "ya", "yb", "sb", "sq"],
+            ["qa", "ra", "rh", "sh", "sq"],
+            ["qa", "ta", "th", "sh", "sq"],
+        ]
+        .iter()
+        .map(|a| a.iter().map(|e| e.to_string()).collect())
+        .collect();
+
         assert_eq!(res.len(), expected.len());
         assert!(is_contains_vec2(&res, &expected));
     }
