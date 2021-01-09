@@ -1,8 +1,178 @@
 //! 与[minimum_genetic_mutation](crate::minimum_genetic_mutation)一样
-//! 
+//!
 //! 与[word_ladder_ii]的区别：bfs中的next_visited设计为何在这里没有
 
-#![allow(dead_code)]
+pub mod solution_bfs {
+    /// # 思路
+    ///
+    /// 注意：count=1开始是题目要求
+    ///
+    /// 由于word可以改变一个字母，在无向图中可以改变成之前出现的单词：hit -> hot, hot -> hit，也可以在同层
+    /// 的word相互转换，相当于树中多叉节点，但不能跨节点转换（每次转换只能改变一个字母）
+    ///
+    /// ## 如何避免重复
+    ///
+    /// 使用visited避免重复visited.insert(next_word)必须在queue.push_back时添加，不能在queue.pop_front时才insert，
+    /// 因为没有这个visited.contains包含，当前层的之前可能出现一样的word被重复添加到queue中导致超时
+    ///
+    /// 还有一种使用word_list作为unvisited替代visited in-place remove的方式操作，与insert相反，但是
+    /// 这个visited是更通用的方式
+    ///
+    /// ### Submissions
+    ///
+    /// date=20201227, mem=2.4, mem_beats=96, runtime=88, runtime_beats=21, url=https://leetcode-cn.com/submissions/detail/134057724/
+    ///
+    /// date=20201228, mem=2.4, mem_beats=93, runtime=88, runtime_beats=21, url=https://leetcode-cn.com/submissions/detail/134406528/
+    ///
+    /// date=20210109, mem=2.9, mem_beats=26, runtime=104, runtime_beats=19, url=https://leetcode-cn.com/submissions/detail/137131008/
+    pub struct Solution;
+
+    impl Solution {
+        pub fn ladder_length(begin_word: String, end_word: String, word_list: Vec<String>) -> i32 {
+            use std::collections::{HashSet, VecDeque};
+            const NOT_FOUND: i32 = 0;
+
+            let word_list = word_list.into_iter().collect::<HashSet<_>>();
+            if word_list.is_empty() || !word_list.contains(&end_word) {
+                return NOT_FOUND;
+            }
+            // 要求从1开始
+            let mut count = 1;
+            let (mut queue, mut visited) = (VecDeque::new(), HashSet::new());
+            // 从begin_word开始
+            queue.push_back(begin_word.clone());
+            // 避免再次从begin_word计算next_words
+            visited.insert(begin_word);
+
+            while !queue.is_empty() {
+                count += 1;
+                for _ in 0..queue.len() {
+                    let mut cur_word = queue
+                        .pop_front()
+                        .map(|w| w.chars().collect::<Vec<_>>())
+                        .unwrap();
+                    for i in 0..cur_word.len() {
+                        let old = cur_word[i];
+                        for letter in 'a'..='z' {
+                            cur_word[i] = letter;
+                            let next_word = cur_word.iter().collect::<String>();
+                            if word_list.contains(&next_word) {
+                                // 找到结果
+                                if next_word == end_word {
+                                    return count;
+                                }
+                                // 如果visited没有包含next_word时insert并添加到queue
+                                if visited.insert(next_word.clone()) {
+                                    queue.push_back(next_word);
+                                }
+                            }
+                        }
+                        cur_word[i] = old;
+                    }
+                }
+            }
+            NOT_FOUND
+        }
+    }
+}
+
+pub mod solution_bfs_two_end {
+    /// # 思路
+    ///
+    /// 双向广度优先遍历
+    ///
+    /// - 已知目标顶点的情况下，可以分别从起点和目标顶点（终点）执行广度优先遍历，直到遍历的部分有交集。这种方式搜索的单词数量会更小一些；
+    /// - 更合理的做法是，每次从单词数量小的集合开始扩散；
+    /// - 这里 beginVisited 和 endVisited 交替使用，等价于单向 BFS 里使用队列，每次扩散都要加到总的 visited 里。
+    ///
+    /// 注意：
+    ///
+    /// 这是的begin,end visited表示前后当前层的words,而global_visited表示在bfs中同样的含义，即防止重复到下层。
+    ///
+    /// begin,end visited使用hashset是为了在end.contains加速，使用vec也可以正常工作可以通过[leetcode测试](https://leetcode-cn.com/submissions/detail/137144826/)
+    ///
+    /// haset.contains与insert逻辑可简写：
+    ///
+    /// ```ignore
+    /// if global_visited.insert(&next_word) {
+    ///     next_level_visited.insert(next_word.clone());
+    /// }
+    /// // 替换
+    /// // if !global_visited.contains(&next_word) {
+    /// //     next_level_visited.insert(next_word.clone());
+    /// //     global_visited.insert(next_word);
+    /// // }
+    /// ```
+    ///
+    /// 参考：
+    ///
+    /// - [广度优先遍历、双向广度优先遍历（Java）](https://leetcode-cn.com/problems/word-ladder/solution/yan-du-you-xian-bian-li-shuang-xiang-yan-du-you-2/)
+    /// - [4 ms](https://leetcode-cn.com/submissions/api/detail/127/rust/4/)
+    ///
+    /// ### Submissions
+    ///
+    /// date=20201227, mem=2.4, mem_beats=97, runtime=12, runtime_beats=75, url=https://leetcode-cn.com/submissions/detail/134072129/
+    ///
+    /// date=20201228, mem=2.5, mem_beats=66, runtime=12, runtime_beats=75, url=https://leetcode-cn.com/submissions/detail/134409400/
+    ///
+    /// date=20210109, mem=2.5, mem_beats=69, runtime=12, runtime_beats=71, url=https://leetcode-cn.com/submissions/detail/137149168/
+    pub struct Solution;
+
+    impl Solution {
+        pub fn ladder_length(begin_word: String, end_word: String, word_list: Vec<String>) -> i32 {
+            use std::collections::HashSet;
+            const NOT_FOUND: i32 = 0;
+
+            let word_list = word_list.into_iter().collect::<HashSet<_>>();
+            if word_list.is_empty() || !word_list.contains(&end_word) {
+                return NOT_FOUND;
+            }
+
+            let (mut begin_level_visited, mut end_level_visited) = (HashSet::new(), HashSet::new());
+            let mut global_visited = HashSet::new();
+            // 左边和右边扩散
+            begin_level_visited.insert(begin_word.clone());
+            end_level_visited.insert(end_word.clone());
+            // 避免重复一次 不加也没事，重复的会被global_visited过滤 不会添加到next_level
+            global_visited.insert(begin_word);
+            global_visited.insert(end_word);
+            // 计数从1开始
+            let mut count = 1;
+
+            while !begin_level_visited.is_empty() {
+                count += 1;
+                if begin_level_visited.len() > end_level_visited.len() {
+                    std::mem::swap(&mut begin_level_visited, &mut end_level_visited);
+                }
+                let mut next_level_visited = HashSet::new();
+                for cur_word in begin_level_visited {
+                    let mut cur_word = cur_word.chars().collect::<Vec<_>>();
+                    for i in 0..cur_word.len() {
+                        let old = cur_word[i];
+                        for letter in 'a'..='z' {
+                            cur_word[i] = letter;
+                            let next_word = cur_word.iter().collect::<String>();
+                            if word_list.contains(&next_word) {
+                                if end_level_visited.contains(&next_word) {
+                                    return count;
+                                }
+                                // global_visited不存在时添加 next_word
+                                if global_visited.insert(next_word.clone()) {
+                                    next_level_visited.insert(next_word);
+                                }
+                            }
+                        }
+                        cur_word[i] = old;
+                    }
+                }
+                begin_level_visited = next_level_visited;
+            }
+            NOT_FOUND
+        }
+    }
+}
+
+#[allow(dead_code)]
 mod solution_dfs {
     /// # 思路
     ///
@@ -60,204 +230,15 @@ mod solution_dfs {
     }
 }
 
-pub mod solution_bfs {
-    /// # 思路
-    ///
-    /// 注意：count=1开始是题目要求
-    ///
-    /// ### Submissions
-    ///
-    /// date=20201227, mem=2.4, mem_beats=96, runtime=88, runtime_beats=21, url=https://leetcode-cn.com/submissions/detail/134057724/
-    ///
-    /// date=20201228, mem=2.4, mem_beats=93, runtime=88, runtime_beats=21, url=https://leetcode-cn.com/submissions/detail/134406528/
-    pub struct Solution;
-
-    impl Solution {
-        pub fn ladder_length(begin_word: String, end_word: String, word_list: Vec<String>) -> i32 {
-            use std::collections::HashSet;
-            const NOT_FOUND: i32 = 0;
-            if word_list.is_empty() {
-                return NOT_FOUND;
-            }
-            let mut unvisited = word_list.into_iter().collect::<HashSet<_>>();
-            if !unvisited.contains(&end_word) {
-                return NOT_FOUND;
-            }
-            unvisited.remove(&begin_word);
-            let mut queue = std::collections::VecDeque::new();
-            queue.push_back(begin_word);
-            let mut count = 1;
-            while !queue.is_empty() {
-                count += 1;
-                for _ in 0..queue.len() {
-                    let mut word = queue.pop_front().unwrap().chars().collect::<Vec<_>>();
-                    for i in 0..word.len() {
-                        let old = word[i];
-                        for letter in 'a'..='z' {
-                            word[i] = letter;
-                            let new_word = word.iter().collect::<String>();
-                            if new_word == end_word {
-                                return count;
-                            } else if unvisited.remove(&new_word) {
-                                queue.push_back(new_word);
-                            }
-                        }
-                        word[i] = old;
-                    }
-                }
-            }
-            NOT_FOUND
-        }
-    }
-}
-
-pub mod solution_bfs_two_end {
-    /// # 思路
-    ///
-    /// 双向广度优先遍历
-    ///
-    /// - 已知目标顶点的情况下，可以分别从起点和目标顶点（终点）执行广度优先遍历，直到遍历的部分有交集。这种方式搜索的单词数量会更小一些；
-    /// - 更合理的做法是，每次从单词数量小的集合开始扩散；
-    /// - 这里 beginVisited 和 endVisited 交替使用，等价于单向 BFS 里使用队列，每次扩散都要加到总的 visited 里。
-    ///
-    /// 参考：
-    ///
-    /// - [广度优先遍历、双向广度优先遍历（Java）](https://leetcode-cn.com/problems/word-ladder/solution/yan-du-you-xian-bian-li-shuang-xiang-yan-du-you-2/)
-    /// - [4 ms](https://leetcode-cn.com/submissions/api/detail/127/rust/4/)
-    ///
-    /// ### Submissions
-    ///
-    /// date=20201227, mem=2.4, mem_beats=97, runtime=12, runtime_beats=75, url=https://leetcode-cn.com/submissions/detail/134072129/
-    ///
-    /// date=20201228, mem=2.5, mem_beats=66, runtime=12, runtime_beats=75, url=https://leetcode-cn.com/submissions/detail/134409400/
-    pub struct Solution;
-
-    impl Solution {
-        pub fn ladder_length(begin_word: String, end_word: String, word_list: Vec<String>) -> i32 {
-            use std::collections::HashSet;
-            const NOT_FOUND: i32 = 0;
-            if word_list.is_empty() {
-                return NOT_FOUND;
-            }
-            let mut unvisited = word_list.into_iter().collect::<HashSet<_>>();
-            if !unvisited.contains(&end_word) {
-                return NOT_FOUND;
-            }
-            unvisited.remove(&begin_word);
-            let (mut begin_visited, mut end_visited) = (HashSet::new(), HashSet::new());
-            begin_visited.insert(begin_word);
-            end_visited.insert(end_word);
-            let mut count = 1;
-            while !begin_visited.is_empty() {
-                count += 1;
-                let mut next_begin_visited = HashSet::new();
-                // 从前遍历当前第count层
-                for word in begin_visited {
-                    let mut word = word.chars().collect::<Vec<_>>();
-                    // 修改word每个字符
-                    for i in 0..word.len() {
-                        let old = word[i];
-                        for letter in 'a'..='z' {
-                            word[i] = letter;
-                            let new_word = word.iter().collect::<String>();
-                            // 与后遍历相交时返回
-                            if end_visited.contains(&new_word) {
-                                return count;
-                            }
-                            // 添加到下层
-                            else if unvisited.remove(&new_word) {
-                                next_begin_visited.insert(new_word);
-                            }
-                        }
-                        word[i] = old;
-                    }
-                }
-                // 使用len小的遍历
-                if next_begin_visited.len() < end_visited.len() {
-                    begin_visited = next_begin_visited;
-                } else {
-                    begin_visited = end_visited;
-                    end_visited = next_begin_visited;
-                }
-            }
-            NOT_FOUND
-        }
-    }
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
 
-    // bfs
-    pub fn ladder_length(begin_word: String, end_word: String, word_list: Vec<String>) -> i32 {
-        use std::collections::HashSet;
-        const NOT_FOUND: i32 = 0;
-
-        fn _get_next_words(cur: &str, word_list: &HashSet<String>) -> Vec<String> {
-            let mut word = cur.chars().collect::<Vec<_>>();
-            let mut next_words = vec![];
-            for i in 0..word.len() {
-                let old = word[i];
-                for letter in 'a'..='z' {
-                    if letter != old {
-                        word[i] = letter;
-                        let next_word = word.iter().collect::<String>();
-                        if word_list.contains(&next_word) {
-                            next_words.push(next_word);
-                        }
-                    }
-                }
-                word[i] = old;
-            }
-            next_words
-        }
-
-        let word_list = word_list.into_iter().collect::<HashSet<_>>();
-        if word_list.is_empty() || !word_list.contains(&end_word) {
-            return NOT_FOUND;
-        }
-
-        let mut queue = std::collections::VecDeque::new();
-        queue.push_back(begin_word.to_string());
-
-        let mut visited = HashSet::new();
-        visited.insert(begin_word.to_string());
-
-        let mut depth = 1;
-        // todo
-        while !queue.is_empty() {
-            depth += 1;
-            let mut next_visited = HashSet::new();
-            for _ in 0..queue.len() {
-                let mut cur_word = queue.pop_front().unwrap().chars().collect::<Vec<_>>();
-                for i in 0..cur_word.len() {
-                    let old = cur_word[i];
-                    for letter in 'a'..='z' {
-                        if letter != old {
-                            let next_word = cur_word.iter().collect::<String>();
-                            if next_word == end_word {
-                                return depth;
-                            }
-                            // if 
-                        }
-                    }
-                    cur_word[i] = old;
-                }
-            }
-
-            next_visited.into_iter().for_each(|e| {
-                visited.insert(e);
-            });
-        }
-        todo!()
-    }
-
     #[test]
     fn basic() {
-        test(solution_bfs::Solution::ladder_length);
+        // test(solution_bfs::Solution::ladder_length);
         test(solution_bfs_two_end::Solution::ladder_length);
-        test(ladder_length)
+        test(solution_bfs::Solution::ladder_length);
     }
 
     fn test<F: Fn(String, String, Vec<String>) -> i32>(func: F) {
