@@ -43,6 +43,10 @@ pub mod solution_dfs_bfs {
     ///     <-> ait  <->
     /// ```
     ///
+    /// visited标记已访问的节点，表示next节点是否能与cur路径成立，visited要
+    /// 禁止上层next->cur与同层间的路径：上层用visited包含当前层访问节点，同层用
+    /// next_level_visited包含
+    ///
     /// 另外，word_ladder中visited也是可以在for外再添加next_word，只是存在重复的到queue中了，但
     /// 这里`!visited.contains && !next_visited.contains`时插入queue也可以避免重复
     ///
@@ -71,7 +75,9 @@ pub mod solution_dfs_bfs {
     ///
     /// date=20210104, mem=3.6, mem_beats=92, runtime=112, runtime_beats=50, url=https://leetcode-cn.com/submissions/detail/135893824/
     ///
-    /// date=20210104, mem=3.8, mem_beats=65, runtime=108, runtime_beats=50, url=https://leetcode-cn.com/submissions/detail/137174798/
+    /// date=20210109, mem=3.8, mem_beats=65, runtime=108, runtime_beats=50, url=https://leetcode-cn.com/submissions/detail/137174798/
+    ///
+    /// date=20210109, mem=3.5, mem_beats=75, runtime=116, runtime_beats=35, url=https://leetcode-cn.com/submissions/detail/137386457/
     pub struct Solution;
 
     impl Solution {
@@ -170,14 +176,13 @@ pub mod solution_dfs_bfs {
 
             let mut res = vec![];
             let word_list = word_list.into_iter().collect::<HashSet<_>>();
-            if word_list.is_empty() || !word_list.contains(&end_word) {
+            if !word_list.contains(&end_word) {
                 return res;
             }
-            let word_successors = _get_word_successors(&begin_word, &end_word, &word_list);
             _backtrack(
                 &begin_word,
                 &end_word,
-                &word_successors,
+                &_get_word_successors(&begin_word, &end_word, &word_list),
                 &mut vec![&begin_word],
                 &mut res,
             );
@@ -191,20 +196,83 @@ pub mod solution_dfs_bfs_two_end {
     ///
     /// 注意：
     ///
-    /// 在双向交替添加word到word_successors中时，如果是从后面找的next_words
-    /// cur_word=kot, next_words: [hot, kit]这时不能以前面的方向放入successors中
+    /// 对于有些解法中存在的不同，下面的java代码需要两次addToSuccessors。这是由于
+    /// 其中的visited添加了还未访问的下层结点，在转向时导致next_word已经被放到visited中，
+    /// 需要在单独调用。这个解法只要将`visited.addAll(nextLevelVisited)`移动就是
+    /// rust解法了
+    ///
+    /// ```java
+    /// if (wordSet.contains(nextWord)) {
+    /// if (endVisited.contains(nextWord)) {
+    /// found = true;
+    /// // 在另一侧找到单词以后，还需把这一层关系添加到「后继结点列表」
+    /// addToSuccessors(successors, forward, currentWord, nextWord);
+    /// }
+    ///
+    /// if (!visited.contains(nextWord)) {
+    /// nextLevelVisited.add(nextWord);
+    /// addToSuccessors(successors, forward, currentWord, nextWord);
+    /// }
+    /// }
+    /// //。
+    ///
+    /// visited.addAll(nextLevelVisited);
+    /// ```
+    ///
+    /// 让visited表示所有已找过next_word的节点列表，不包含未找的结点，如果因为`begin_visited.len() > end_visited.len()`
+    /// 出现反向遍历，会使上次的next_words节点没有被遍历到visited。在换向后一旦出现`next_word==end_word`
+    /// ，`visited.contains(&next_word)==false`是成立的，next_word没有被之前的访问，不需要提前访问
     ///
     /// ```ignore
-    ///     <-> hot <->
-    /// hit             kot
-    ///     <-> kit <->
+    /// begin 0:    1:
+    ///                 dot
+    ///                 lot
+    /// hit ->  hot ->
+    ///
+    /// end 2:      3:
+    /// cog ->  dog ->
+    ///                 cog-x
+    ///                 log-x
+    ///                 dot
+    ///
+    ///         log ->
+    ///                 cog-x
+    ///                 dog-x
+    ///                 lot
     /// ```
+    ///
+    /// 下面两段是相同的结果，只需要一个contains更加清楚
+    ///
+    /// ```rust,ignore
+    /// // 提前加入层当前节点
+    /// begin_visited.iter().for_each(|e| {
+    ///     visited.insert(e.clone());
+    /// });
+    /// //
+    /// if !visited.contains(&next) {
+    ///
+    /// // 简写
+    /// // for cur in &begin_visited {
+    /// //     visited.insert(cur.clone());
+    /// //         for next in _get_next_words(&cur, word_list) {
+    /// //             if !visited.contains(&next) && !begin_visited.contains(&next) {
+    /// ```
+    ///
+    /// 双向之所以能快于单向，不是因为双向快多少，而是相比于单向，减少了许多不必要的路径
+    ///
+    /// 参考：
+    ///
+    /// - [单双向广度优先遍历 + 回溯算法（Java、Python）](https://leetcode-cn.com/problems/word-ladder-ii/solution/yan-du-you-xian-bian-li-shuang-xiang-yan-du-you--2/)
+    /// - [My concise JAVA solution based on BFS and DFS](https://leetcode.com/problems/word-ladder-ii/discuss/40475/My-concise-JAVA-solution-based-on-BFS-and-DFS/222218)
+    /// - [复杂度相关](https://leetcode-cn.com/problems/word-ladder-ii/solution/yan-du-you-xian-bian-li-shuang-xiang-yan-du-you--2/443681)
     ///
     /// ### Submissions
     ///
     /// date=20210103, mem=2.6, mem_beats=100, runtime=16, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/135723941/
     ///
     /// date=20210104, mem=2.6, mem_beats=100, runtime=28, runtime_beats=85, url=https://leetcode-cn.com/submissions/detail/135902953/
+    ///
+    /// date=20210110, mem=2.8, mem_beats=90, runtime=16, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/137374741/
     pub struct Solution;
 
     impl Solution {
@@ -251,7 +319,7 @@ pub mod solution_dfs_bfs_two_end {
                 }
                 next_words
             }
-            /// with bfs two end
+
             fn _get_word_successors(
                 begin: &str,
                 end: &str,
@@ -259,19 +327,19 @@ pub mod solution_dfs_bfs_two_end {
             ) -> HashMap<String, Vec<String>> {
                 let mut word_successors = HashMap::new();
 
-                let mut visited = HashSet::new();
-                // visited.insert(begin.to_string());
-                // visited.insert(end.to_string());
-
+                // 保存双向要访问的下层节点
                 let (mut begin_visited, mut end_visited) = (HashSet::new(), HashSet::new());
                 begin_visited.insert(begin.to_string());
                 end_visited.insert(end.to_string());
+                // 保存当前方向 用于保留路径顺序
                 let mut is_forward = true;
+
+                // 保存当前访问过的所有节点：当前层与上层
+                let mut visited = HashSet::new();
                 let mut is_found = false;
 
-
                 // 在保证了 beginVisited 总是较小（可以等于）大小的集合前提下，
-                // && !endVisited.isEmpty() 可以省略
+                // `&& !endVisited.isEmpty()` 可以省略
                 while !begin_visited.is_empty() && !is_found {
                     // 默认 beginVisited 是小集合
                     if begin_visited.len() > end_visited.len() {
@@ -279,25 +347,28 @@ pub mod solution_dfs_bfs_two_end {
                         // 每次改变都对应 begin_visited 的方向
                         is_forward = !is_forward;
                     }
-                    // 临时保存当前层对应的下层words
+                    // 提前保存当前层节点words
+                    begin_visited.iter().for_each(|e| {
+                        visited.insert(e.clone());
+                    });
+
+                    // 下层的words
                     let mut next_visited = HashSet::new();
                     for cur in begin_visited {
-                        visited.insert(cur.clone());
                         for next in _get_next_words(&cur, word_list) {
-                            if !visited.contains(&next) && !begin.contains(&next) {
+                            // 禁止next指向上层与当前层
+                            if !visited.contains(&next) {
                                 if end_visited.contains(&next) {
                                     is_found = true;
                                 }
-
                                 next_visited.insert(next.clone());
+                                // 保证在反向时节点的路径顺序正确
                                 let (cur, next) = if is_forward {
                                     (cur.clone(), next)
                                 } else {
                                     (next, cur.clone())
                                 };
-                                word_successors.entry(cur)
-                                    .or_insert(vec![])
-                                    .push(next);
+                                word_successors.entry(cur).or_insert(vec![]).push(next);
                             }
                         }
                     }
@@ -306,84 +377,15 @@ pub mod solution_dfs_bfs_two_end {
                 word_successors
             }
 
-
-            // /// with bfs two end
-            // fn _get_word_successors(
-            //     begin: &str,
-            //     end: &str,
-            //     word_list: &HashSet<String>,
-            // ) -> HashMap<String, Vec<String>> {
-            //     let mut word_successors = HashMap::new();
-            //
-            //     let mut visited = HashSet::new();
-            //     visited.insert(begin.to_string());
-            //     visited.insert(end.to_string());
-            //
-            //     let (mut begin_visited, mut end_visited) = (HashSet::new(), HashSet::new());
-            //     begin_visited.insert(begin.to_string());
-            //     end_visited.insert(end.to_string());
-            //     let mut is_forward = true;
-            //     let mut is_found = false;
-            //
-            //     // 将word为key的successors中插入next_word。
-            //     // 如果is_forward=false则反向插入：successors[next_word].push(word)
-            //     let mut successors_insert =
-            //         |mut word: String, mut next_word: String, is_forward: bool| {
-            //             if !is_forward {
-            //                 std::mem::swap(&mut word, &mut next_word);
-            //             }
-            //             word_successors
-            //                 .entry(word)
-            //                 .or_insert(vec![])
-            //                 .push(next_word);
-            //         };
-            //     // 在保证了 beginVisited 总是较小（可以等于）大小的集合前提下，
-            //     // && !endVisited.isEmpty() 可以省略
-            //     while !begin_visited.is_empty() {
-            //         // 默认 beginVisited 是小集合
-            //         if begin_visited.len() > end_visited.len() {
-            //             std::mem::swap(&mut begin_visited, &mut end_visited);
-            //             // 每次改变都对应 begin_visited 的方向
-            //             is_forward = !is_forward;
-            //         }
-            //         // 临时保存当前层对应的下层words
-            //         let mut next_visited = HashSet::new();
-            //         for word in begin_visited {
-            //             for next_word in _get_next_words(&word, word_list) {
-            //                 // 在另一侧找到单词以后，还需把这一层关系添加到「后继结点列表」
-            //                 if end_visited.contains(&next_word) {
-            //                     is_found = true;
-            //                     // 当找到时必定存在`visited.contains(&next_word) = true`。end与begin
-            //                     // visited相交表示visited之前已经相遇过
-            //                     successors_insert(word.clone(), next_word.clone(), is_forward);
-            //                 }
-            //
-            //                 if !visited.contains(&next_word) {
-            //                     next_visited.insert(next_word.clone());
-            //                     successors_insert(word.clone(), next_word.clone(), is_forward);
-            //                 }
-            //             }
-            //         }
-            //         if is_found {
-            //             break;
-            //         }
-            //         next_visited.iter().for_each(|e| {
-            //             visited.insert(e.clone());
-            //         });
-            //         begin_visited = next_visited;
-            //     }
-            //     word_successors
-            // }
-
             let mut res = vec![];
             let word_list = word_list.into_iter().collect::<HashSet<_>>();
-            if word_list.is_empty() || !word_list.contains(&end_word) {
+            if !word_list.contains(&end_word) {
                 return res;
             }
             _backtrack(
                 &begin_word,
                 &end_word,
-                dbg!(&_get_word_successors(&begin_word, &end_word, &word_list)),
+                &_get_word_successors(&begin_word, &end_word, &word_list),
                 &mut vec![&begin_word],
                 &mut res,
             );
@@ -414,6 +416,8 @@ pub mod solution_bfs_simple {
     /// ### submissions
     ///
     /// date=20210109, mem=7.7, mem_beats=5, runtime=492, runtime_beats=10, url=https://leetcode-cn.com/submissions/detail/137200279/
+    ///
+    /// date=20210110, mem=8.3, mem_beats=5, runtime=536, runtime_beats=5, url=https://leetcode-cn.com/submissions/detail/137396060/
     pub struct Solution;
 
     impl Solution {
@@ -426,7 +430,7 @@ pub mod solution_bfs_simple {
 
             let mut res = vec![];
             let word_list = word_list.into_iter().collect::<HashSet<String>>();
-            if word_list.is_empty() || !word_list.contains(&end_word) {
+            if !word_list.contains(&end_word) {
                 return res;
             }
 
@@ -446,7 +450,7 @@ pub mod solution_bfs_simple {
                     let path = queue.pop_front().unwrap();
                     // 已找到最短level与paths，直接退出
                     if path.len() > min_level {
-                        break;
+                        return res;
                     }
                     // 当前level的word
                     let mut cur_word = path.last().map(|e| e.chars().collect::<Vec<_>>()).unwrap();
@@ -493,20 +497,20 @@ mod tests {
 
     #[test]
     fn basic() {
-        // test(solution_dfs_bfs::Solution::find_ladders);
+        test(solution_dfs_bfs::Solution::find_ladders);
         test(solution_dfs_bfs_two_end::Solution::find_ladders);
-        // test(solution_bfs_simple::Solution::find_ladders);
+        test(solution_bfs_simple::Solution::find_ladders);
     }
 
     fn test<F: Fn(String, String, Vec<String>) -> Vec<Vec<String>>>(func: F) {
-        // assert_eq!(
-        //     func(
-        //         "hot".to_string(),
-        //         "dog".to_string(),
-        //         ["hot", "dog"].iter().map(|e| e.to_string()).collect()
-        //     ),
-        //     vec![] as Vec<Vec<String>>
-        // );
+        assert_eq!(
+            func(
+                "hot".to_string(),
+                "dog".to_string(),
+                ["hot", "dog"].iter().map(|e| e.to_string()).collect()
+            ),
+            vec![] as Vec<Vec<String>>
+        );
 
         let res = func(
             "hit".to_string(),

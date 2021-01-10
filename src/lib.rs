@@ -64,6 +64,7 @@ pub mod find_largest_value_in_each_tree_row;
 pub mod word_ladder;
 pub mod word_ladder_ii;
 pub mod number_of_islands;
+pub mod minesweeper;
 
 // array
 pub mod move_zeroes;

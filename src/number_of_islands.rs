@@ -53,12 +53,15 @@ pub mod solution_dfs {
     /// ### Submissions
     /// 
     /// date=20210109, mem=5.2, mem_beats=50, runtime=8, runtime_beats=30, url=https://leetcode-cn.com/submissions/detail/137091727/
+    ///
+    /// date=20210110, mem=5.2, mem_beats=40, runtime=8, runtime_beats=54, url=https://leetcode-cn.com/submissions/detail/137401861/
     pub struct Solution;
 
     impl Solution {
         pub fn num_islands(mut grid: Vec<Vec<char>>) -> i32 {
             const LAND: char = '1';
             const DELETED_LAND: char = '2';
+
             fn _dfs_delete(grid: &mut Vec<Vec<char>>, row: usize, col: usize) {
                 if row >= grid.len() || col >= grid[0].len() || grid[row][col] != LAND {
                     return;
@@ -73,6 +76,7 @@ pub mod solution_dfs {
                     _dfs_delete(grid, row, col - 1);
                 }
             }
+
             let mut count = 0;
             for row in 0..grid.len() {
                 for col in 0..grid[row].len() {
@@ -100,6 +104,8 @@ pub mod solution_bfs {
     /// ### Submissions
     /// 
     /// date=20210109, mem=5.1, mem_beats=100, runtime=4, runtime_beats=90, url=https://leetcode-cn.com/submissions/detail/137095630/
+    ///
+    /// date=20210110, mem=5.2, mem_beats=81, runtime=8, runtime_beats=54, url=https://leetcode-cn.com/submissions/detail/137403628/
     pub struct Solution;
 
     impl Solution {
@@ -135,7 +141,8 @@ pub mod solution_bfs {
                 for col in 0..grid[row].len() {
                     if grid[row][col] == LAND {
                         _bfs_delete(&mut grid, row, col, &mut queue);
-                        queue.clear();
+                        // queue在出来时已清空
+                        // queue.clear();
                         count += 1;
                     }
                 }
