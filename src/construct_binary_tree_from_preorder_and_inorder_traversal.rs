@@ -60,18 +60,25 @@ pub mod solution_recursive {
                 let mut root = TreeNode::new(preorder[p_start]);
                 let i_root_idx = i_indexes.get(&root.val).unwrap();
                 let left_len = i_root_idx - i_start;
-                root.left = _helper(
-                    preorder,
-                    // 排除当前root节点
-                    p_start + 1,
-                    p_start + left_len,
-                    inorder,
-                    i_start,
-                    // 排除当前root节点
+                
+                root.left = if *i_root_idx == 0 {
+                    // fixed: i_root_idx - 1
                     // 存在 attempt to subtract with overflow error for local test
-                    dbg!(i_root_idx - 1),
-                    i_indexes,
-                );
+                    None
+                } else {
+                    _helper(
+                        preorder,
+                        // 排除当前root节点
+                        p_start + 1,
+                        p_start + left_len,
+                        inorder,
+                        i_start,
+                        // 排除当前root节点
+                        i_root_idx - 1,
+                        i_indexes,
+                    )
+                };
+                 
                 root.right = _helper(
                     preorder,
                     // 排除当前root节点
@@ -99,7 +106,7 @@ pub mod solution_recursive {
                 &inorder,
                 0,
                 inorder.len() - 1,
-                &mut indexes,
+                &indexes,
             )
         }
     }
@@ -115,6 +122,8 @@ pub mod solution_recursive_slice {
     /// ### Submission
     ///
     /// date=20201220, mem=2.6, mem_beats=63, runtime=4, runtime_beats=72, url=https://leetcode-cn.com/submissions/detail/118908310/
+    /// 
+    /// date=20201220, mem=2.6, mem_beats=63, runtime=4, runtime_beats=72, url=
     pub struct Solution;
 
     impl Solution {
@@ -126,6 +135,7 @@ pub mod solution_recursive_slice {
                     let mut root = TreeNode::new(preorder[0]);
                     let root_idx = inorder.iter().position(|e| *e == root.val).unwrap();
                     let next_root_idx = root_idx + 1;
+                    // inorder排除当前root preorder传入对应root节点的数量
                     root.left = _helper(&preorder[1..next_root_idx], &inorder[..root_idx]);
                     root.right = _helper(&preorder[next_root_idx..], &inorder[next_root_idx..]);
                     Some(Rc::new(RefCell::new(root)))
@@ -142,14 +152,14 @@ mod tests {
 
     #[test]
     fn basic() {
-        fn test<F: Fn(Vec<i32>, Vec<i32>) -> Option<Rc<RefCell<TreeNode>>>>(func: F) {
-            assert_eq!(
-                func(vec![3, 9, 20, 15, 7], vec![9, 3, 15, 20, 7]),
-                btree![3, 9, 20, null, null, 15, 7]
-            );
-        }
-
         test(solution_recursive::Solution::build_tree);
         test(solution_recursive_slice::Solution::build_tree);
+    }
+
+    fn test<F: Fn(Vec<i32>, Vec<i32>) -> Option<Rc<RefCell<TreeNode>>>>(func: F) {
+        assert_eq!(
+            func(vec![3, 9, 20, 15, 7], vec![9, 3, 15, 20, 7]),
+            btree![3, 9, 20, null, null, 15, 7]
+        );
     }
 }
