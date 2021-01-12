@@ -103,3 +103,5 @@ pub use leetcode_prelude as prelude;
 
 // greedy
 pub mod assign_cookies;
+pub mod best_time_to_buy_and_sell_stock_ii;
+pub mod jump_game;
