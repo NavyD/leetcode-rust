@@ -1,3 +1,7 @@
+// 允许在循环中使用索引而不是只用iter
+// like this: for i in 0..nums.len() {
+#![allow(clippy::needless_range_loop)]
+
 pub mod count_of_range_sum;
 pub mod count_of_smaller_numbers_after_self;
 pub mod reverse_pairs;
@@ -105,3 +109,5 @@ pub use leetcode_prelude as prelude;
 pub mod assign_cookies;
 pub mod best_time_to_buy_and_sell_stock_ii;
 pub mod jump_game;
+pub mod lemonade_change;
+pub mod walking_robot_simulation;

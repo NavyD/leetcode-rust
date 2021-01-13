@@ -1,5 +1,5 @@
 /// 首次写的拉跨
-/// 
+///
 /// ```ignore
 /// let mut steps = 0;
 /// let mut i = 0;
@@ -26,18 +26,18 @@ pub mod solution_greedy {
     /// ### Submissions
     ///
     /// date=20210112, mem=2.1, mem_beats=83, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/137791586/
+    ///
+    /// date=20210113, mem=2.2, mem_beats=35, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/138057889/
     pub struct Solution;
 
     impl Solution {
         pub fn can_jump(nums: Vec<i32>) -> bool {
-            let mut i = 0;
             let mut longest_jump = 0;
-            while i < nums.len() {
+            for i in 0..nums.len() {
                 if i > longest_jump {
                     return false;
                 }
                 longest_jump = longest_jump.max(i + nums[i] as usize);
-                i += 1;
             }
             true
         }
@@ -46,17 +46,19 @@ pub mod solution_greedy {
 
 pub mod solution_greedy_reversed {
     /// # 思路
-    /// 
+    ///
     /// 倒着推。如果前个位置能到达当前位置，则更新当前位置。
     /// 当遍历完后，pos==0时表示可以到达
-    /// 
+    ///
     /// 参考：
-    /// 
+    ///
     /// - [顺着推、倒着推两种方式，击败了99%的java用户](https://leetcode-cn.com/problems/jump-game/solution/shun-zhao-tui-dao-zhao-tui-liang-chong-fang-shi-ji/)
-    /// 
+    ///
     /// ### Submissions
-    /// 
+    ///
     /// date=20210112, mem=2.2, mem_beats=55, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/137793447/
+    ///
+    /// date=20210113, mem=2.3, mem_beats=11, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/138058713/
     pub struct Solution;
 
     impl Solution {
@@ -80,12 +82,12 @@ mod tests {
     #[test]
     fn basic() {
         test(solution_greedy::Solution::can_jump);
-        test(solution_greedy_reversed::Solution::can_jump)
+        test(solution_greedy_reversed::Solution::can_jump);
     }
 
     fn test<F: Fn(Vec<i32>) -> bool>(f: F) {
-        assert!(f(vec! [2,3,1,1,4]));
-        assert!(!f(vec![3,2,1,0,4]));
+        assert!(f(vec![2, 3, 1, 1, 4]));
+        assert!(!f(vec![3, 2, 1, 0, 4]));
         assert!(f(vec![0]));
     }
 }
