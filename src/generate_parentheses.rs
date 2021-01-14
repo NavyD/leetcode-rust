@@ -44,6 +44,8 @@ pub mod solution_dfs {
     ///
     /// date=20201223, mem=2.1, mem_beats=85, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/133181240/
     ///
+    /// date=20210114, mem=2.1, mem_beats=85, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/138299858/
+    ///
     /// ### 复杂度
     ///
     /// 参考：[括号生成 复杂度](https://leetcode-cn.com/problems/generate-parentheses/solution/gua-hao-sheng-cheng-by-leetcode-solution/)
@@ -84,6 +86,7 @@ pub mod solution_dfs {
     }
 }
 
+/// 第3次没写出来，没想到queue要对应parenthesis与count关系
 pub mod solution_bfs {
     /// # 思路
     ///
@@ -182,6 +185,8 @@ pub mod solution_bfs {
     /// date=20201222, mem=2.2, mem_beats=22, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/132839666/
     ///
     /// date=20201223, mem=2.2, mem_beats=53, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/133191328/
+    /// 
+    /// date=20210114, mem=2.1, mem_beats=94, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/138304111/
     pub struct Solution;
 
     impl Solution {
@@ -195,29 +200,30 @@ pub mod solution_bfs {
                 left_count: i32,
                 right_count: i32,
             }
+
+            let mut res = vec![];
             let mut queue = std::collections::VecDeque::new();
             queue.push_back(Node {
                 parentheses: String::new(),
                 left_count: n,
                 right_count: n,
             });
-            let mut res = vec![];
-            while let Some(node) = queue.pop_front() {
+            while let Some(cur) = queue.pop_front() {
                 // node结果完成
-                if node.left_count == 0 && node.right_count == 0 {
-                    res.push(node.parentheses.clone());
+                if cur.left_count == 0 && cur.right_count == 0 {
+                    res.push(cur.parentheses);
                     continue;
                 }
                 // 左括号
-                if node.left_count > 0 {
-                    let mut next = node.clone();
+                if cur.left_count > 0 {
+                    let mut next = cur.clone();
                     next.parentheses.push(LEFT_PARENTHESIS);
                     next.left_count -= 1;
                     queue.push_back(next);
                 }
                 // 右括号
-                if node.right_count > node.left_count {
-                    let mut next = node;
+                if cur.right_count > cur.left_count {
+                    let mut next = cur;
                     next.parentheses.push(RIGHT_PARENTHESIS);
                     next.right_count -= 1;
                     queue.push_back(next);
