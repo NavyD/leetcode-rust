@@ -112,3 +112,7 @@ pub mod jump_game;
 pub mod lemonade_change;
 pub mod walking_robot_simulation;
 pub mod jump_game_ii;
+
+// binary search
+pub mod sqrtx;
+pub mod valid_perfect_square;

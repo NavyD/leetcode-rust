@@ -1,7 +1,7 @@
 ///
 /// 第一次写的，类似于[`jump_game`]，至少思路差不多了，
 /// 但是没有考虑细节
-/// 
+///
 /// ```ignore
 /// pub fn jump(nums: Vec<i32>) -> i32 {
 ///     if nums.len() == 1 {
@@ -30,8 +30,10 @@ pub mod solution_greedy {
     /// 注意：
     ///
     /// for 循环中，i < nums.length - 1，少了末尾。因为开始的时候边界是第 0 个位置，steps 已经加 1 了。
-    /// 如果最后一步刚好跳到了末尾，此时 steps 其实不用加 1 了。
-    /// 如果是 i < nums.length，i 遍历到最后的时候，会进入 if 语句中，steps 会多加 1
+    /// 如果最后一步刚好跳到了末尾，此时 steps 其实不用加 1 了。如果是 i < nums.length，i 遍历到最后的时候，
+    /// 会进入 if 语句中，steps 会多加 1。
+    ///
+    /// 访问最后一个元素之前，我们的边界一定大于等于最后一个位置，否则就无法跳到最后一个位置了
     ///
     /// 参考：
     ///
@@ -42,6 +44,8 @@ pub mod solution_greedy {
     /// ### Submissions
     ///
     /// date=20210114, mem=2.3, mem_beats=16, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/138274557/
+    ///
+    /// date=20210115, mem=2.1, mem_beats=83, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/138591872/
     pub struct Solution;
 
     impl Solution {
@@ -49,14 +53,15 @@ pub mod solution_greedy {
             let mut steps = 0;
             // cur_end表示当前范围的最后下标， cur_longest_pos表示当前范围下可达到的最长位置
             let (mut cur_end, mut cur_longest_pos) = (0, 0);
-            for i in 0..nums.len() - 1 {
+            let end = nums.len() - 1;
+            for i in 0..end {
                 cur_longest_pos = cur_longest_pos.max(nums[i] as usize + i);
                 // 当前范围走完，走下一步
                 if i == cur_end {
                     cur_end = cur_longest_pos;
                     steps += 1;
                     // 提前检查到达
-                    if cur_end >= nums.len() - 1 {
+                    if cur_end >= end {
                         break;
                     }
                 }
@@ -72,19 +77,21 @@ pub mod solution_greedy_reversed {
     /// 反向查找出发位置
     ///
     /// 我们的目标是到达数组的最后一个位置，因此我们可以考虑最后一步跳跃前所在的位置，该位置通过跳跃能够到达最后一个位置。
-    /// 
+    ///
     /// 如果有多个位置通过跳跃都能够到达最后一个位置，那么我们应该如何进行选择呢？直观上来看，我们可以「贪心」地选择距离最后一个位置最远的那个位置，
     /// 也就是对应下标最小的那个位置。因此，我们可以从左到右遍历数组，选择第一个满足要求的位置。
-    /// 
+    ///
     /// 找到最后一步跳跃前所在的位置之后，我们继续贪心地寻找倒数第二步跳跃前所在的位置，以此类推，直到找到数组的开始位置。
     ///
     /// 参考：
-    /// 
+    ///
     /// - [跳跃游戏 II](https://leetcode-cn.com/problems/jump-game-ii/solution/tiao-yue-you-xi-ii-by-leetcode-solution/)
-    /// 
+    ///
     /// ### Submissions
     ///
     /// date=20210114, mem=2.3, mem_beats=16, runtime=524, runtime_beats=14, url=https://leetcode-cn.com/submissions/detail/138284960/
+    /// 
+    /// date=20210115, mem=2.1, mem_beats=50, runtime=528, runtime_beats=14, url=https://leetcode-cn.com/submissions/detail/138592278/
     pub struct Solution;
 
     impl Solution {
