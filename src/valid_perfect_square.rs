@@ -4,6 +4,8 @@ pub mod solution_binarysearch {
     /// ### Submissions
     /// 
     /// date=20210115, mem=2, mem_beats=80, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/138588521/
+    /// 
+    /// date=20210117, mem=2, mem_beats=86, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/139012647/
     pub struct Solution;
 
     impl Solution {

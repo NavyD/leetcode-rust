@@ -116,3 +116,4 @@ pub mod jump_game_ii;
 // binary search
 pub mod sqrtx;
 pub mod valid_perfect_square;
+pub mod search_in_rotated_sorted_array;

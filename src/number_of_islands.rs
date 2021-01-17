@@ -37,7 +37,7 @@ pub mod solution_dfs {
     /// // 判断坐标 (r, c) 是否在网格中
     /// boolean inArea(int[][] grid, int r, int c) {
     ///     return 0 <= r && r < grid.length
-    ///         	&& 0 <= c && c < grid[0].length;
+    ///         && 0 <= c && c < grid[0].length;
     /// }
     /// ```
     ///
@@ -45,16 +45,18 @@ pub mod solution_dfs {
     ///
     /// 标记已经遍历过的格子。以岛屿问题为例，我们需要在所有值为 1 的陆地格子上做 DFS 遍历。
     /// 每走过一个陆地格子，就把格子的值改为 2，这样当我们遇到 2 的时候，就知道这是遍历过的格子了。
-    /// 
+    ///
     /// 参考：
-    /// 
+    ///
     /// - [岛屿类问题的通用解法、DFS 遍历框架](https://leetcode-cn.com/problems/number-of-islands/solution/dao-yu-lei-wen-ti-de-tong-yong-jie-fa-dfs-bian-li-/)
-    /// 
+    ///
     /// ### Submissions
-    /// 
+    ///
     /// date=20210109, mem=5.2, mem_beats=50, runtime=8, runtime_beats=30, url=https://leetcode-cn.com/submissions/detail/137091727/
     ///
     /// date=20210110, mem=5.2, mem_beats=40, runtime=8, runtime_beats=54, url=https://leetcode-cn.com/submissions/detail/137401861/
+    ///
+    /// date=20210117, mem=5.2, mem_beats=57, runtime=8, runtime_beats=60, url=https://leetcode-cn.com/submissions/detail/139014563/
     pub struct Solution;
 
     impl Solution {
@@ -63,17 +65,16 @@ pub mod solution_dfs {
             const DELETED_LAND: char = '2';
 
             fn _dfs_delete(grid: &mut Vec<Vec<char>>, row: usize, col: usize) {
-                if row >= grid.len() || col >= grid[0].len() || grid[row][col] != LAND {
-                    return;
-                }
-                grid[row][col] = DELETED_LAND;
-                _dfs_delete(grid, row + 1, col);
-                _dfs_delete(grid, row, col + 1);
-                if row >= 1 {
-                    _dfs_delete(grid, row - 1, col);
-                }
-                if col >= 1 {
-                    _dfs_delete(grid, row, col - 1);
+                if row < grid.len() && col < grid[row].len() && grid[row][col] == LAND {
+                    grid[row][col] = DELETED_LAND;
+                    _dfs_delete(grid, row + 1, col);
+                    _dfs_delete(grid, row, col + 1);
+                    if row > 0 {
+                        _dfs_delete(grid, row - 1, col);
+                    }
+                    if col > 0 {
+                        _dfs_delete(grid, row, col - 1);
+                    }
                 }
             }
 
@@ -94,18 +95,20 @@ pub mod solution_dfs {
 pub mod solution_bfs {
 
     /// # 思路
-    /// 
+    ///
     /// 用queue代替dfs，queue保存row,col下标去搜索对应的相邻节点并删除
-    /// 
+    ///
     /// 参考：
-    /// 
+    ///
     /// - [200. 岛屿数量（DFS / BFS）](https://leetcode-cn.com/problems/number-of-islands/solution/number-of-islands-shen-du-you-xian-bian-li-dfs-or-/)
-    /// 
+    ///
     /// ### Submissions
-    /// 
+    ///
     /// date=20210109, mem=5.1, mem_beats=100, runtime=4, runtime_beats=90, url=https://leetcode-cn.com/submissions/detail/137095630/
     ///
     /// date=20210110, mem=5.2, mem_beats=81, runtime=8, runtime_beats=54, url=https://leetcode-cn.com/submissions/detail/137403628/
+    ///
+    /// date=20210117, mem=5.4, mem_beats=7, runtime=4, runtime_beats=92, url=https://leetcode-cn.com/submissions/detail/139015792/
     pub struct Solution;
 
     impl Solution {
@@ -114,13 +117,7 @@ pub mod solution_bfs {
             const LAND: char = '1';
             const DELETED_LAND: char = '2';
 
-            fn _bfs_delete(
-                grid: &mut Vec<Vec<char>>,
-                row: usize,
-                col: usize,
-                queue: &mut VecDeque<(usize, usize)>,
-            ) {
-                queue.push_back((row, col));
+            fn _bfs_delete(grid: &mut Vec<Vec<char>>, queue: &mut VecDeque<(usize, usize)>) {
                 while let Some((row, col)) = queue.pop_front() {
                     if row < grid.len() && col < grid[0].len() && grid[row][col] == LAND {
                         grid[row][col] = DELETED_LAND;
@@ -140,7 +137,8 @@ pub mod solution_bfs {
             for row in 0..grid.len() {
                 for col in 0..grid[row].len() {
                     if grid[row][col] == LAND {
-                        _bfs_delete(&mut grid, row, col, &mut queue);
+                        queue.push_back((row, col));
+                        _bfs_delete(&mut grid, &mut queue);
                         // queue在出来时已清空
                         // queue.clear();
                         count += 1;

@@ -33,11 +33,13 @@ pub mod solution_binarysearch {
     /// 参考：
     /// 
     /// - [二分查找 + 牛顿法（Python 代码、Java 代码）](https://leetcode-cn.com/problems/sqrtx/solution/er-fen-cha-zhao-niu-dun-fa-python-dai-ma-by-liweiw/)
-    /// - [特别好用的二分查找法模板](https://www.liwei.party/2019/06/17/leetcode-solution-new/search-insert-position/)
+    /// - [解释：特别好用的二分查找法模板](https://www.liwei.party/2019/06/17/leetcode-solution-new/search-insert-position/)
     /// 
     /// ### Submissions
     /// 
     /// date=20210115, mem=1.9, mem_beats=90, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/138583963/
+    /// 
+    /// date=20210117, mem=1.9, mem_beats=68, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/139011065/
     pub struct Solution;
 
     impl Solution {
