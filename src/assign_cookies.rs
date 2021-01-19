@@ -35,6 +35,8 @@ pub mod solution_greedy {
     /// date=20210111, mem=2.2, mem_beats=70, runtime=8, runtime_beats=10, url=https://leetcode-cn.com/submissions/detail/137634210/
     /// 
     /// date=20210112, mem=2.2, mem_beats=68, runtime=8, runtime_beats=27, url=https://leetcode-cn.com/submissions/detail/137810626/
+    /// 
+    /// date=20210119, mem=2.3, mem_beats=23, runtime=4, runtime_beats=27, url=https://leetcode-cn.com/submissions/detail/139513653/
     pub struct Solution;
 
     impl Solution {
