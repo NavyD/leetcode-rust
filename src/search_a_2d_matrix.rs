@@ -41,6 +41,8 @@ pub mod solution_binarysearch {
     /// ### Submissions
     /// 
     /// date=20210119, mem=2, mem_beats=60, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/139500665/
+    /// 
+    /// date=20210120, mem=2.1, mem_beats=20, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/139739469/
     pub struct Solution;
 
     impl Solution {
@@ -49,13 +51,13 @@ pub mod solution_binarysearch {
             let (mut lo, mut hi) = (0, m * n - 1);
             while lo < hi {
                 let mid = (lo + hi) / 2;
-                if matrix[mid / n][mid % n] < target {
+                if matrix[mid / n][mid % n] < target { 
                     lo = mid + 1;
                 } else {
                     hi = mid;
                 }
             }
-            matrix[hi / n][hi % n] == target
+            matrix[lo / n][lo % n] == target
         }
     }
 }
@@ -74,6 +76,8 @@ pub mod solution_binarysearch_row_col {
     /// ### Submissions
     /// 
     /// date=20210119, mem=2.1, mem_beats=20, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/139508154/
+    /// 
+    /// date=20210120, mem=2, mem_beats=60, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/139741684/
     pub struct Solution;
 
     impl Solution {

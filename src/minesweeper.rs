@@ -2,7 +2,7 @@
 
 pub mod solution_dfs {
     /// # 思路
-    /// 
+    ///
     /// - 如果当前节点为雷，修改为x结束
     /// - 如果当前不为雷，递归找相邻节点雷数量
     ///   - 如果雷不存在，则修改为B并找相邻节点，
@@ -15,19 +15,21 @@ pub mod solution_dfs {
     /// ```
     ///
     /// 注意：
-    /// 
+    ///
     /// checked_indexes中存在一个坑`filter(|(i, j)| !(*i == 0 && *j == 0))`中，很容易写成
     /// `filter(|(i, j)| *i != 0 && *j != 0))`这导致出现0的
     /// 元素都被过滤，调试了许久才发现的。。。
-    /// 
+    ///
     /// 在dfs中checked_indexes被放在了_dfs函数中递归也可能不断的创建，可能改成方法参数传递好点，
     /// 但是这个不太熟悉
-    /// 
+    ///
     /// ### Submissions
     ///
     /// date=20210110, mem=2.5, mem_beats=100, runtime=16, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/137457156/
-    /// 
+    ///
     /// date=20210111, mem=2.7, mem_beats=100, runtime=16, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/137614072/
+    ///
+    /// date=20210120, mem=2.4, mem_beats=60, runtime=16, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/139747473/
     pub struct Solution;
 
     impl Solution {
@@ -79,6 +81,7 @@ pub mod solution_dfs {
     }
 }
 
+/// 要注意去重的问题
 pub mod solution_bfs {
     /// # 思路
     ///
@@ -116,6 +119,8 @@ pub mod solution_bfs {
     /// ### Submissions
     ///
     /// date=20210111, mem=2.2, mem_beats=100, runtime=16, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/137607120/
+    /// 
+    /// date=20210120, mem=2.3, mem_beats=80, runtime=20, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/139752875/
     pub struct Solution;
 
     impl Solution {

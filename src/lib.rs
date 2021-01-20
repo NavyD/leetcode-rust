@@ -24,6 +24,7 @@ pub mod unique_paths_ii;
 pub mod minimum_path_sum;
 pub mod decode_ways;
 pub mod generate_parentheses;
+pub mod fibonacci_number;
 
 // tree
 pub mod same_tree;
@@ -118,3 +119,4 @@ pub mod sqrtx;
 pub mod valid_perfect_square;
 pub mod search_in_rotated_sorted_array;
 pub mod search_a_2d_matrix;
+pub mod find_minimum_in_rotated_sorted_array;
