@@ -30,6 +30,8 @@ pub mod solution_greedy {
     /// date=20210112, mem=2.1, mem_beats=86, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/137794557/
     /// 
     /// date=20210113, mem=2.1, mem_beats=73, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/138054633/
+    /// 
+    /// date=20210124, mem=2.2, mem_beats=40, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/140733456/
     pub struct Solution;
 
     impl Solution {

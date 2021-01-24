@@ -10,6 +10,8 @@
 /// }
 /// steps >= nums.len()
 /// ```
+/// 
+/// 第3次与jump game ii有点混了
 pub mod solution_greedy {
     /// # 思路
     ///
@@ -28,6 +30,8 @@ pub mod solution_greedy {
     /// date=20210112, mem=2.1, mem_beats=83, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/137791586/
     ///
     /// date=20210113, mem=2.2, mem_beats=35, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/138057889/
+    /// 
+    /// date=20210124, mem=2.2, mem_beats=40, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/140731511/
     pub struct Solution;
 
     impl Solution {
@@ -54,11 +58,16 @@ pub mod solution_greedy_reversed {
     ///
     /// - [顺着推、倒着推两种方式，击败了99%的java用户](https://leetcode-cn.com/problems/jump-game/solution/shun-zhao-tui-dao-zhao-tui-liang-chong-fang-shi-ji/)
     ///
+    /// 注意不能使用`if nums[i] as usize + i < pos {return false;}`替换，在[2,0,0j时可能导致前面能到达的
+    /// 不能被访问。
+    /// 
     /// ### Submissions
     ///
     /// date=20210112, mem=2.2, mem_beats=55, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/137793447/
     ///
     /// date=20210113, mem=2.3, mem_beats=11, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/138058713/
+    /// 
+    /// date=20210124, mem=2, mem_beats=100, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/140732473/
     pub struct Solution;
 
     impl Solution {
@@ -89,5 +98,6 @@ mod tests {
         assert!(f(vec![2, 3, 1, 1, 4]));
         assert!(!f(vec![3, 2, 1, 0, 4]));
         assert!(f(vec![0]));
+        assert!(f(vec![2,0,0]));
     }
 }

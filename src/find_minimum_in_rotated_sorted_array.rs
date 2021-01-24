@@ -16,6 +16,8 @@ pub mod solution_binarysearch {
     /// ### Submissions
     /// 
     /// date=20210120, mem=2, mem_beats=40, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/139732885/
+    /// 
+    /// date=20210124, mem=2.1, mem_beats=33, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/140728925/
     pub struct Solution;
 
     impl Solution {
