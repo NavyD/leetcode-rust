@@ -19,12 +19,14 @@ pub mod is_subsequence;
 pub mod min_cost_climbing_stairs;
 pub mod divisor_game;
 pub mod longest_palindromic_substring;
-pub mod unique_paths;
-pub mod unique_paths_ii;
 pub mod minimum_path_sum;
 pub mod decode_ways;
 pub mod generate_parentheses;
+
 pub mod fibonacci_number;
+pub mod unique_paths;
+pub mod unique_paths_ii;
+pub mod longest_common_subsequence;
 
 // tree
 pub mod same_tree;

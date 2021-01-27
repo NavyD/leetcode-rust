@@ -58,17 +58,6 @@ pub mod solution_dp {
             res.to_string()
         }
     }
-
-    #[cfg(test)]
-    mod tests {
-        use super::*;
-
-        #[test]
-        fn basics() {
-            assert_eq!(Solution::longest_palindrome("babad".to_string()), "bab");
-            assert_eq!(Solution::longest_palindrome("cbbd".to_string()), "bb");
-        }
-    }
 }
 
 pub mod solution_extend {
@@ -143,15 +132,21 @@ pub mod solution_extend {
         }
     }
 
-    #[cfg(test)]
-    mod tests {
-        use super::*;
+}
 
-        #[test]
-        fn basics() {
-            assert_eq!(Solution::longest_palindrome("babad".to_string()), "bab");
-            assert_eq!(Solution::longest_palindrome("cbbd".to_string()), "bb");
-            assert_eq!(Solution::longest_palindrome("".to_string()), "");
-        }
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn basics() {
+        test(solution_dp::Solution::longest_palindrome);
+        test(solution_extend::Solution::longest_palindrome);
+    }
+
+    fn test<F: Fn(String) -> String>(f: F) {
+        assert_eq!(f("babad".to_string()), "bab");
+        assert_eq!(f("cbbd".to_string()), "bb");
+        assert_eq!(f("".to_string()), "");
     }
 }

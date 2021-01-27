@@ -115,6 +115,14 @@ pub mod solution_dp {
     ///
     /// * [tusizi](https://leetcode.com/problems/unique-paths-ii/discuss/23250/Short-JAVA-solution)
     /// * [jianchao-li](references=https://leetcode.com/problems/unique-paths-ii/discuss/23252/4ms-O(n)-DP-Solution-in-C%2B%2B-with-Explanations)
+    /// 
+    /// 
+    /// 子问题：当前位置要左边，上面两个位置推出，如果当前位置是obstacle不可走，则为0
+    /// 
+    /// 设dp[i][j]表示在i,j位置上的路径数，有`dp[i][j] = if grid[i][j]==0 { dp[i-1][j] + dp[i][j-1] } else { 0 }`
+    /// 
+    /// 初始化：当`[0][j]`存在一个障碍时j..len都是0，`[i][0]`同理。如果使用`dp[i][j]`表示i-1,j-1位置，在0,0位置时使用`dp[1][1]`
+    /// 如果0,0位置存在障碍，`dp[1][1]=0`，否则`dp[1][1]=1`，要求`dp[0][1]=1 or dp[1][0]=1`。不再需要主动再次初始化
     ///
     /// ## Submissions
     ///
@@ -122,6 +130,8 @@ pub mod solution_dp {
     ///
     /// date=20210124, mem=1.9, mem_beats=76, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/140720811/
     ///
+    /// date=20210127, mem=2, mem_beats=50, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/141515400/
+    /// 
     /// ## 复杂度
     ///
     /// - 时间：O(N*M)
@@ -166,15 +176,19 @@ pub mod solution_dp_optimized {
     /// which is current cell = top cell + left cell
     /// ```
     ///
+    /// 参考：
+    /// 
+    /// * [tusizi](https://leetcode.com/problems/unique-paths-ii/discuss/23250/Short-JAVA-solution)
+    /// * [BirdFrank](https://leetcode.com/problems/unique-paths-ii/discuss/23250/Short-JAVA-solution/22620)
+    ///
     /// ## Submissions
     ///
     /// date=20200703, mem=2.1, mem_beats=57.14, runtime=0, runtime_beats=100, url=https://leetcode.com/submissions/detail/361356420/
     ///
     /// date=20210124, mem=1.9, mem_beats=100, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/140723024/
     /// 
-    /// * [tusizi](https://leetcode.com/problems/unique-paths-ii/discuss/23250/Short-JAVA-solution)
-    /// * [BirdFrank](https://leetcode.com/problems/unique-paths-ii/discuss/23250/Short-JAVA-solution/22620)
-    ///
+    /// date=20210127, mem=2, mem_beats=43, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/141516342/
+    /// 
     /// ## 复杂度
     ///
     /// - 时间：O(N*M)
@@ -189,7 +203,7 @@ pub mod solution_dp_optimized {
             for i in 0..m {
                 for j in 0..n {
                     if obstacle_grid[i][j] == 1 {
-                        // 上面来的路径 不存在
+                        // 覆盖 上面来的路径 不存在 
                         dp[j] = 0;
                     } else if j > 0 {
                         // 左边来 + 上面的
@@ -204,8 +218,6 @@ pub mod solution_dp_optimized {
 
 #[cfg(test)]
 mod tests {
-    use std::vec;
-
     use super::*;
 
     #[test]

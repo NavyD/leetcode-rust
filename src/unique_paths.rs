@@ -1,8 +1,4 @@
 pub mod solution_dp {
-
-    pub struct Solution;
-
-    impl Solution {
         /// # 思路
         ///
         /// 由于从某点后到下一点，只能右移或下移到达下一点，假定dp[i][j]是point(i,j)
@@ -31,7 +27,9 @@ pub mod solution_dp {
         ///
         /// - 时间：O(N*M)
         /// - 空间：O(N*M)
-        ///
+    pub struct Solution;
+
+    impl Solution {
         pub fn unique_paths(m: i32, n: i32) -> i32 {
             let (m, n) = (m as usize, n as usize);
             let mut paths = vec![vec![0; n]; m];
@@ -59,6 +57,8 @@ pub mod solution_dp_optimized {
     /// ### Submissions
     /// 
     /// date=20210124, mem=2.1, mem_beats=24, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/140693038/
+    /// 
+    /// date=20210127, mem=2.1, mem_beats=25, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/141524565/
     pub struct Solution;
 
     impl Solution {
