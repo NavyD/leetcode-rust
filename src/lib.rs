@@ -27,6 +27,7 @@ pub mod fibonacci_number;
 pub mod unique_paths;
 pub mod unique_paths_ii;
 pub mod longest_common_subsequence;
+pub mod triangle;
 
 // tree
 pub mod same_tree;

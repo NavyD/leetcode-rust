@@ -59,14 +59,15 @@ pub mod solution_dp {
     /// ### Submissions
     /// 
     /// date=20200127, mem=5.8, mem_beats=25, runtime=4, runtime_beats=91, url=https://leetcode-cn.com/submissions/detail/141504192/
+    /// 
+    /// date=20200128, mem=5.8, mem_beats=25, runtime=4, runtime_beats=91, url=https://leetcode-cn.com/submissions/detail/141803274/
     pub struct Solution;
 
     impl Solution {
         pub fn longest_common_subsequence(text1: String, text2: String) -> i32 {
-            let (m, n) = (text1.len() + 1, text2.len() + 1);
+            let (s1, s2) = (text1.as_bytes(), text2.as_bytes());
+            let (m, n) = (s1.len() + 1, s2.len() + 1);
             let mut dp = vec![vec![0; n]; m];
-            let s1 = text1.as_bytes();
-            let s2 = text2.as_bytes();
             for i in 1..m {
                 for j in 1..n {
                     dp[i][j] = if s1[i - 1] == s2[j - 1] {

@@ -55,8 +55,10 @@ pub mod solution_greedy {
     /// ### Submissions
     ///
     /// date=20210113, mem=2.9, mem_beats=10, runtime=16, runtime_beats=67, url=https://leetcode-cn.com/submissions/detail/138042161/
-    /// 
+    ///
     /// date=20210114, mem=2.9, mem_beats=50, runtime=12, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/138291699/
+    /// 
+    /// date=20210128, mem=3, mem_beats=10, runtime=16, runtime_beats=70, url=https://leetcode-cn.com/submissions/detail/141807144/
     pub struct Solution;
 
     impl Solution {
@@ -71,14 +73,15 @@ pub mod solution_greedy {
             let (mut x, mut y) = (0, 0);
             // 初始方向 向上 北方
             let mut cur_dire_idx = 0;
-            for mut command in commands {
+            for command in commands {
                 match command {
                     // 右转
                     -1 => cur_dire_idx = (cur_dire_idx + 1) % directions.len(),
                     // 左转
                     -2 => cur_dire_idx = (cur_dire_idx + 3) % directions.len(),
                     _ => {
-                        while command > 0 {
+                        let mut len = command;
+                        while len > 0 {
                             // 走下一步
                             let next = (
                                 x + directions[cur_dire_idx].0,
@@ -93,7 +96,7 @@ pub mod solution_greedy {
                             // 最大欧式距离
                             max_distance = max_distance.max(x * x + y * y);
 
-                            command -= 1;
+                            len -= 1;
                         }
                     }
                 }
