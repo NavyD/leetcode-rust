@@ -13,7 +13,7 @@ pub mod solution_dp {
     ///
     /// 当`s1[0]==s2[j]`，j+1..len都将为1，表示当只有一个字符串与s2相比（存在于s2中）时lcs=1。
     /// 当`s2[0]==s1[i]`相似。
-    /// 
+    ///
     /// ```ignore
     /// pub fn longest_common_subsequence(text1: String, text2: String) -> i32 {
     ///     let (m, n) = (text1.len(), text2.len());
@@ -48,19 +48,21 @@ pub mod solution_dp {
     ///     dp[m - 1][n - 1]
     /// }
     ///  ```
-    /// 
+    ///
     /// 注意：对于初始化，如果用`dp[i][j]`表示`s1[i-1],s2[j-1]`的lcs值，`dp[0][0]`表示空字符串
     /// 的lcs，就不需要主动初始化了。
-    /// 
+    ///
     /// 参考：
-    /// 
+    ///
     /// * [动态规划之最长公共子序列（LCS）](https://leetcode-cn.com/problems/longest-common-subsequence/solution/dong-tai-gui-hua-zhi-zui-chang-gong-gong-zi-xu-lie/)
     ///
     /// ### Submissions
-    /// 
+    ///
     /// date=20200127, mem=5.8, mem_beats=25, runtime=4, runtime_beats=91, url=https://leetcode-cn.com/submissions/detail/141504192/
-    /// 
+    ///
     /// date=20200128, mem=5.8, mem_beats=25, runtime=4, runtime_beats=91, url=https://leetcode-cn.com/submissions/detail/141803274/
+    /// 
+    /// date=20200212, mem=5.6, mem_beats=84, runtime=4, runtime_beats=91, url=https://leetcode-cn.com/submissions/detail/145366141/
     pub struct Solution;
 
     impl Solution {
