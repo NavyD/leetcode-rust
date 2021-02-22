@@ -1,14 +1,8 @@
-//! Given an integer array nums, find the contiguous subarray (containing at least one number) which has the largest sum and return its sum.
-//! 
-//! Example:
-//! 
-//! Input: [-2,1,-3,4,-1,2,1,-5,4],
-//! Output: 6
-//! Explanation: [4,-1,2,1] has the largest sum = 6.
-//! Follow up:
-//! 
-//! If you have figured out the O(n) solution, try coding another solution using the divide and conquer approach, which is more subtle.
-
+/// 首次的想法：dp[i] = dp[i-1].max(dp[i - 1] + nums[i])
+/// 
+/// 没有考虑到：当nums[i]<0时必定有dp[i] < dp[i-1]+nums[i]，但此时一个
+/// 最大子序列不一定到i完结了，这个递推公式不可行
+/// 
 pub mod solution_dp {
     /// # 思路
     ///
@@ -34,12 +28,23 @@ pub mod solution_dp {
     ///
     /// 由于max subarray是求和，当nums[i]<=0时有dp[i]=dp[i-1]，
     /// 那dp[i-1] < nums[i]就不成立了：nums[1]=-1, dp[0]=-2
+    /// 
+    /// ---
+    /// 
+    /// 定义dp[i]表示在当前i元素时为结尾时的子序列的和，只要找到每个位置的子序列和比较就可以
+    /// 找出最大值子序列和。考虑nums[i]是单独开始一段还是加入上一段，单nums[i]<0并不能决定，可以
+    /// 比较：`dp[i] = nums[i].max(dp[i - 1] + nums[i])`
+    /// 
+    /// 参考：
+    /// 
+    /// * [最大子序和](https://leetcode-cn.com/problems/maximum-subarray/solution/zui-da-zi-xu-he-by-leetcode-solution/)
+    /// * [最大子序和 c++实现四种解法 暴力法、动态规划、贪心法和分治法 图示讲解](https://leetcode-cn.com/problems/maximum-subarray/solution/zui-da-zi-xu-he-cshi-xian-si-chong-jie-fa-bao-li-f/)
     ///
     /// ## submissions
     ///
     /// date=20200618, mem=2.2, mem_beats=58.91, runtime=0, runtime_beats=100, url=https://leetcode.com/submissions/detail/355190523/
-    ///
-    /// author=FujiwaranoSai, references=https://leetcode.com/problems/maximum-subarray/discuss/20193/DP-solution-and-some-thoughts
+    /// 
+    /// date=20210222, mem=2, mem_beats=93, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/147575169/
     ///
     /// ## 复杂度
     ///
@@ -50,41 +55,13 @@ pub mod solution_dp {
 
     impl Solution {
         pub fn max_sub_array(nums: Vec<i32>) -> i32 {
-            if nums.is_empty() {
-                return 0;
-            }
-            // create dp
-            let mut dp = vec![0; nums.len()];
-            dp[0] = nums[0];
-            let mut largest: i32 = dp[0];
+            let mut prev = nums[0];
+            let mut longest = prev;
             for i in 1..nums.len() {
-                // dp[i] = nums[i] + max(dp[i-1], 0)
-                dp[i] = nums[i] + 0.max(dp[i - 1]);
-                largest = largest.max(dp[i]);
+                prev = (prev + nums[i]).max(nums[i]);
+                longest = longest.max(prev);
             }
-            largest
-        }
-    }
-
-    #[cfg(test)]
-    mod tests {
-        use super::*;
-        #[test]
-        fn basics() {
-            let nums = vec![-2, 1, -3, 4, -1, 2, 1, -5, 4];
-            assert_eq!(Solution::max_sub_array(nums), 6);
-
-            let nums = vec![-2, 1, -3];
-            assert_eq!(Solution::max_sub_array(nums), 1);
-
-            let nums = vec![-2];
-            assert_eq!(Solution::max_sub_array(nums), -2);
-
-            let nums = vec![];
-            assert_eq!(Solution::max_sub_array(nums), 0);
-
-            let nums = vec![-2, -1];
-            assert_eq!(Solution::max_sub_array(nums), -1);
+            longest
         }
     }
 }
@@ -233,27 +210,21 @@ pub mod solution_divide_and_conquer {
             (left_max_sum + right_max_sum).max(sub_max_sum)
         }
     }
+}
 
-    #[cfg(test)]
-    mod tests {
-        use super::*;
+#[cfg(test)]
+mod tests {
+    use super::*;
 
-        #[test]
-        fn basics() {
-            let nums = vec![-2, 1, -3, 4, -1, 2, 1, -5, 4];
-            assert_eq!(Solution::max_sub_array(nums), 6);
+    #[test]
+    fn basics() {
+        test(solution_dp::Solution::max_sub_array);
+    }
 
-            let nums = vec![-2, 1, -3];
-            assert_eq!(Solution::max_sub_array(nums), 1);
-
-            let nums = vec![-2];
-            assert_eq!(Solution::max_sub_array(nums), -2);
-
-            let nums = vec![];
-            assert_eq!(Solution::max_sub_array(nums), 0);
-
-            let nums = vec![-2, -1];
-            assert_eq!(Solution::max_sub_array(nums), -1);
-        }
+    fn test<F: Fn( Vec<i32>) -> i32>(func: F) {
+        assert_eq!(func(vec![-2, 1, -3, 4, -1, 2, 1, -5, 4]), 6);
+        assert_eq!(func(vec![-2, 1, -3]), 1);
+        assert_eq!(func(vec![-2]), -2);
+        assert_eq!(func(vec![-2, -1]), -1);
     }
 }

@@ -10,7 +10,6 @@ pub mod maximum_profit_in_job_scheduling;
 pub mod sort_an_array;
 
 // dynamic programming
-pub mod maximum_subarray;
 pub mod climbing_stairs;
 pub mod house_robber;
 pub mod best_time_to_buy_and_sell_stock;
@@ -28,6 +27,7 @@ pub mod unique_paths;
 pub mod unique_paths_ii;
 pub mod longest_common_subsequence;
 pub mod triangle;
+pub mod maximum_subarray;
 
 // tree
 pub mod same_tree;

@@ -46,6 +46,9 @@ pub mod solution_dp {
     /// assert_eq!(minimum_total(vec![vec![2], vec![3, 4], vec![6, 5, 7], vec![4, 1, 8, 3]]),11);
     /// ```
     ///
+    /// 具体实现使用了自低向上避免初始化问题，由于上一层的`triangle[i].len() = triangle[i+1].len() - 1`，在
+    /// 找最小值时不需要判断下标是否出界
+    ///
     /// 参考：
     ///
     /// * [Java动态规划两种思路以及代码实现](https://leetcode-cn.com/problems/triangle/solution/javadong-tai-gui-hua-si-lu-yi-ji-dai-ma-shi-xian-b/)
@@ -57,8 +60,10 @@ pub mod solution_dp {
     /// ### Submissions
     ///
     /// date=2020128, mem=2.2, mem_beats=57, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/141791812/
-    /// 
+    ///
     /// date=2020212, mem=2.2, mem_beats=27, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/145363789/
+    ///
+    /// date=20210222, mem=2.1, mem_beats=59, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/147564298/
     pub struct Solution;
 
     impl Solution {
@@ -85,8 +90,10 @@ pub mod solution_dp_optimized {
     /// ### Submissions
     ///
     /// date=2020128, mem=2.1, mem_beats=64, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/141798204/
-    /// 
+    ///
     /// date=2020128, mem=2.4, mem_beats=10, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/145364332/
+    /// 
+    /// date=20210222, mem=2.1, mem_beats=59, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/147567568/
     pub struct Solution;
 
     impl Solution {
