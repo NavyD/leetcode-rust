@@ -32,16 +32,18 @@ pub mod solution_greedy {
     /// date=20210113, mem=2.2, mem_beats=35, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/138057889/
     /// 
     /// date=20210124, mem=2.2, mem_beats=40, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/140731511/
+    /// 
+    /// date=20210307, mem=2.1, mem_beats=69, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/152094236/
     pub struct Solution;
 
     impl Solution {
         pub fn can_jump(nums: Vec<i32>) -> bool {
-            let mut longest_jump = 0;
+            let mut farthest_pos = 0;
             for i in 0..nums.len() {
-                if i > longest_jump {
+                if i > farthest_pos {
                     return false;
                 }
-                longest_jump = longest_jump.max(i + nums[i] as usize);
+                farthest_pos = farthest_pos.max(i + nums[i] as usize);
             }
             true
         }
@@ -68,6 +70,8 @@ pub mod solution_greedy_reversed {
     /// date=20210113, mem=2.3, mem_beats=11, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/138058713/
     /// 
     /// date=20210124, mem=2, mem_beats=100, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/140732473/
+    /// 
+    /// date=20210307, mem=2, mem_beats=95, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/152096208/
     pub struct Solution;
 
     impl Solution {

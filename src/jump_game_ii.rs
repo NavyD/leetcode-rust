@@ -90,8 +90,10 @@ pub mod solution_greedy_reversed {
     /// ### Submissions
     ///
     /// date=20210114, mem=2.3, mem_beats=16, runtime=524, runtime_beats=14, url=https://leetcode-cn.com/submissions/detail/138284960/
-    /// 
+    ///
     /// date=20210115, mem=2.1, mem_beats=50, runtime=528, runtime_beats=14, url=https://leetcode-cn.com/submissions/detail/138592278/
+    /// 
+    /// date=20210307, mem=2.3, mem_beats=10, runtime=528, runtime_beats=5, url=https://leetcode-cn.com/submissions/detail/152105220/
     pub struct Solution;
 
     impl Solution {
