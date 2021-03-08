@@ -40,27 +40,29 @@ pub mod solution_binarysearch {
     /// date=20210115, mem=1.9, mem_beats=90, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/138583963/
     /// 
     /// date=20210117, mem=1.9, mem_beats=68, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/139011065/
+    /// 
+    /// date=20210308, mem=1.9, mem_beats=65, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/152596842/
     pub struct Solution;
 
     impl Solution {
         pub fn my_sqrt(x: i32) -> i32 {
             let x = x as u64;
-            let mut left = 0;
+            let mut lo = 0;
             // 上界
-            let mut right = x / 2 + 1;
-            while left < right {
+            let mut hi = x / 2 + 1;
+            while lo < hi {
                 // 取右中位数
-                let mid = left + (right - left + 1) / 2;
+                let mid = (lo + hi + 1) / 2;
                 let square = (mid * mid) as u64;
                 if square > x  {
                     // [left, mid - 1]
-                    right = mid - 1;
+                    hi = mid - 1;
                 } else {
                     // [mid, right]
-                    left = mid;
+                    lo = mid;
                 }
             }
-            left as i32
+            lo as i32
         }
     }
 }

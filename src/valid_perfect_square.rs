@@ -1,36 +1,33 @@
 pub mod solution_binarysearch {
     /// # 思路
     /// 
+    /// 参考：
+    /// 
+    /// * [层层递进逐步最优的四种解法详解！](https://leetcode-cn.com/problems/valid-perfect-square/solution/ceng-ceng-di-jin-zhu-bu-zui-you-de-si-chong-jie-fa/)
+    /// 
     /// ### Submissions
     /// 
     /// date=20210115, mem=2, mem_beats=80, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/138588521/
     /// 
     /// date=20210117, mem=2, mem_beats=86, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/139012647/
+    /// 
+    /// date=20210308, mem=2, mem_beats=32, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/152602821/
     pub struct Solution;
 
     impl Solution {
-        // 1 <= num <= 2^31 - 1
         pub fn is_perfect_square(num: i32) -> bool {
-            if num <= 1 {
-                return true;
-            }
-            use std::cmp::Ordering;
-
             let num = num as u64;
-            // 下界
-            let mut left = 2;
-            // 上界
-            let mut right = num / 2;
-            while left <= right {
-                let mid = left + (right - left) / 2;
-                let square = (mid * mid) as u64;
-                match square.cmp(&num) {
-                    Ordering::Equal => return true,
-                    Ordering::Greater => right = mid - 1,
-                    Ordering::Less => left = mid + 1,
+            // 1 <= num <= 2^31 - 1
+            let (mut lo, mut hi) = (1, num);
+            while lo < hi {
+                let mid = (lo + hi) / 2;
+                if mid * mid < num {
+                    lo = mid + 1;
+                } else {
+                    hi = mid;
                 }
             }
-            false
+            lo * lo == num
         }
     }
 }
@@ -73,6 +70,7 @@ mod tests {
     fn basic() {
         test(solution_binarysearch::Solution::is_perfect_square);
         test(solution_progression::Solution::is_perfect_square);
+        test(is_perfect_square)
     }
 
     // 1 <= num <= 2^31 - 1
@@ -83,5 +81,19 @@ mod tests {
         assert!(f(9));
         assert!(f(1));
         assert!(!f(2147395599));
+    }
+
+    pub fn is_perfect_square(num: i32) -> bool {
+        let num = num as u64;
+        let (mut lo, mut hi) = (1, num);
+        while lo < hi {
+            let mid = (lo + hi) / 2;
+            if mid * mid < num {
+                lo = mid + 1;
+            } else {
+                hi = mid;
+            }
+        }
+        lo * lo == num
     }
 }

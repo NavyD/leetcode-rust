@@ -28,7 +28,7 @@ pub mod unique_paths_ii;
 pub mod longest_common_subsequence;
 pub mod triangle;
 pub mod maximum_subarray;
-
+pub mod maximum_product_subarray;
 // tree
 pub mod same_tree;
 pub mod symmetric_tree;
