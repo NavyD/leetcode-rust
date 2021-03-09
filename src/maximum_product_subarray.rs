@@ -17,11 +17,11 @@ pub mod solution_dp {
     ///
     /// 由于之前的值与当前`nums[i]`的正负值会一起影响`dp[i][j]`：
     ///
-    /// 当`nums[i] < 0`时最大值*`nums[i]`为最小值
+    /// 当`nums[i] < 0`时最大值 * `nums[i]`为最小值
     ///
-    /// 要注意必须切分新的一段：
-    ///
-    /// 积`nums[i] * dp[i - 1].max|min`与当前`nums[i]`比较选择大，如`nums[i] > 0`时 `dp[i].max < 0`
+    /// 要注意计算的积 比 当前num更大或小时, 必须切分新的一段,表示新的连续一段:
+    /// 
+    /// 如果nums[i]，如`nums[i] > 0`时 `dp[i].max < 0`
     /// 表示切分i为新的一段开始
     ///
     /// ```
@@ -41,6 +41,8 @@ pub mod solution_dp {
     /// ### Submissions
     ///
     /// date=20210308, mem=2.2, mem_beats=36, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/152482019/
+    /// 
+    /// date=20210309, mem=2.2, mem_beats=36, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/152894274/
     pub struct Solution;
 
     impl Solution {
@@ -65,6 +67,8 @@ pub mod solution_dp {
 pub mod solution_dp_optimized {
     /// 思路：
     ///
+    /// 在dp时只使用了i-1的值,可以使用一个变量替换
+    /// 
     /// 参考：
     ///
     /// * [画解算法：152. 乘积最大子序列](https://leetcode-cn.com/problems/maximum-product-subarray/solution/hua-jie-suan-fa-152-cheng-ji-zui-da-zi-xu-lie-by-g/)
@@ -72,12 +76,14 @@ pub mod solution_dp_optimized {
     /// ### Submissions
     ///
     /// date=20210308, mem=2, mem_beats=81, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/152464307/
+    /// 
+    /// date=20210309, mem=2.1, mem_beats=81, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/152899923/
     pub struct Solution;
 
     impl Solution {
         pub fn max_product(nums: Vec<i32>) -> i32 {
-            let mut min_prod = nums[0];
-            let mut max_prod = min_prod;
+            let mut max_prod = nums[0];
+            let mut min_prod = max_prod;
             let mut res = min_prod;
             for i in 1..nums.len() {
                 if nums[i] < 0 {

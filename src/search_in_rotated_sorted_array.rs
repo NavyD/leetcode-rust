@@ -6,7 +6,7 @@ pub mod solution_binarysearch {
     ///
     /// * 0..=mid增序 target在mid后面 两种情况 比mid大在旋转位前 或比0小在旋转后    
     /// * 0..=mid中存在旋转位 target在后面需要>0，且比mid大
-    /// 
+    ///
     /// 注意：不能用`nums[0] > nums[mid]`替代`nums[0] > target`，前者在if中走到时是默认成立的，如果
     /// 在当target=nums[0]时nums[0]为旋转位，此时mid比target小，前者会走到`lo=mid+1`导致错误
     ///
@@ -17,18 +17,20 @@ pub mod solution_binarysearch {
     /// ### Submissions
     ///
     /// date=20210117, mem=2.1, mem_beats=25, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/139004026/
-    /// 
+    ///
     /// date=20210119, mem=2.1, mem_beats=29, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/139512673/
+    ///
+    /// date=20210309, mem=2, mem_beats=62, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/152918436/
     pub struct Solution;
 
     impl Solution {
         pub fn search(nums: Vec<i32>, target: i32) -> i32 {
             let (mut lo, mut hi) = (0, nums.len() - 1);
             while lo < hi {
-                let mid = lo + (hi - lo) / 2;
+                let mid = (lo + hi) / 2;
                 // 0..=mid增序 target在mid后面 两种情况 比mid大在旋转位前 或比0小在旋转后
                 if nums[0] <= nums[mid] && (target > nums[mid] || target < nums[0])
-                    // 0..=mid中存在旋转位 target在后面需要>0，且比mid大
+                    // 0..=mid中存在旋转位 target在后面需要 < 0，且比mid大
                     || (nums[0] > target && nums[mid] < target)
                 {
                     lo = mid + 1;
@@ -62,5 +64,4 @@ mod tests {
         assert_eq!(f(vec![1, 3], 3), 1);
         assert_eq!(f(vec![5, 1, 3], 5), 0);
     }
-
 }
