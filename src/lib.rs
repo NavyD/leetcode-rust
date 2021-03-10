@@ -30,6 +30,7 @@ pub mod triangle;
 pub mod maximum_subarray;
 pub mod maximum_product_subarray;
 pub mod coin_change;
+pub mod coin_change_2;
 
 // tree
 pub mod same_tree;

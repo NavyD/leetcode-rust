@@ -20,6 +20,8 @@ pub mod solution_dp {
     /// ### Submissions
     ///
     /// date=20210309, mem=2.1, mem_beats=50, runtime=16, runtime_beats=35, url=https://leetcode-cn.com/submissions/detail/152889099/
+    /// 
+    /// date=20210310, mem=2.1, mem_beats=50, runtime=20, runtime_beats=35, url=https://leetcode-cn.com/submissions/detail/153326263/
     pub struct Solution;
 
     impl Solution {
