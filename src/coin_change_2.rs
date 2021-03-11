@@ -17,6 +17,8 @@ pub mod solution_dp {
     /// ### Submissions
     ///
     /// date=20210310, mem=6.3, mem_beats=100, runtime=4, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/153303521/
+    /// 
+    /// date=20210311, mem=6.2, mem_beats=100, runtime=12, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/153786239/
     pub struct Solution;
 
     impl Solution {
@@ -38,6 +40,40 @@ pub mod solution_dp {
     }
 }
 
+pub mod solution_dp_optimized {
+    /// # 思路
+    ///
+    /// 对于硬币从0到k，我们必须使用第k个硬币的时候，当前金额的组合数。
+    /// 因此状态数组DP[i]表示的是对于第k个硬币能凑的组合数
+    ///
+    /// 状态转移方程如下`DP[i] = DP[i] + DP[i-k]`
+    /// 
+    /// 参考：
+    /// 
+    /// * [Knapsack problem - Java solution with thinking process O(nm) Time and O(m) Space](https://leetcode.com/problems/coin-change-2/discuss/99212/Knapsack-problem-Java-solution-with-thinking-process-O(nm)-Time-and-O(m)-Space)
+    /// * [零钱兑换II和爬楼梯问题到底有什么不同？](https://leetcode-cn.com/problems/coin-change-2/solution/ling-qian-dui-huan-iihe-pa-lou-ti-wen-ti-dao-di-yo/)
+    ///
+    /// ### Submissions
+    ///
+    /// date=20210311, mem=2, mem_beats=100, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/153796187/
+    pub struct Solution;
+
+    impl Solution {
+        pub fn change(amount: i32, coins: Vec<i32>) -> i32 {
+            let amount = amount as usize;
+            let mut dp = vec![0; amount + 1];
+            dp[0] = 1;
+            for coin in coins {
+                let coin = coin as usize;
+                for amount in coin..=amount {
+                    dp[amount] += dp[amount - coin];
+                }
+            }
+            dp[amount]
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -45,6 +81,7 @@ mod tests {
     #[test]
     fn basic() {
         test(solution_dp::Solution::change);
+        test(solution_dp_optimized::Solution::change);
     }
 
     fn test<F: Fn(i32, Vec<i32>) -> i32>(func: F) {
