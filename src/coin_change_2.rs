@@ -17,7 +17,7 @@ pub mod solution_dp {
     /// ### Submissions
     ///
     /// date=20210310, mem=6.3, mem_beats=100, runtime=4, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/153303521/
-    /// 
+    ///
     /// date=20210311, mem=6.2, mem_beats=100, runtime=12, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/153786239/
     pub struct Solution;
 
@@ -47,15 +47,17 @@ pub mod solution_dp_optimized {
     /// 因此状态数组DP[i]表示的是对于第k个硬币能凑的组合数
     ///
     /// 状态转移方程如下`DP[i] = DP[i] + DP[i-k]`
-    /// 
+    ///
     /// 参考：
-    /// 
+    ///
     /// * [Knapsack problem - Java solution with thinking process O(nm) Time and O(m) Space](https://leetcode.com/problems/coin-change-2/discuss/99212/Knapsack-problem-Java-solution-with-thinking-process-O(nm)-Time-and-O(m)-Space)
     /// * [零钱兑换II和爬楼梯问题到底有什么不同？](https://leetcode-cn.com/problems/coin-change-2/solution/ling-qian-dui-huan-iihe-pa-lou-ti-wen-ti-dao-di-yo/)
     ///
     /// ### Submissions
     ///
     /// date=20210311, mem=2, mem_beats=100, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/153796187/
+    /// 
+    /// date=20210314, mem=1.9, mem_beats=100, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/155003732/
     pub struct Solution;
 
     impl Solution {

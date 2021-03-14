@@ -25,7 +25,39 @@
 ///
 /// 由于max subarray是求和，当nums[i]<=0时有dp[i]=dp[i-1]，
 /// 那dp[i-1] < nums[i]就不成立了：nums[1]=-1, dp[0]=-2
+
 pub mod solution_dp {
+    /// # 思路
+    ///
+    /// 子问题：定义problem(i)表示以下标为i为结尾的子序和。一个负数 + 任何数都会比当前数小，
+    /// 则有：`problem(i) = problem(i - 1).max(0) + nums[i]`
+    ///
+    /// 状态数组：`dp[i]`表示以下标为i为结尾的子序和，最大子序和可以通过比较所有的dp[i]找出最大
+    ///
+    /// dp方程：考虑nums[i]是单独开始一段还是加入上一段，单`nums[i]<0`并不能决定：
+    /// `dp[i] = max(nums[i], nums[i] + dp[i - 1])`
+    ///
+    /// 初始化：`dp[0] = nums[0]`
+    ///
+    /// ### Submissions
+    ///
+    /// date=20210314, mem=2.3, mem_beats=5, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/154951229/
+    pub struct Solution;
+
+    impl Solution {
+        pub fn max_sub_array(nums: Vec<i32>) -> i32 {
+            let mut res = nums[0];
+            let mut dp = nums;
+            for i in 1..dp.len() {
+                dp[i] = dp[i].max(dp[i] + dp[i - 1]);
+                res = res.max(dp[i]);
+            }
+            res
+        }
+    }
+}
+
+pub mod solution_dp_optimized {
     /// # 思路
     ///
     /// 定义dp[i]表示在当前i元素时为结尾时的子序列的和，只要找到每个位置的子序列和比较就可以
@@ -44,6 +76,8 @@ pub mod solution_dp {
     /// date=20210222, mem=2, mem_beats=93, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/147575169/
     ///
     /// date=20210307, mem=2, mem_beats=87, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/152088296/
+    /// 
+    /// date=20210314, mem=2.1, mem_beats=41, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/154952557/
     ///
     /// ## 复杂度
     ///
@@ -54,13 +88,13 @@ pub mod solution_dp {
 
     impl Solution {
         pub fn max_sub_array(nums: Vec<i32>) -> i32 {
+            let mut res = nums[0];
             let mut sub_sum = nums[0];
-            let mut longest = sub_sum;
             for i in 1..nums.len() {
-                sub_sum = (sub_sum + nums[i]).max(nums[i]);
-                longest = longest.max(sub_sum);
+                sub_sum = nums[i].max(nums[i] + sub_sum);
+                res = res.max(sub_sum);
             }
-            longest
+            res
         }
     }
 }
@@ -109,7 +143,7 @@ pub mod solution_divide_and_conquer {
             }
         }
 
-        fn max_sum(nums: &Vec<i32>, lo: usize, hi: usize) -> i32 {
+        fn max_sum(nums: &[i32], lo: usize, hi: usize) -> i32 {
             if lo >= hi {
                 return nums[lo];
             }
@@ -148,6 +182,8 @@ mod tests {
     #[test]
     fn basics() {
         test(solution_dp::Solution::max_sub_array);
+        test(solution_dp_optimized::Solution::max_sub_array);
+        test(solution_divide_and_conquer::Solution::max_sub_array);
     }
 
     fn test<F: Fn(Vec<i32>) -> i32>(func: F) {

@@ -20,7 +20,7 @@ pub mod solution_dp {
     /// ### Submissions
     ///
     /// date=20210309, mem=2.1, mem_beats=50, runtime=16, runtime_beats=35, url=https://leetcode-cn.com/submissions/detail/152889099/
-    /// 
+    ///
     /// date=20210310, mem=2.1, mem_beats=50, runtime=20, runtime_beats=35, url=https://leetcode-cn.com/submissions/detail/153326263/
     pub struct Solution;
 
@@ -46,6 +46,60 @@ pub mod solution_dp {
     }
 }
 
+pub mod solution_bfs {
+    /// # 思路
+    /// 
+    /// ![](https://pic.leetcode-cn.com/32128c822b67e7a851e78165e4498d71519c5ba7c1476e60f7d9e8c2df7487b0-%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202020-03-08%2010.33.52.png)
+    /// 
+    /// 参考：
+    /// 
+    /// * [方法二：广度优先遍历](https://leetcode-cn.com/problems/coin-change/solution/dong-tai-gui-hua-shi-yong-wan-quan-bei-bao-wen-ti-/)
+    /// 
+    /// ### Submissions
+    /// 
+    /// date=20210314, mem=2, mem_beats=81, runtime=8, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/155029103/
+    pub struct Solution;
+
+    impl Solution {
+        pub fn coin_change(coins: Vec<i32>, amount: i32) -> i32 {
+            if amount == 0 {
+                return 0;
+            }
+
+            let mut queue = std::collections::VecDeque::new();
+            queue.push_back(amount);
+
+            let amount = amount as usize;
+            let mut visited = vec![false; amount + 1];
+            visited[amount] = true;
+            // coins.sort_unstable();
+
+            let mut steps = 1;
+            while !queue.is_empty() {
+                for _ in 0..queue.len() {
+                    let amount = queue.pop_front().unwrap();
+                    for coin in &coins {
+                        let rest_amount = amount - coin;
+                        if rest_amount == 0 {
+                            return steps;
+                        }
+                        if rest_amount < 0 {
+                            // break;
+                            continue;
+                        }
+                        if !visited[rest_amount as usize] {
+                            queue.push_back(rest_amount);
+                            visited[rest_amount as usize] = true;
+                        }
+                    }
+                }
+                steps += 1;
+            }
+            -1
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -53,6 +107,7 @@ mod tests {
     #[test]
     fn basic() {
         test(solution_dp::Solution::coin_change);
+        test(solution_bfs::Solution::coin_change);
     }
 
     fn test<F: Fn(Vec<i32>, i32) -> i32>(func: F) {

@@ -11,7 +11,6 @@ pub mod sort_an_array;
 
 // dynamic programming
 pub mod climbing_stairs;
-pub mod house_robber;
 pub mod best_time_to_buy_and_sell_stock;
 pub mod range_sum_query_immutable;
 pub mod is_subsequence;
@@ -31,6 +30,7 @@ pub mod maximum_subarray;
 pub mod maximum_product_subarray;
 pub mod coin_change;
 pub mod coin_change_2;
+pub mod house_robber;
 
 // tree
 pub mod same_tree;
