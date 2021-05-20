@@ -46,6 +46,8 @@ pub mod solution_greedy {
     /// date=20210114, mem=2.3, mem_beats=16, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/138274557/
     ///
     /// date=20210115, mem=2.1, mem_beats=83, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/138591872/
+    ///
+    /// date=20210520, mem=2, mem_beats=70, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/179175793/
     pub struct Solution;
 
     impl Solution {
@@ -53,6 +55,7 @@ pub mod solution_greedy {
             let mut steps = 0;
             // cur_end表示当前范围的最后下标， cur_longest_pos表示当前范围下可达到的最长位置
             let (mut cur_end, mut cur_longest_pos) = (0, 0);
+            // 0位置steps 已经加1 避免在nums.len() - 1时steps+1
             let end = nums.len() - 1;
             for i in 0..end {
                 cur_longest_pos = cur_longest_pos.max(nums[i] as usize + i);
@@ -92,18 +95,20 @@ pub mod solution_greedy_reversed {
     /// date=20210114, mem=2.3, mem_beats=16, runtime=524, runtime_beats=14, url=https://leetcode-cn.com/submissions/detail/138284960/
     ///
     /// date=20210115, mem=2.1, mem_beats=50, runtime=528, runtime_beats=14, url=https://leetcode-cn.com/submissions/detail/138592278/
-    /// 
+    ///
     /// date=20210307, mem=2.3, mem_beats=10, runtime=528, runtime_beats=5, url=https://leetcode-cn.com/submissions/detail/152105220/
+    /// 
+    /// date=20210520, mem=2.1, mem_beats=23, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/179180098/
     pub struct Solution;
 
     impl Solution {
         pub fn jump(nums: Vec<i32>) -> i32 {
             let mut steps = 0;
-            let mut position = nums.len() - 1;
-            while position > 0 {
+            let mut pos = nums.len() - 1;
+            while pos > 0 {
                 // 找能到达pos的最小（最长）位置
-                position = (0..position)
-                    .find(|i| nums[*i] as usize + i >= position)
+                pos = (0..pos)
+                    .find(|i| nums[*i] as usize + i >= pos)
                     .unwrap();
                 steps += 1;
             }

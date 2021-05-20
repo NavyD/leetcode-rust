@@ -21,6 +21,8 @@ pub mod solution_binarysearch {
     /// date=20210119, mem=2.1, mem_beats=29, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/139512673/
     ///
     /// date=20210309, mem=2, mem_beats=62, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/152918436/
+    ///
+    /// date=20210520, mem=2, mem_beats=70, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/179164611/
     pub struct Solution;
 
     impl Solution {
@@ -63,5 +65,6 @@ mod tests {
         assert_eq!(f(vec![1], 0), -1);
         assert_eq!(f(vec![1, 3], 3), 1);
         assert_eq!(f(vec![5, 1, 3], 5), 0);
+        assert_eq!(f(vec![4,5,6,7,0,1,2], 1), 5);
     }
 }
