@@ -42,12 +42,13 @@ pub mod solution_dp {
     /// ### Submissions
     ///
     /// date=20210314, mem=2.3, mem_beats=5, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/154951229/
+    ///
+    /// date=20210522, mem=2, mem_beats=79, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/179758836/
     pub struct Solution;
 
     impl Solution {
         pub fn max_sub_array(nums: Vec<i32>) -> i32 {
-            let mut res = nums[0];
-            let mut dp = nums;
+            let (mut res, mut dp) = (nums[0], nums);
             for i in 1..dp.len() {
                 dp[i] = dp[i].max(dp[i] + dp[i - 1]);
                 res = res.max(dp[i]);
@@ -76,8 +77,10 @@ pub mod solution_dp_optimized {
     /// date=20210222, mem=2, mem_beats=93, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/147575169/
     ///
     /// date=20210307, mem=2, mem_beats=87, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/152088296/
-    /// 
+    ///
     /// date=20210314, mem=2.1, mem_beats=41, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/154952557/
+    ///
+    /// date=20210522, mem=2, mem_beats=98, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/179759906/
     ///
     /// ## 复杂度
     ///
@@ -88,8 +91,7 @@ pub mod solution_dp_optimized {
 
     impl Solution {
         pub fn max_sub_array(nums: Vec<i32>) -> i32 {
-            let mut res = nums[0];
-            let mut sub_sum = nums[0];
+            let (mut res, mut sub_sum) = (nums[0], nums[0]);
             for i in 1..nums.len() {
                 sub_sum = nums[i].max(nums[i] + sub_sum);
                 res = res.max(sub_sum);
@@ -121,11 +123,36 @@ pub mod solution_divide_and_conquer {
     /// max_sum = left_max_sum + right_max_sum = 6
     /// ```
     ///
+    /// 注意：在取整个[lo..hi]跨中心范围和时，在left找最大值要从mid->lo反向找，由于
+    /// 在使用最大值的方式从lo -> mid时当`mid<0`时无法将nums[mid]加入最大和中出现错误。
+    /// 如：`[2,3,-6,2,4]` 当mid=2,nums[mid]=-6时left=[2,3,-6]，如果使用`lo->mid`则
+    /// 会有left_max_sum = 5，而没有算入-6的结果left_max_sum = -1
+    /// 
+    /// 对于寻找跨中心范围可使用iter::fold api，由于要缓存中间结果，写起来也不是很优雅：
+    /// 
+    /// ```ignore
+    /// let mut sum = 0;
+    /// let left_max_sum1 = (lo..=mid).rfold(nums[mid], |acc, i| {
+    ///     sum += nums[i];
+    ///     sum.max(acc)
+    /// });
+    /// let mut sum = 0;
+    /// let right_max_sum1 = (mid + 1..=hi).fold(nums[mid + 1], |acc, i| {
+    ///     sum += nums[i];
+    ///     sum.max(acc)
+    /// });
+    /// ```
+    ///
+    /// 参考：
+    /// 
+    /// * [How-to-solve-"Maximum-Subarray"-by-using-the-divide-and-conquer-approach](https://leetcode.com/problems/maximum-subarray/discuss/20372/How-to-solve-"Maximum-Subarray"-by-using-the-divide-and-conquer-approach/20607)
+    /// * [最大子序和 c++实现四种解法 暴力法、动态规划、贪心法和分治法 图示讲解](https://leetcode-cn.com/problems/maximum-subarray/solution/zui-da-zi-xu-he-cshi-xian-si-chong-jie-fa-bao-li-f/)
+    /// 
     /// ## Submissions
     ///
     /// date=20200620, mem=2.1, mem_beats=92.56, runtime=0, runtime_beats=100, url=https://leetcode.com/submissions/detail/355978516/
-    ///
-    /// author=porker2008, references=https://leetcode.com/problems/maximum-subarray/discuss/20372/How-to-solve-"Maximum-Subarray"-by-using-the-divide-and-conquer-approach/20607
+    /// 
+    /// date=20200522, mem=2.1, mem_beats=54, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/179782354/
     ///
     /// ## 复杂度
     ///
@@ -136,41 +163,36 @@ pub mod solution_divide_and_conquer {
 
     impl Solution {
         pub fn max_sub_array(nums: Vec<i32>) -> i32 {
+            fn helper(nums: &[i32], lo: usize, hi: usize) -> i32 {
+                if lo >= hi {
+                    return nums[lo];
+                }
+                let mid = (lo + hi) / 2;
+                // get max sub sum compare with left sum and right sum
+                let sub_max_sum = helper(nums, lo, mid).max(helper(nums, mid + 1, hi));
+
+                // get current max sum with cross left and right
+                let (mut sum, mut left_max_sum) = (0, nums[mid]);
+                // get left sum from mid to lo
+                for i in (lo..=mid).rev() {
+                    sum += nums[i];
+                    left_max_sum = sum.max(left_max_sum);
+                }
+                let (mut sum, mut right_max_sum) = (0, nums[mid + 1]);
+                // get right sum from mid+1 to hi
+                for i in mid + 1..=hi {
+                    sum += nums[i];
+                    right_max_sum = sum.max(right_max_sum);
+                }
+                // to compare cross sum and max sub sums
+                (left_max_sum + right_max_sum).max(sub_max_sum)
+            }
+
             if nums.is_empty() {
                 0
             } else {
-                Self::max_sum(&nums, 0, nums.len() - 1)
+                helper(&nums, 0, nums.len() - 1)
             }
-        }
-
-        fn max_sum(nums: &[i32], lo: usize, hi: usize) -> i32 {
-            if lo >= hi {
-                return nums[lo];
-            }
-            let mid = (lo + hi) / 2;
-            // get max sub sum compare with left sum and right sum
-            let sub_max_sum = Self::max_sum(nums, lo, mid).max(Self::max_sum(nums, mid + 1, hi));
-            // get current max sum with left and right
-            let mut left_max_sum = nums[mid];
-            let mut sum = 0;
-            // get left sum from mid to lo
-            for i in (lo..=mid).rev() {
-                sum += nums[i];
-                if sum > left_max_sum {
-                    left_max_sum = sum;
-                }
-            }
-            sum = 0;
-            let mut right_max_sum = nums[mid + 1];
-            // get right sum from mid+1 to hi
-            for i in mid + 1..=hi {
-                sum += nums[i];
-                if sum > right_max_sum {
-                    right_max_sum = sum;
-                }
-            }
-            // to compare current sum and max sub sums
-            (left_max_sum + right_max_sum).max(sub_max_sum)
         }
     }
 }
@@ -191,5 +213,6 @@ mod tests {
         assert_eq!(func(vec![-2, 1, -3]), 1);
         assert_eq!(func(vec![-2]), -2);
         assert_eq!(func(vec![-2, -1]), -1);
+        assert_eq!(func(vec![2, 3, -6, 2, 4]), 6);
     }
 }
