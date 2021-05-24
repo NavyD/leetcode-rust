@@ -44,6 +44,8 @@ pub mod solution_dp {
     /// date=20210314, mem=2.3, mem_beats=5, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/154951229/
     ///
     /// date=20210522, mem=2, mem_beats=79, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/179758836/
+    ///
+    /// date=20210523, mem=2.2, mem_beats=18, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/179995932/
     pub struct Solution;
 
     impl Solution {
@@ -82,6 +84,8 @@ pub mod solution_dp_optimized {
     ///
     /// date=20210522, mem=2, mem_beats=98, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/179759906/
     ///
+    /// date=20210523, mem=2.3, mem_beats=12, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/179998106/
+    ///
     /// ## 复杂度
     ///
     /// - 时间：O(N)
@@ -91,9 +95,10 @@ pub mod solution_dp_optimized {
 
     impl Solution {
         pub fn max_sub_array(nums: Vec<i32>) -> i32 {
-            let (mut res, mut sub_sum) = (nums[0], nums[0]);
-            for i in 1..nums.len() {
-                sub_sum = nums[i].max(nums[i] + sub_sum);
+            let mut res = nums[0];
+            let mut sub_sum = 0;
+            for num in nums {
+                sub_sum = num.max(sub_sum + num);
                 res = res.max(sub_sum);
             }
             res
@@ -154,6 +159,8 @@ pub mod solution_divide_and_conquer {
     /// 
     /// date=20200522, mem=2.1, mem_beats=54, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/179782354/
     ///
+    /// date=20200523, mem=2.1, mem_beats=55, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/180015540/
+    ///
     /// ## 复杂度
     ///
     /// - 时间：O(N log N)
@@ -163,36 +170,37 @@ pub mod solution_divide_and_conquer {
 
     impl Solution {
         pub fn max_sub_array(nums: Vec<i32>) -> i32 {
-            fn helper(nums: &[i32], lo: usize, hi: usize) -> i32 {
-                if lo >= hi {
-                    return nums[lo];
+            fn helper(nums: &[i32]) -> i32 {
+                if nums.is_empty() {
+                    return 0;
                 }
-                let mid = (lo + hi) / 2;
+                if nums.len() == 1 {
+                    return nums[0];
+                }
+                // nums.len() / 2 可导致当nums.len()=2时left:`..=1`,一直在left中无限循环，right:`2..`不成立
+                let mid = nums.len() / 2 - 1;
                 // get max sub sum compare with left sum and right sum
-                let sub_max_sum = helper(nums, lo, mid).max(helper(nums, mid + 1, hi));
+                let sub_max_sum = helper(&nums[..=mid]).max(helper(&nums[mid + 1..]));
 
                 // get current max sum with cross left and right
-                let (mut sum, mut left_max_sum) = (0, nums[mid]);
-                // get left sum from mid to lo
-                for i in (lo..=mid).rev() {
+                let mut sum = 0;
+                let mut left_max_sum = i32::MIN;
+                for i in (0..=mid).rev() {
                     sum += nums[i];
-                    left_max_sum = sum.max(left_max_sum);
+                    left_max_sum = left_max_sum.max(sum);
                 }
-                let (mut sum, mut right_max_sum) = (0, nums[mid + 1]);
-                // get right sum from mid+1 to hi
-                for i in mid + 1..=hi {
+
+                let mut sum = 0;
+                let mut right_max_sum = i32::MIN;
+                for i in mid + 1..nums.len() {
                     sum += nums[i];
-                    right_max_sum = sum.max(right_max_sum);
+                    right_max_sum = right_max_sum.max(sum);
                 }
+
                 // to compare cross sum and max sub sums
                 (left_max_sum + right_max_sum).max(sub_max_sum)
             }
-
-            if nums.is_empty() {
-                0
-            } else {
-                helper(&nums, 0, nums.len() - 1)
-            }
+            helper(&nums)
         }
     }
 }

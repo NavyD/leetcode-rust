@@ -13,7 +13,9 @@ pub mod solution_dp {
     ///
     /// 即: `if i - coins[j] >= 0 { dp[i] = min(dp[i], dp[i - coins[j]] + 1) }`
     ///
-    /// `dp[amount] = for i in [0, len - 1] if coins[i] <= amount: min(dp[amount], 1 + dp[amount - coins[i]])`
+    /// `dp[amount] = for coin in coins: if coin <= amount: min(dp[amount], 1 + dp[amount - coins[i]])`
+    ///
+    /// 初始化：当amount=1时，dp[1] = coins[0] + dp[0] = 1 + 0，即dp[0]=0
     ///
     /// 下面使用iter api替换内部for循环：
     /// 
@@ -49,6 +51,8 @@ pub mod solution_dp {
     /// date=20210310, mem=2.1, mem_beats=50, runtime=20, runtime_beats=35, url=https://leetcode-cn.com/submissions/detail/153326263/
     /// 
     /// date=20210522, mem=2, mem_beats=86, runtime=16, runtime_beats=40, url=https://leetcode-cn.com/submissions/detail/179790819/
+    ///
+    /// date=20210523, mem=2, mem_beats=63, runtime=12, runtime_beats=60, url=https://leetcode-cn.com/submissions/detail/180025433/
     pub struct Solution;
 
     impl Solution {
@@ -85,6 +89,8 @@ pub mod solution_bfs {
     /// ### Submissions
     ///
     /// date=20210314, mem=2, mem_beats=81, runtime=8, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/155029103/
+    ///
+    /// date=20210523, mem=2.1, mem_beats=46, runtime=12, runtime_beats=60, url=https://leetcode-cn.com/submissions/detail/180036176/
     pub struct Solution;
 
     impl Solution {
@@ -93,20 +99,23 @@ pub mod solution_bfs {
                 return 0;
             }
 
+            let amount = amount as usize;
             let mut queue = std::collections::VecDeque::new();
             queue.push_back(amount);
 
-            let amount = amount as usize;
             let mut visited = vec![false; amount + 1];
             visited[amount] = true;
+
             // coins.sort_unstable();
 
-            let mut steps = 1;
+            let mut steps = 0;
             while !queue.is_empty() {
+                steps += 1;
                 for _ in 0..queue.len() {
                     let amount = queue.pop_front().unwrap();
                     for coin in &coins {
-                        let rest_amount = amount - coin;
+                        let rest_amount = amount as i32 - coin;
+                        // 0找到最短路径
                         if rest_amount == 0 {
                             return steps;
                         }
@@ -114,14 +123,16 @@ pub mod solution_bfs {
                             // break;
                             continue;
                         }
-                        if !visited[rest_amount as usize] {
+                        let rest_amount = rest_amount as usize;
+                        if !visited[rest_amount] {
                             queue.push_back(rest_amount);
-                            visited[rest_amount as usize] = true;
+                            // 禁止重复访问 添加到队列的时候，就应该立即设置为 true
+                            visited[rest_amount] = true;
                         }
                     }
                 }
-                steps += 1;
             }
+            // 未找出0 凑不出当前面值
             -1
         }
     }
