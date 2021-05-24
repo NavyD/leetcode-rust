@@ -91,6 +91,8 @@ pub mod solution_bfs {
     /// date=20210314, mem=2, mem_beats=81, runtime=8, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/155029103/
     ///
     /// date=20210523, mem=2.1, mem_beats=46, runtime=12, runtime_beats=60, url=https://leetcode-cn.com/submissions/detail/180036176/
+    /// 
+    /// date=20210524, mem=2.1, mem_beats=43, runtime=8, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/180334942/
     pub struct Solution;
 
     impl Solution {

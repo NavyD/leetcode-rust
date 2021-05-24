@@ -1,5 +1,13 @@
+/// 思考：为何在coin change中的bfs解法在这里不可行
+/// 
+/// 简单的修改`if rest_amount==0 { res += 1 }`时，状态树由于visited的存在，会将
+/// 多个分支到同一个rest_amount后合并为一种，使得结果少于组合数
 pub mod solution_dp {
     /// # 思路
+    /// 
+    /// 在coin change中是要找出花费最少个数的硬币，如果在这里改成计算硬币数的和：
+    /// `dp[amount] = for coin in coins: if coin <= amount: sum(dp[amount - coins[i]]))`。
+    /// 但是结果不对，这里找出的是硬币的排列数，`1,2`,`2,1`被视为两种情况，而题目要求的是组合数，
     ///
     /// 正确的子问题定义应该是，`problem(k,i) = problem(k-1, i) + problem(k, i-k)`
     ///
@@ -8,7 +16,12 @@ pub mod solution_dp {
     ///
     /// - 一种是没有用前k-1个硬币就凑齐了，
     /// - 一种是前面已经凑到了i-k，现在就差第k个硬币了。
+    /// 
+    /// dp方程：`dp[k][amount] = if coins[k-1] <= amount: dp[k][amount - coins[k-1]] + dp[k - 1][amount] else: dp[k -1][amount]`。
     ///
+    /// 初始化：当只有1个硬币且刚好amount=coin即k=1,i=1时dp[1][1]=dp[0][1] + dp[1, 0]=1，此时应该初始化
+    /// dp[i][0]=1
+    /// 
     /// 参考：
     ///
     /// * [Knapsack problem - Java solution with thinking process O(nm) Time and O(m) Space](https://leetcode.com/problems/coin-change-2/discuss/99212/Knapsack-problem-Java-solution-with-thinking-process-O(nm)-Time-and-O(m)-Space)
@@ -19,23 +32,28 @@ pub mod solution_dp {
     /// date=20210310, mem=6.3, mem_beats=100, runtime=4, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/153303521/
     ///
     /// date=20210311, mem=6.2, mem_beats=100, runtime=12, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/153786239/
+    /// 
+    /// date=20210524, mem=6.3, mem_beats=6.25, runtime=12, runtime_beats=6.25, url=https://leetcode-cn.com/submissions/detail/180329906/
     pub struct Solution;
 
     impl Solution {
         pub fn change(amount: i32, coins: Vec<i32>) -> i32 {
-            let mut dp = vec![vec![0; amount as usize + 1]; coins.len() + 1];
+            let (amount, coins_len) = (amount as usize, coins.len());
+            let mut dp = vec![vec![0; amount + 1]; coins_len + 1];
+            // 这里可以移除，dp过程不会出现dp[0][0]
             dp[0][0] = 1;
-            for i in 1..=coins.len() {
+            for i in 1..=coins_len {
+                // 初始化
                 dp[i][0] = 1;
-                for j in 1..=amount as usize {
+                for j in 1..=amount {
                     dp[i][j] = dp[i - 1][j];
-                    let pre_amount_idx = j as i32 - coins[i - 1];
-                    if pre_amount_idx >= 0 {
-                        dp[i][j] += dp[i][pre_amount_idx as usize];
+                    let rest_amount = j as i32 - coins[i - 1];
+                    if rest_amount >= 0 {
+                        dp[i][j] += dp[i][rest_amount as usize];
                     }
                 }
             }
-            *dp.last().and_then(|a| a.last()).unwrap()
+            dp[coins_len][amount]
         }
     }
 }
@@ -58,6 +76,8 @@ pub mod solution_dp_optimized {
     /// date=20210311, mem=2, mem_beats=100, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/153796187/
     /// 
     /// date=20210314, mem=1.9, mem_beats=100, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/155003732/
+    /// 
+    /// date=20210524, mem=1.9, mem_beats=100, runtime=0, runtime_beats=81, url=https://leetcode-cn.com/submissions/detail/180333918/
     pub struct Solution;
 
     impl Solution {
