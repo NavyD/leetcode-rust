@@ -31,6 +31,7 @@ pub mod maximum_product_subarray;
 pub mod coin_change;
 pub mod coin_change_2;
 pub mod house_robber;
+pub mod house_robber_ii;
 
 // tree
 pub mod same_tree;

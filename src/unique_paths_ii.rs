@@ -132,6 +132,8 @@ pub mod solution_dp {
     ///
     /// date=20210127, mem=2, mem_beats=50, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/141515400/
     /// 
+    /// date=20210525, mem=2, mem_beats=85, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/180637540/
+    /// 
     /// ## 复杂度
     ///
     /// - 时间：O(N*M)
@@ -188,6 +190,8 @@ pub mod solution_dp_optimized {
     /// date=20210124, mem=1.9, mem_beats=100, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/140723024/
     /// 
     /// date=20210127, mem=2, mem_beats=43, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/141516342/
+    /// 
+    /// date=20210525, mem=2, mem_beats=85, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/180638894/
     /// 
     /// ## 复杂度
     ///
