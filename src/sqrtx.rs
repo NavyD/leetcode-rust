@@ -28,7 +28,7 @@ pub mod solution_binarysearch {
     /// 在取mid时应该使用右中位数`let mid = left + (right - left + 1) / 2`，如果
     /// 使用左中位数`let mid = left + (right - left) / 2`，在只有2个元素时取了第1个，
     /// 可能导致死循环。如当x=9,当left=3,right=4时，取mid=3，使得square=3*3=9 == x =>left=3
-    /// 无法退出
+    /// 无法退出。如x=8，当lo=2,hi=3时 2*2 < 8: lo=mid+1=3导致比结果多1
     /// 
     /// 参考：
     /// 
@@ -42,23 +42,22 @@ pub mod solution_binarysearch {
     /// date=20210117, mem=1.9, mem_beats=68, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/139011065/
     /// 
     /// date=20210308, mem=1.9, mem_beats=65, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/152596842/
+    ///
+    /// date=20210526, mem=2, mem_beats=55, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/180935765/
     pub struct Solution;
 
     impl Solution {
         pub fn my_sqrt(x: i32) -> i32 {
             let x = x as u64;
             let mut lo = 0;
-            // 上界
+            // 上界 可简单的置为hi=x
             let mut hi = x / 2 + 1;
             while lo < hi {
                 // 取右中位数
                 let mid = (lo + hi + 1) / 2;
-                let square = (mid * mid) as u64;
-                if square > x  {
-                    // [left, mid - 1]
+                if mid * mid > x {
                     hi = mid - 1;
                 } else {
-                    // [mid, right]
                     lo = mid;
                 }
             }

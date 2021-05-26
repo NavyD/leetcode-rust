@@ -12,6 +12,8 @@ pub mod solution_binarysearch {
     /// date=20210117, mem=2, mem_beats=86, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/139012647/
     /// 
     /// date=20210308, mem=2, mem_beats=32, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/152602821/
+    ///
+    /// date=20210526, mem=1.9, mem_beats=46, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/180940781/
     pub struct Solution;
 
     impl Solution {
@@ -20,11 +22,11 @@ pub mod solution_binarysearch {
             // 1 <= num <= 2^31 - 1
             let (mut lo, mut hi) = (1, num);
             while lo < hi {
-                let mid = (lo + hi) / 2;
-                if mid * mid < num {
-                    lo = mid + 1;
+                let mid = (lo + hi + 1) / 2;
+                if mid * mid > num {
+                    hi = mid - 1;
                 } else {
-                    hi = mid;
+                    lo = mid;
                 }
             }
             lo * lo == num
@@ -70,7 +72,6 @@ mod tests {
     fn basic() {
         test(solution_binarysearch::Solution::is_perfect_square);
         test(solution_progression::Solution::is_perfect_square);
-        test(is_perfect_square)
     }
 
     // 1 <= num <= 2^31 - 1
@@ -81,19 +82,5 @@ mod tests {
         assert!(f(9));
         assert!(f(1));
         assert!(!f(2147395599));
-    }
-
-    pub fn is_perfect_square(num: i32) -> bool {
-        let num = num as u64;
-        let (mut lo, mut hi) = (1, num);
-        while lo < hi {
-            let mid = (lo + hi) / 2;
-            if mid * mid < num {
-                lo = mid + 1;
-            } else {
-                hi = mid;
-            }
-        }
-        lo * lo == num
     }
 }
