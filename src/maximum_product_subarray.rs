@@ -34,7 +34,7 @@ pub mod solution_dp {
     /// dp[i].max = max(nums[i], nums[i] * dp[i - 1].min) if nums[i] < 0
     /// ```
     ///
-    /// 初始化：由于 nums[i] 必须被选取，那么 dp[i][0] = nums[0]，dp[i][1] = nums[0]。
+    /// 初始化：如果nums.len==1，由于 nums[0] 必须被选取，那么 dp[0][0] = nums[0]，dp[0][1] = nums[0]。
     ///
     /// 参考：
     ///
@@ -90,6 +90,8 @@ pub mod solution_dp_optimized {
     /// date=20210309, mem=2.1, mem_beats=81, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/152899923/
     /// 
     /// date=20210523, mem=2.1, mem_beats=53, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/179986506/
+    ///
+    /// date=20210530, mem=2, mem_beats=94, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/182157614/
     pub struct Solution;
 
     impl Solution {

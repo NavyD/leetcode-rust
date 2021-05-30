@@ -46,6 +46,8 @@ pub mod solution_dp {
     /// date=20210522, mem=2, mem_beats=79, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/179758836/
     ///
     /// date=20210523, mem=2.2, mem_beats=18, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/179995932/
+    ///
+    /// date=20210530, mem=2.1, mem_beats=54, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/182147680/
     pub struct Solution;
 
     impl Solution {
@@ -67,6 +69,9 @@ pub mod solution_dp_optimized {
     /// 找出最大值子序列和。考虑nums[i]是单独开始一段还是加入上一段，单nums[i]<0并不能决定，可以
     /// 比较：`dp[i] = nums[i].max(dp[i - 1] + nums[i])`
     ///
+    /// 初始化：当nums.len()==1时，如果res=0, nums[0] < 0，会导致pre_sum < res=0。
+    /// 可以定义res=nums[0]或res=i32::MIN
+    ///
     /// 参考：
     ///
     /// * [最大子序和](https://leetcode-cn.com/problems/maximum-subarray/solution/zui-da-zi-xu-he-by-leetcode-solution/)
@@ -86,6 +91,8 @@ pub mod solution_dp_optimized {
     ///
     /// date=20210523, mem=2.3, mem_beats=12, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/179998106/
     ///
+    /// date=20210530, mem=2, mem_beats=91, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/182150174/
+    ///
     /// ## 复杂度
     ///
     /// - 时间：O(N)
@@ -95,11 +102,10 @@ pub mod solution_dp_optimized {
 
     impl Solution {
         pub fn max_sub_array(nums: Vec<i32>) -> i32 {
-            let mut res = nums[0];
-            let mut sub_sum = 0;
+            let (mut res, mut pre_sum) = (nums[0], 0);
             for num in nums {
-                sub_sum = num.max(sub_sum + num);
-                res = res.max(sub_sum);
+                pre_sum = num.max(pre_sum + num);
+                res = res.max(pre_sum);
             }
             res
         }
@@ -128,10 +134,16 @@ pub mod solution_divide_and_conquer {
     /// max_sum = left_max_sum + right_max_sum = 6
     /// ```
     ///
-    /// 注意：在取整个[lo..hi]跨中心范围和时，在left找最大值要从mid->lo反向找，由于
+    /// 注意：
+    ///
+    /// - 在取整个[lo..hi]跨中心范围和时，在left找最大值要从mid->lo反向找，由于
     /// 在使用最大值的方式从lo -> mid时当`mid<0`时无法将nums[mid]加入最大和中出现错误。
     /// 如：`[2,3,-6,2,4]` 当mid=2,nums[mid]=-6时left=[2,3,-6]，如果使用`lo->mid`则
     /// 会有left_max_sum = 5，而没有算入-6的结果left_max_sum = -1
+    ///
+    /// - nums.len() / 2 使用不当可导致当nums.len()=2时left:`..=1`,一直在left中无限循环，right:`2..`不成立。
+    /// 如：`let mid = nums.len() / 2;let sub_max_sum = helper(&nums[..=mid]).max(helper(&nums[mid + 1..]));`
+    /// 要注意mid的使用范围
     /// 
     /// 对于寻找跨中心范围可使用iter::fold api，由于要缓存中间结果，写起来也不是很优雅：
     /// 
@@ -161,6 +173,8 @@ pub mod solution_divide_and_conquer {
     ///
     /// date=20200523, mem=2.1, mem_beats=55, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/180015540/
     ///
+    /// date=20200530, mem=2, mem_beats=82, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/182153736/
+    ///
     /// ## 复杂度
     ///
     /// - 时间：O(N log N)
@@ -177,22 +191,20 @@ pub mod solution_divide_and_conquer {
                 if nums.len() == 1 {
                     return nums[0];
                 }
-                // nums.len() / 2 可导致当nums.len()=2时left:`..=1`,一直在left中无限循环，right:`2..`不成立
-                let mid = nums.len() / 2 - 1;
+
+                let mid = nums.len() / 2;
                 // get max sub sum compare with left sum and right sum
-                let sub_max_sum = helper(&nums[..=mid]).max(helper(&nums[mid + 1..]));
+                let sub_max_sum = helper(&nums[..mid]).max(helper(&nums[mid..]));
 
                 // get current max sum with cross left and right
-                let mut sum = 0;
-                let mut left_max_sum = i32::MIN;
-                for i in (0..=mid).rev() {
+                let (mut sum, mut left_max_sum) = (0, nums[mid - 1]);
+                for i in (0..mid).rev() {
                     sum += nums[i];
                     left_max_sum = left_max_sum.max(sum);
                 }
 
-                let mut sum = 0;
-                let mut right_max_sum = i32::MIN;
-                for i in mid + 1..nums.len() {
+                let (mut sum, mut right_max_sum) = (0, nums[mid]);
+                for i in mid..nums.len() {
                     sum += nums[i];
                     right_max_sum = right_max_sum.max(sum);
                 }
