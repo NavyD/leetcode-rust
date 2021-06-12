@@ -44,6 +44,8 @@ pub mod solution_binarysearch {
     /// date=20210308, mem=1.9, mem_beats=65, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/152596842/
     ///
     /// date=20210526, mem=2, mem_beats=55, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/180935765/
+    /// 
+    /// date=20210612, mem=2, mem_beats=41, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/186040248/
     pub struct Solution;
 
     impl Solution {

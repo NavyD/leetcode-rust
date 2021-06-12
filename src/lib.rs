@@ -32,6 +32,7 @@ pub mod coin_change;
 pub mod coin_change_2;
 pub mod house_robber;
 pub mod house_robber_ii;
+pub mod best_time_to_buy_and_sell_stock_ii;
 
 // tree
 pub mod same_tree;
@@ -115,7 +116,6 @@ pub use leetcode_prelude as prelude;
 
 // greedy
 pub mod assign_cookies;
-pub mod best_time_to_buy_and_sell_stock_ii;
 pub mod jump_game;
 pub mod lemonade_change;
 pub mod walking_robot_simulation;

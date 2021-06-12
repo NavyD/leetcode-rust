@@ -38,42 +38,10 @@
 ///     *dp.last().unwrap()
 /// }
 /// ```
-pub mod solution_greedy {
-    /// # 思路
-    /// 
-    /// 贪心算法的直觉：由于不限制交易次数，只要今天股价比昨天高，就交易
-    /// 
-    /// 参考：
-    /// 
-    /// - [暴力搜索、贪心算法、动态规划（Java）](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-ii/solution/tan-xin-suan-fa-by-liweiwei1419-2/)
-    /// 
-    /// ### Submissions
-    /// 
-    /// date=20210112, mem=2.1, mem_beats=86, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/137794557/
-    /// 
-    /// date=20210113, mem=2.1, mem_beats=73, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/138054633/
-    /// 
-    /// date=20210124, mem=2.2, mem_beats=40, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/140733456/
-    pub struct Solution;
-
-    impl Solution {
-        pub fn max_profit(prices: Vec<i32>) -> i32 {
-            let mut max_profit = 0;
-            for i in 1..prices.len() {
-                let profit = prices[i] - prices[i - 1];
-                if profit > 0 {
-                    max_profit += profit;
-                }
-            }
-            max_profit
-        }
-    }
-}
-
 pub mod solution_dp {
     /// # 思路
     /// 
-    /// ## 1
+    /// ## 方法1：前i天可获得的最大利润
     /// 
     /// 子问题：定义一个min_price，表示在前i天时出现的最小价格，假设在第i天卖出的利润`prices[i] - min_price`，
     /// 如果之前的利润更大，则使用之前的利润，否则更新为在第i天卖出的利润。problem(i)表示在前i天可获得的最大利润，
@@ -81,31 +49,80 @@ pub mod solution_dp {
     /// 
     /// dp方程：`dp[i] = dp[i - 1].max(prices[i] - (min_price = min_price.min(prices[i])))`
     /// 
+    /// ```
+    /// pub fn max_profit(prices: Vec<i32>) -> i32 {
+    ///     let (mut min_price, mut dp) = (prices[0], vec![0; prices.len()]);
+    ///     for i in 1..prices.len() {
+    ///         min_price = min_price.min(prices[i]);
+    ///         dp[i] = dp[i - 1].max(prices[i] - min_price);
+    ///     }
+    ///     *dp.last().unwrap()
+    /// }
+    /// assert_eq!(max_profit(vec![7, 1, 5, 3, 6, 4]), 5);
+    /// ```
     /// 
-    /// 
-    /// ## 2
+    /// ## 方法2：第i天时卖出的最大利润
     /// 
     /// 子问题：problem(i)表示在第i天时卖出的最大利润，problem(i)不能直接作为问题的结果，但是可以统计一个最大值表示 
-    /// 前i天的最大利润。`problem(i) = 0.max(problem(i - 1) + prices[i] - prices[i - 1])`
+    /// 前i天的最大利润。`problem(i) = 0.max(problem(i - 1) + prices[i] - prices[i - 1])`，第i天卖出的最大利润可以
+    /// 通过累积差实现如：b3 = a3 - a2, b4 = a4 - a3, b5 = a5 - a4, b6 = a6 - a5. b3 + b4 + b5 + b6 = a6 - a2。
+    /// `[参考](https://leetcode.com/problems/best-time-to-buy-and-sell-stock/discuss/39038/Kadane's-Algorithm-Since-no-one-has-mentioned-about-this-so-far-:)-(In-case-if-interviewer-twists-the-input)/36798)`
     /// 
     /// 参考：
     /// 
     /// * [股票问题（Python3、C++）](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock/solution/gu-piao-wen-ti-python3-c-by-z1m/)
     /// * [Kadane's Algorithm - Since no one has mentioned about this so far :) (In case if interviewer twists the input)](https://leetcode.com/problems/best-time-to-buy-and-sell-stock/discuss/39038/Kadane's-Algorithm-Since-no-one-has-mentioned-about-this-so-far-%3A)-(In-case-if-interviewer-twists-the-input))
     /// * [暴力解法、动态规划（Java）](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock/solution/bao-li-mei-ju-dong-tai-gui-hua-chai-fen-si-xiang-b/774434)
+    /// 
+    /// ### Submissions
+    /// 
+    /// date=20210612, mem=2.8, mem_beats=73, runtime=12, runtime_beats=91, url=https://leetcode-cn.com/submissions/detail/186035718/
     pub struct Solution;
 
     impl Solution {
         pub fn max_profit(prices: Vec<i32>) -> i32 {
-            let mut min_price = prices[0];
-            let mut dp = prices;
-            dp[0] = 0;
-            for i in 1..dp.len() {
-                let price = dp[i];
-                min_price = min_price.min(price);
-                dp[i] = dp[i - 1].max(price - min_price);
+            let (mut res, mut dp) = (0, vec![0; prices.len()]);
+            for i in 1..prices.len() {
+                dp[i] = 0.max(dp[i - 1] + prices[i] - prices[i - 1]);
+                res = res.max(dp[i])
             }
-            *dp.last().unwrap()
+            res
+        }
+    }
+}
+
+pub mod solution_dp_optimized {
+    /// # 思路
+    /// 
+    /// 优化方法2
+    /// 
+    /// 这是优化方法1：
+    /// 
+    /// ```
+    /// pub fn max_profit(prices: Vec<i32>) -> i32 {
+    ///     let (mut cur, mut min_price) = (0, prices[0]);
+    ///     for i in 1..prices.len() {
+    ///         min_price = min_price.min(prices[i]);
+    ///         cur = cur.max(prices[i] - min_price);
+    ///     }
+    ///     cur
+    /// }
+    /// assert_eq!(max_profit(vec![7, 1, 5, 3, 6, 4]), 5);
+    /// ```
+    /// 
+    /// ### Submissions
+    /// 
+    /// date=20210612, mem=3, mem_beats=6, runtime=16, runtime_beats=59, url=https://leetcode-cn.com/submissions/detail/186037766/
+    pub struct Solution;
+
+    impl Solution {
+        pub fn max_profit(prices: Vec<i32>) -> i32 {
+            let (mut res, mut pre) = (0, 0);
+            for i in 1..prices.len() {
+                pre = 0.max(pre + prices[i] - prices[i - 1]);
+                res = res.max(pre);
+            }
+            res
         }
     }
 }
@@ -116,28 +133,13 @@ mod tests {
 
     #[test]
     fn basic() {
-        test(solution_greedy::Solution::max_profit);
         test(solution_dp::Solution::max_profit);
-        test(max_profit);
+        test(solution_dp_optimized::Solution::max_profit);
     }
 
     fn test<F: Fn(Vec<i32>) -> i32>(func: F) {
         assert_eq!(func(vec![7, 1, 5, 3, 6, 4]), 5);
         assert_eq!(func(vec![1, 2, 3, 4, 5]), 4);
         assert_eq!(func(vec![7, 6, 4, 3, 1]), 0);
-    }
-    /// problem(i) = problem(i-1).max(problem(i-1) + prices[i] - prices[i-1]).max(0)
-    ///
-    /// 
-    /// dp[i] = dp[i - 1].max(prices[i] - min_price=min_price.min(prices[i]))
-    pub fn max_profit(prices: Vec<i32>) -> i32 {
-        let mut res = 0;
-        let mut dp = vec![0; prices.len()];
-        for i in 1..prices.len() {
-            let diff = prices[i] - prices[i - 1];
-            dp[i] = 0.max(dp[i - 1] + diff);
-            res = res.max(dp[i]);
-        }
-        res
     }
 }
