@@ -1,7 +1,7 @@
 pub mod solution_dp {
     /// # 思路
     ///
-    /// 设`dp[i]`表示凑齐总价值 i 需要的最少硬币个数
+    /// 子问题：设`dp[i]`表示凑齐总价值 i 需要的最少硬币个数，`problem(i) = for coin in coins: min(problem(i - coin) + 1)`
     ///
     /// 对于`coins = [1, 2, 5], amount = 11`, 凑成面值为 11 的最少硬币个数可以由以下三者的最小值得到：
     ///
@@ -13,13 +13,40 @@ pub mod solution_dp {
     ///
     /// 即: `if i - coins[j] >= 0 { dp[i] = min(dp[i], dp[i - coins[j]] + 1) }`
     ///
-    /// `dp[amount] = for coin in coins: if coin <= amount: min(dp[amount], 1 + dp[amount - coins[i]])`
+    /// dp方程：`dp[amount] = for coin in coins: if coin <= amount: min(dp[amount], 1 + dp[amount - coins[i]])`
     ///
-    /// 初始化：当amount=1时，dp[1] = coins[0] + dp[0] = 1 + 0，即dp[0]=0
+    /// 初始化：当amount=1时，dp[1] = coins[0] + dp[0] = 1 + 0，即dp[0]=Some(0)，其它初始化为None
+    ///
+    /// 注意：有[动态规划、完全背包、BFS（包含完全背包问题公式推导）](https://leetcode-cn.com/problems/coin-change/solution/dong-tai-gui-hua-shi-yong-wan-quan-bei-bao-wen-ti-/)
+    /// ` if (i - coin >= 0 && dp[i - coin] != amount + 1) {`，在找`dp[i]`时必须验证`dp[amount - coins[i]]`这个之前的是否存在，如果不存在说明无法使用凑出
+    /// `dp[i]`。但是、但是、但是，对于从1..=amount开始dp[i]，dp[0]=0，dp[preidx=amount-coins[i]]是必存在的，
+    /// 这个验证是不需要的，移除
+    ///
+    /// ```
+    /// pub fn coin_change(coins: Vec<i32>, amount: i32) -> i32 {
+    ///     let amount = amount as usize;
+    ///     let mut dp = vec![None; amount + 1];
+    ///     // 理解 dp[0] = 0 的合理性，单独一枚硬币如果能够凑出面值，符合最优子结构
+    ///     dp[0] = Some(0);
+    ///     for amount in 1..=amount {
+    ///         for coin in &coins {
+    ///             let pre_idx = amount as i32 - coin;
+    ///             if pre_idx >= 0 && dp[pre_idx as usize].is_some() {
+    ///                 dp[amount] = dp[amount]
+    ///                     // 避免 None.min(Some(v)) 返回一个None
+    ///                     .or(Some(i32::MAX))
+    ///                     .min(dp[pre_idx as usize].map(|v| v + 1))
+    ///             }
+    ///         }
+    ///     }
+    ///     dp[amount].unwrap_or(-1)
+    /// }
+    /// assert_eq!(coin_change(vec![1, 2, 5], 11), 3);
+    /// ```
     ///
     /// 下面使用iter api替换内部for循环：
-    /// 
-    /// ```ignore
+    ///
+    /// ```
     /// pub fn coin_change(coins: Vec<i32>, amount: i32) -> i32 {
     ///     let amount = amount as usize;
     ///     let mut dp = vec![None; amount + 1];
@@ -38,41 +65,45 @@ pub mod solution_dp {
     ///     }
     ///     dp[amount].unwrap_or(-1)
     /// }
+    /// assert_eq!(coin_change(vec![1, 2, 5], 11), 3);
     /// ```
     ///
     /// 参考:
     ///
     /// * [动态规划、完全背包、BFS（包含完全背包问题公式推导）](https://leetcode-cn.com/problems/coin-change/solution/dong-tai-gui-hua-shi-yong-wan-quan-bei-bao-wen-ti-/)
+    /// * [[C++] O(n*amount) time O(amount) space DP solution](https://leetcode.com/problems/coin-change/discuss/77360/C%2B%2B-O(n*amount)-time-O(amount)-space-DP-solution)
     ///
     /// ### Submissions
     ///
     /// date=20210309, mem=2.1, mem_beats=50, runtime=16, runtime_beats=35, url=https://leetcode-cn.com/submissions/detail/152889099/
     ///
     /// date=20210310, mem=2.1, mem_beats=50, runtime=20, runtime_beats=35, url=https://leetcode-cn.com/submissions/detail/153326263/
-    /// 
+    ///
     /// date=20210522, mem=2, mem_beats=86, runtime=16, runtime_beats=40, url=https://leetcode-cn.com/submissions/detail/179790819/
     ///
     /// date=20210523, mem=2, mem_beats=63, runtime=12, runtime_beats=60, url=https://leetcode-cn.com/submissions/detail/180025433/
+    /// 
+    /// date=20210613, mem=2, mem_beats=83, runtime=8, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/186249323/
     pub struct Solution;
 
     impl Solution {
         pub fn coin_change(coins: Vec<i32>, amount: i32) -> i32 {
-            let amount = amount as usize;
-            let mut dp = vec![None; amount + 1];
-            // 理解 dp[0] = 0 的合理性，单独一枚硬币如果能够凑出面值，符合最优子结构 
-            dp[0] = Some(0);
-            for amount in 1..=amount {
+            let (amount, mark) = (amount as usize, amount + 1);
+            let mut dp = vec![mark; amount + 1];
+            dp[0] = 0;
+            for i in 1..=amount {
                 for coin in &coins {
-                    let pre_idx = amount as i32 - coin;
-                    if pre_idx >= 0 && dp[pre_idx as usize].is_some() {
-                        dp[amount] = dp[amount]
-                            // 避免 None.min(Some(v)) 返回一个None
-                            .or(Some(i32::MAX))
-                            .min(dp[pre_idx as usize].map(|v| v + 1))
+                    let coin = *coin as usize;
+                    if i >= coin {
+                        dp[i] = dp[i].min(dp[i - coin] + 1);
                     }
                 }
             }
-            dp[amount].unwrap_or(-1)
+            if dp[amount] == mark {
+                -1
+            } else {
+                dp[amount]
+            }
         }
     }
 }
@@ -91,8 +122,10 @@ pub mod solution_bfs {
     /// date=20210314, mem=2, mem_beats=81, runtime=8, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/155029103/
     ///
     /// date=20210523, mem=2.1, mem_beats=46, runtime=12, runtime_beats=60, url=https://leetcode-cn.com/submissions/detail/180036176/
-    /// 
+    ///
     /// date=20210524, mem=2.1, mem_beats=43, runtime=8, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/180334942/
+    /// 
+    /// date=20210613, mem=2, mem_beats=84, runtime=12, runtime_beats=64, url=https://leetcode-cn.com/submissions/detail/186258732/
     pub struct Solution;
 
     impl Solution {
@@ -101,10 +134,10 @@ pub mod solution_bfs {
                 return 0;
             }
 
-            let amount = amount as usize;
             let mut queue = std::collections::VecDeque::new();
             queue.push_back(amount);
-
+            
+            let amount = amount as usize;
             let mut visited = vec![false; amount + 1];
             visited[amount] = true;
 
@@ -116,7 +149,7 @@ pub mod solution_bfs {
                 for _ in 0..queue.len() {
                     let amount = queue.pop_front().unwrap();
                     for coin in &coins {
-                        let rest_amount = amount as i32 - coin;
+                        let rest_amount = amount - coin;
                         // 0找到最短路径
                         if rest_amount == 0 {
                             return steps;
@@ -125,11 +158,9 @@ pub mod solution_bfs {
                             // break;
                             continue;
                         }
-                        let rest_amount = rest_amount as usize;
-                        if !visited[rest_amount] {
+                        if !visited[rest_amount as usize] {
                             queue.push_back(rest_amount);
-                            // 禁止重复访问 添加到队列的时候，就应该立即设置为 true
-                            visited[rest_amount] = true;
+                            visited[rest_amount as usize] = true;
                         }
                     }
                 }

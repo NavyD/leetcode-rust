@@ -8,7 +8,7 @@
 /// 的关系
 ///
 /// 拉跨
-/// 
+///
 /// ```ignore
 /// pub fn unique_paths_with_obstacles(obstacle_grid: Vec<Vec<i32>>) -> i32 {
 ///     let (m, n) = (obstacle_grid.len(), obstacle_grid[0].len());
@@ -115,12 +115,12 @@ pub mod solution_dp {
     ///
     /// * [tusizi](https://leetcode.com/problems/unique-paths-ii/discuss/23250/Short-JAVA-solution)
     /// * [jianchao-li](references=https://leetcode.com/problems/unique-paths-ii/discuss/23252/4ms-O(n)-DP-Solution-in-C%2B%2B-with-Explanations)
-    /// 
-    /// 
+    ///
+    ///
     /// 子问题：当前位置要左边，上面两个位置推出，如果当前位置是obstacle不可走，则为0
-    /// 
+    ///
     /// 设dp[i][j]表示在i,j位置上的路径数，有`dp[i][j] = if grid[i][j]==0 { dp[i-1][j] + dp[i][j-1] } else { 0 }`
-    /// 
+    ///
     /// 初始化：当`[0][j]`存在一个障碍时j..len都是0，`[i][0]`同理。如果使用`dp[i][j]`表示i-1,j-1位置，在0,0位置时使用`dp[1][1]`
     /// 如果0,0位置存在障碍，`dp[1][1]=0`，否则`dp[1][1]=1`，要求`dp[0][1]=1 or dp[1][0]=1`。不再需要主动再次初始化
     ///
@@ -131,9 +131,9 @@ pub mod solution_dp {
     /// date=20210124, mem=1.9, mem_beats=76, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/140720811/
     ///
     /// date=20210127, mem=2, mem_beats=50, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/141515400/
-    /// 
+    ///
     /// date=20210525, mem=2, mem_beats=85, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/180637540/
-    /// 
+    ///
     /// ## 复杂度
     ///
     /// - 时间：O(N*M)
@@ -177,22 +177,55 @@ pub mod solution_dp_optimized {
     /// which is new dp[j] = old dp[j] + dp[j-1]
     /// which is current cell = top cell + left cell
     /// ```
+    /// 
+    /// 下面使用`dp.len=n+1`避免`if j>0`，初始化时不能使用dp[0]=1，dp[1]=1表示
+    /// 计算第0列+1，如果使用dp[0]=1，就会在每行重复计算第0列+1，使得结果更大
+    /// 
+    /// ```
+    /// pub fn unique_paths_with_obstacles(obstacle_grid: Vec<Vec<i32>>) -> i32 {
+    ///     let (m, n) = (obstacle_grid.len(), obstacle_grid[0].len());
+    ///     let mut dp = vec![0; n + 1];
+    ///     dp[1] = 1;
+    ///     for i in 0..m {
+    ///         for j in 1..=n {
+    ///             if obstacle_grid[i][j - 1] == 0 {
+    ///                 dp[j] += dp[j - 1];
+    ///             } else {
+    ///                 dp[j] = 0;
+    ///             }
+    ///         }
+    ///     }
+    ///     dp[n]
+    /// }
+    /// assert_eq!(
+    ///     unique_paths_with_obstacles(vec![
+    ///         vec![0, 0, 0],
+    ///         vec![0, 1, 0],
+    ///         vec![0, 0, 0],
+    ///         vec![0, 0, 0],
+    ///         vec![0, 0, 0],
+    ///     ]),
+    ///     7
+    /// );
+    /// ```
     ///
     /// 参考：
-    /// 
-    /// * [tusizi](https://leetcode.com/problems/unique-paths-ii/discuss/23250/Short-JAVA-solution)
-    /// * [BirdFrank](https://leetcode.com/problems/unique-paths-ii/discuss/23250/Short-JAVA-solution/22620)
+    ///
+    /// * [Short JAVA solution](https://leetcode.com/problems/unique-paths-ii/discuss/23250/Short-JAVA-solution)
+    /// * [use n + 1](https://leetcode.com/problems/unique-paths-ii/discuss/23250/Short-JAVA-solution/173411)
     ///
     /// ## Submissions
     ///
     /// date=20200703, mem=2.1, mem_beats=57.14, runtime=0, runtime_beats=100, url=https://leetcode.com/submissions/detail/361356420/
     ///
     /// date=20210124, mem=1.9, mem_beats=100, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/140723024/
-    /// 
+    ///
     /// date=20210127, mem=2, mem_beats=43, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/141516342/
-    /// 
+    ///
     /// date=20210525, mem=2, mem_beats=85, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/180638894/
     /// 
+    /// date=20210613, mem=2.1, mem_beats=8, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/186290129/
+    ///
     /// ## 复杂度
     ///
     /// - 时间：O(N*M)
@@ -207,7 +240,7 @@ pub mod solution_dp_optimized {
             for i in 0..m {
                 for j in 0..n {
                     if obstacle_grid[i][j] == 1 {
-                        // 覆盖 上面来的路径 不存在 
+                        // 覆盖 上面来的路径 不存在
                         dp[j] = 0;
                     } else if j > 0 {
                         // 左边来 + 上面的
@@ -231,14 +264,16 @@ mod tests {
     }
 
     fn test<F: Fn(Vec<Vec<i32>>) -> i32>(f: F) {
-        let input = vec![
-            vec![0, 0, 0],
-            vec![0, 1, 0],
-            vec![0, 0, 0],
-            vec![0, 0, 0],
-            vec![0, 0, 0],
-        ];
-        assert_eq!(f(input), 7);
+        assert_eq!(
+            f(vec![
+                vec![0, 0, 0],
+                vec![0, 1, 0],
+                vec![0, 0, 0],
+                vec![0, 0, 0],
+                vec![0, 0, 0],
+            ]),
+            7
+        );
         assert_eq!(f(vec![vec![0, 1]]), 0);
         assert_eq!(f(vec![vec![1]]), 0);
         assert_eq!(f(vec![vec![0], vec![0], vec![0]]), 1);
