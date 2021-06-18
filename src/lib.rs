@@ -11,7 +11,6 @@ pub mod sort_an_array;
 
 // dynamic programming
 pub mod climbing_stairs;
-pub mod best_time_to_buy_and_sell_stock;
 pub mod range_sum_query_immutable;
 pub mod is_subsequence;
 pub mod min_cost_climbing_stairs;
@@ -33,6 +32,7 @@ pub mod coin_change_2;
 pub mod house_robber;
 pub mod house_robber_ii;
 pub mod best_time_to_buy_and_sell_stock_ii;
+pub mod best_time_to_buy_and_sell_stock;
 
 // tree
 pub mod same_tree;
