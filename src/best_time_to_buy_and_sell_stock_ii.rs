@@ -1,5 +1,5 @@
 /// 第一次写：菜
-/// 
+///
 /// ```ignore
 /// let mut min = prices[0];
 /// let mut max = -1;
@@ -18,19 +18,19 @@
 /// ```
 pub mod solution_greedy {
     /// # 思路
-    /// 
+    ///
     /// 贪心算法的直觉：由于不限制交易次数，只要今天股价比昨天高，就交易
-    /// 
+    ///
     /// 参考：
-    /// 
+    ///
     /// - [暴力搜索、贪心算法、动态规划（Java）](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-ii/solution/tan-xin-suan-fa-by-liweiwei1419-2/)
-    /// 
+    ///
     /// ### Submissions
-    /// 
+    ///
     /// date=20210112, mem=2.1, mem_beats=86, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/137794557/
-    /// 
+    ///
     /// date=20210113, mem=2.1, mem_beats=73, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/138054633/
-    /// 
+    ///
     /// date=20210124, mem=2.2, mem_beats=40, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/140733456/
     pub struct Solution;
 
@@ -50,45 +50,48 @@ pub mod solution_greedy {
 
 pub mod solution_dp {
     /// # 思路
-    /// 
+    ///
     /// ```ignore
     /// T[i][k][0] = max(T[i - 1][k][0], T[i - 1][k][1] + prices[i])
     /// T[i][k][1] = max(T[i - 1][k][1], T[i - 1][k - 1][0] - prices[i]) = max(T[i - 1][k][1], T[i - 1][k][0] - prices[i])
     /// ```
-    /// 
+    ///
     /// 参考：
-    /// 
+    ///
     /// * [股票问题系列通解（转载翻译）](https://leetcode-cn.com/circle/article/qiAgHn/)
     /// * [Most consistent ways of dealing with the series of stock problems](https://leetcode.com/problems/best-time-to-buy-and-sell-stock-with-transaction-fee/discuss/108870/Most-consistent-ways-of-dealing-with-the-series-of-stock-problems)
-    /// 
+    ///
     /// ### Submissions
-    /// 
+    ///
     /// date=20210618, mem=3.4, mem_beats=5, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/187704657/
+    ///
+    /// date=20210619, mem=2.2, mem_beats=21, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/187925260/
     pub struct Solution;
 
     impl Solution {
         pub fn max_profit(prices: Vec<i32>) -> i32 {
             let n = prices.len();
-            let mut dp = vec![vec![0; 2]; n];
-            dp[0][0] = 0;
-            dp[0][1] = -prices[0];
+            let mut dp = vec![(0, 0); n];
+            dp[0].0 = 0;
+            dp[0].1 = -prices[0];
 
             for i in 1..n {
-                dp[i][0] = dp[i - 1][0].max(dp[i - 1][1] + prices[i]);
-                dp[i][1] = dp[i - 1][1].max(dp[i - 1][0] - prices[i]);
+                dp[i].0 = dp[i - 1].0.max(dp[i - 1].1 + prices[i]);
+                dp[i].1 = dp[i - 1].1.max(dp[i - 1].0 - prices[i]);
             }
-
-            dp[n - 1][0]
+            dp[n - 1].0
         }
     }
 }
 
 pub mod solution_dp_optimized {
     /// # 思路
-    /// 
+    ///
     /// ### Submissions
-    /// 
+    ///
     /// date=20210618, mem=2.1, mem_beats=88, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/187704978/
+    /// 
+    /// date=20210619, mem=2.2, mem_beats=40, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/187925686/
     pub struct Solution;
 
     impl Solution {
