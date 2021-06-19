@@ -49,7 +49,7 @@ pub mod solution_backtracking {
     /// date=20201218, mem=2.2, mem_beats=5, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/132095917/
     ///
     /// date=20201219, mem=1.9, mem_beats=78, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/132222590/
-    /// 
+    ///
     /// date=20201227, mem=2.1, mem_beats=20, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/134091077/
     pub struct Solution;
 
@@ -57,7 +57,7 @@ pub mod solution_backtracking {
         pub fn letter_combinations(digits: String) -> Vec<String> {
             fn _backtrack(
                 digits: &[u8],
-                number_letters: &Vec<&str>,
+                number_letters: &[&str],
                 path: &mut String,
                 res: &mut Vec<String>,
             ) {
@@ -79,7 +79,7 @@ pub mod solution_backtracking {
                 _backtrack(
                     digits.as_bytes(),
                     // number-letter: 2-abc, 3-def => 重建索引
-                    &vec!["abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"],
+                    &["abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"],
                     &mut String::new(),
                     &mut res,
                 );
@@ -96,16 +96,17 @@ mod tests {
 
     #[test]
     fn basic() {
-        fn test<F: Fn(String) -> Vec<String>>(func: F) {
-            assert_eq!(func("".to_string()), vec![] as Vec<String>);
-            let res = func("23".to_string());
-            let expected = ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"]
-                .iter()
-                .map(|e| e.to_string())
-                .collect::<Vec<_>>();
-            assert_eq!(res.len(), expected.len());
-            assert!(is_contains(&res, &expected));
-        };
         test(solution_backtracking::Solution::letter_combinations);
+    }
+
+    fn test<F: Fn(String) -> Vec<String>>(func: F) {
+        assert_eq!(func("".to_string()), vec![] as Vec<String>);
+        let res = func("23".to_string());
+        let expected = ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"]
+            .iter()
+            .map(|e| e.to_string())
+            .collect::<Vec<_>>();
+        assert_eq!(res.len(), expected.len());
+        assert!(is_contains(&res, &expected));
     }
 }
