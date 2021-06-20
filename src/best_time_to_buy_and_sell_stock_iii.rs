@@ -27,6 +27,8 @@ pub mod solution_dp {
         /// ### Submissions
         ///
         /// date=20210619, mem=21.5, mem_beats=7, runtime=140, runtime_beats=7, url=https://leetcode-cn.com/submissions/detail/187916639/
+        /// 
+        /// date=20210620, mem=21.3, mem_beats=7, runtime=140, runtime_beats=7, url=https://leetcode-cn.com/submissions/detail/188161320/
         pub fn max_profit(prices: Vec<i32>) -> i32 {
             let n = prices.len();
             let mut dp = vec![vec![vec![0; 2]; 3]; n];
@@ -49,9 +51,13 @@ pub mod solution_dp_optimized {
 
     /// # 思路
     /// 
+    /// 注意顺序对profit_10计算前后对profit21没有影响
+    /// 
     /// ### Submissions
     /// 
     /// date=20210619, mem=2.8, mem_beats=100, runtime=12, runtime_beats=71, url=https://leetcode-cn.com/submissions/detail/187918920/
+    /// 
+    /// date=20210620, mem=3, mem_beats=57, runtime=16, runtime_beats=35, url=https://leetcode-cn.com/submissions/detail/188162387/
     pub struct Solution;
 
     impl Solution {
