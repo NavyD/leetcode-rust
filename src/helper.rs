@@ -178,7 +178,6 @@ mod tests {
 
 // Some(RefCell { value: TreeNode { val: 1, left: None, right: Some(RefCell { value: TreeNode { val: 2, left: Some(RefCell { value: TreeNode { val: 2, left: None, right: None } }), right: None } }) } })
 
-
 pub mod utils {
     #[cfg(test)]
     mod tests {
@@ -192,9 +191,15 @@ pub mod utils {
             assert!(!is_contains_vec2(&a, &b));
 
             assert!(is_contains(&vec![2321, 2, 2, 2, 1], &vec![]));
-            assert!(is_contains_vec2(&vec![vec![1,2], vec![4,5]], &vec![]));
-            assert!(!is_contains_vec2(&vec![vec![1,2], vec![4,5]], &vec![vec![10]]));
-            assert!(!is_contains_vec2(&vec![vec![1,2], vec![4,5]], &vec![vec![1], vec![10]]));
+            assert!(is_contains_vec2(&vec![vec![1, 2], vec![4, 5]], &vec![]));
+            assert!(!is_contains_vec2(
+                &vec![vec![1, 2], vec![4, 5]],
+                &vec![vec![10]]
+            ));
+            assert!(!is_contains_vec2(
+                &vec![vec![1, 2], vec![4, 5]],
+                &vec![vec![1], vec![10]]
+            ));
         }
     }
 

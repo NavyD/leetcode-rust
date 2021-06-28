@@ -85,7 +85,7 @@ pub mod solution_dp {
         /// date=20200615, mem=3.4, mem_beats=100, runtime=8, runtime_beats=100, url=https://leetcode.com/submissions/detail/353836184/,
         ///
         /// author=lee215, references=https://leetcode.com/problems/maximum-profit-in-job-scheduling/discuss/409009/JavaC%2B%2BPython-DP-Solution
-        /// 
+        ///
         /// author=fengyunzz8, references=https://leetcode.com/problems/maximum-profit-in-job-scheduling/discuss/409009/JavaC++Python-DP-Solution/368208
         ///
         /// ## 复杂度

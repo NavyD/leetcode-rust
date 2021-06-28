@@ -13,9 +13,9 @@ pub mod solution_dfs {
     /// # 思路
     ///
     /// 使用前序 DFS（递归）
-    /// 
+    ///
     /// 选择前序遍历是因为 根|左|右 的打印顺序，在反序列化时更容易定位出根节点的值。
-    /// 
+    ///
     /// 注意：DELIMITER
     ///
     /// 参考：
@@ -27,7 +27,7 @@ pub mod solution_dfs {
     /// date=20201021, mem=3.2, mem_beats=100, runtime=8, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/117405446/
     ///
     /// date=20201022, mem=3.1, mem_beats=100, runtime=8, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/117716368/
-    /// 
+    ///
     /// date=20201031, mem=3, mem_beats=66.67, runtime=12, runtime_beats=33.33, url=https://leetcode-cn.com/submissions/detail/119963318/
     struct Codec {}
 
@@ -55,16 +55,16 @@ pub mod solution_dfs {
             self.de(&mut data.split(DELIMITER))
         }
 
-        fn de<'a>(&self, iter: &mut impl Iterator<Item = &'a str>) -> Option<Rc<RefCell<TreeNode>>> {
-            iter
-                .next()
-                .and_then(|v| v.parse().ok())
-                .map(|v| {
-                    let mut root = TreeNode::new(v);
-                    root.left = self.de(iter);
-                    root.right = self.de(iter);
-                    Rc::new(RefCell::new(root))
-                })
+        fn de<'a>(
+            &self,
+            iter: &mut impl Iterator<Item = &'a str>,
+        ) -> Option<Rc<RefCell<TreeNode>>> {
+            iter.next().and_then(|v| v.parse().ok()).map(|v| {
+                let mut root = TreeNode::new(v);
+                root.left = self.de(iter);
+                root.right = self.de(iter);
+                Rc::new(RefCell::new(root))
+            })
         }
     }
     #[cfg(test)]

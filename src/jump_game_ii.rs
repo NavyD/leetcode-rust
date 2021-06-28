@@ -97,7 +97,7 @@ pub mod solution_greedy_reversed {
     /// date=20210115, mem=2.1, mem_beats=50, runtime=528, runtime_beats=14, url=https://leetcode-cn.com/submissions/detail/138592278/
     ///
     /// date=20210307, mem=2.3, mem_beats=10, runtime=528, runtime_beats=5, url=https://leetcode-cn.com/submissions/detail/152105220/
-    /// 
+    ///
     /// date=20210520, mem=2.1, mem_beats=23, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/179180098/
     pub struct Solution;
 
@@ -107,9 +107,7 @@ pub mod solution_greedy_reversed {
             let mut pos = nums.len() - 1;
             while pos > 0 {
                 // 找能到达pos的最小（最长）位置
-                pos = (0..pos)
-                    .find(|i| nums[*i] as usize + i >= pos)
-                    .unwrap();
+                pos = (0..pos).find(|i| nums[*i] as usize + i >= pos).unwrap();
                 steps += 1;
             }
             steps

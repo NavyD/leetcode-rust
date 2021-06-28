@@ -1,6 +1,6 @@
 pub mod solution_recursive {
     /// # 思路
-    /// 
+    ///
     /// ```java
     /// @Submission(date = "20201007", memory = 40, memoryBeatRate = 19.34, runtime = 2, runtimeBeatRate = 46.89, url = "https://leetcode-cn.com/submissions/detail/113763877/")
     /// public List<Integer> postorder(Node root) {
@@ -20,7 +20,7 @@ pub mod solution_recursive {
 
 pub mod solution_dfs {
     /// # 思路
-    /// 
+    ///
     /// ```java
     /// @Submission(date = "20201007", memory = 39.8, memoryBeatRate = 45.30, runtime = 4, runtimeBeatRate = 40.71, url = "https://leetcode-cn.com/submissions/detail/113783882/")
     /// @Submission(date = "20201011", memory = 40, memoryBeatRate = 20.71, runtime = 4, runtimeBeatRate = 40.75, url = "https://leetcode-cn.com/submissions/detail/114834554/")

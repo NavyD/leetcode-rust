@@ -82,21 +82,21 @@ pub mod solution_bfs {
     use super::*;
 
     /// # 思路
-    /// 
+    ///
     /// bfs遍历判断左叶子结点找出sum
-    /// 
+    ///
     /// 如何找出左叶子结点？
-    /// 
+    ///
     /// 以`root.left`作root判断下一个left,right是否为空
-    /// 
+    ///
     /// ## Submission
-    /// 
+    ///
     /// date=20200808, mem=2.1, mem_beats=100, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/95895570/
-    /// 
+    ///
     /// author=navyd
-    /// 
+    ///
     /// ## 复杂度
-    /// 
+    ///
     /// - 时间：O(N)
     /// - 空间：O(N)
     pub struct Solution;

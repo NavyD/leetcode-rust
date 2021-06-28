@@ -1,14 +1,14 @@
 /// 总结
-/// 
+///
 /// 这个题目花了3次才开始了解，从开始不清楚背解法 -> 理解暴力解法 -> 单调栈，哨兵
 /// 流程还是不能少，不能直接背解法，记不住，要由于题意开始一步步深入
-/// 
+///
 /// 开始尝试用[container_with_most_water](https://leetcode-cn.com/problems/container-with-most-water/)这个双指针
 /// 解法，但发现其意思与该题不同，柱形面积不是两边最小的height*width，而是用当前
 /// 高度为最小相邻的有多少个柱形width
-/// 
+///
 /// 20200916
-/// 
+///
 /// 注意solution_stack_sentinel中`width=i-last-1 | i`的含义
 pub mod solution_violent_width {
     /// # 思路
@@ -80,7 +80,7 @@ pub mod solution_violent_height {
     /// ### Submissions
     ///
     /// date=20200906, mem=2.2, mem_beats=93.75, runtime=880, runtime_beats=5.97, url=https://leetcode-cn.com/submissions/detail/105190091/
-    /// 
+    ///
     /// date=20200908, mem=2.3, mem_beats=77.78, runtime=884, runtime_beats=5.8, url=https://leetcode-cn.com/submissions/detail/105869662/
     ///
     /// ### 复杂度
@@ -164,10 +164,10 @@ pub mod solution_monotonous_stack {
     ///
     /// 在缓存数据的时候，是从左向右缓存的，我们计算出一个结果的顺序是从右向左的，
     /// 并且计算完成以后我们就不再需要了，符合后进先出的特点 栈
-    /// 
+    ///
     /// 注意：`while let Some(last) = last_indices.last() {`往前找的部分可移除，在后面循环中被
     /// 多次处理
-    /// 
+    ///
     ///
     /// 参考：
     ///
@@ -178,7 +178,7 @@ pub mod solution_monotonous_stack {
     /// date=20200907, mem=2.4, mem_beats=29.41, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/105482050/
     ///
     /// date=20200908, mem=2.5, mem_beats=27.78, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/105874885/
-    /// 
+    ///
     /// ### 复杂度
     ///
     /// - 时间：O(n)
@@ -257,33 +257,33 @@ pub mod solution_monotonous_stack {
 pub mod solution_stack_sentinel {
 
     /// # 思路
-    /// 
+    ///
     /// 遍历完成以后，栈中还有元素，在heights最后加个高度为 0 （或者是 0.5，只要比 1 严格小都行）的柱形，
     /// 以回避上面这后面的单独循环，在最后for一次处理，
     /// 因为它一定比输入数组里任何一个元素小，它会让所有输入数组里的元素出栈
-    /// 
+    ///
     /// 可以省略往前找的循环`while let Some(last) = last_indices.last() {`，外部循环while let可处理
-    /// 
+    ///
     /// 如何处理width与i的关系
-    /// 
+    ///
     /// - 当last_indices中还存在元素时，即`i.last.last`存在，last_heigth对应的`i.last`已经被pop了，则`i-last-1= i - i.last`
     /// 如计算height=5的面积：`last_indices=1; last=1, i=4 ==> i-last-1 = 4 - 1 - 1 = 2`
-    /// 
+    ///
     /// 当last_indices没有元素时，表示当前last就是最后的也是最小的height，这个柱形的width就是最长的，整个未加sentinel的heigth.len()
-    /// 
+    ///
     /// 参考：
-    /// 
+    ///
     /// - [单调递增栈](https://leetcode-cn.com/problems/largest-rectangle-in-histogram/solution/xi-li-hu-tu-bu-ming-suo-yi-by-alien-7/)
     /// - [暴力解法、栈（单调栈、哨兵技巧）](https://leetcode-cn.com/problems/largest-rectangle-in-histogram/solution/bao-li-jie-fa-zhan-by-liweiwei1419/)
-    /// 
+    ///
     /// ### Submissions
-    /// 
+    ///
     /// date=20200907, mem=2.4, mem_beats=29.41, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/105495785/
-    /// 
+    ///
     /// date=20200916, mem=2.3, mem_beats=46.15, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/108503945/
-    /// 
+    ///
     /// ### 复杂度
-    /// 
+    ///
     /// - 时间：O(n)
     /// - 空间：O(n)
     pub struct Solution;
@@ -323,7 +323,7 @@ pub mod solution_stack_sentinel {
 
         #[test]
         fn basics() {
-            assert_eq!(10, Solution::largest_rectangle_area(vec![2,1,5,6,2,3]));
+            assert_eq!(10, Solution::largest_rectangle_area(vec![2, 1, 5, 6, 2, 3]));
             assert_eq!(0, Solution::largest_rectangle_area(vec![]));
             assert_eq!(5, Solution::largest_rectangle_area(vec![5]));
             assert_eq!(5, Solution::largest_rectangle_area(vec![2, 5]));

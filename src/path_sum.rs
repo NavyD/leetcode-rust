@@ -49,15 +49,15 @@ pub mod solution_dfs {
     /// dfs如何计算path sum
     ///
     /// 用先序遍历递归计算root.val-sum作为new sum
-    /// 
+    ///
     /// ## Submission
-    /// 
+    ///
     /// date=20200805, mem=2.7, mem_beats=2.6, runtime=0, runtime_beats=100, url=https://leetcode.com/submissions/detail/376461021/
-    /// 
+    ///
     /// author=力扣官方题解, references=https://leetcode-cn.com/problems/path-sum/solution/lu-jing-zong-he-by-leetcode-solution/
-    /// 
+    ///
     /// ## 复杂度
-    /// 
+    ///
     /// - 时间：O(N)
     /// - 空间：O(log N)
     pub struct Solution;
@@ -83,20 +83,20 @@ pub mod solution_dfs {
 pub mod solution_bfs {
     use super::*;
     /// # 思路
-    /// 
+    ///
     /// bfs如何记录路径和与节点对应？
-    /// 
+    ///
     /// 由于bfs中queue记录每个path，可同用val_queue记录每个path的sum
     /// 两个queue顺序对应就是(path, path_sum)
-    /// 
+    ///
     /// ## Submission
-    /// 
+    ///
     /// date=20200806, mem=2.5, mem_beats=100, runtime=0, runtime_beats=100, url=https://leetcode.com/submissions/detail/376820425/
-    /// 
+    ///
     /// author=力扣官方题解, references=https://leetcode-cn.com/problems/path-sum/solution/lu-jing-zong-he-by-leetcode-solution/
-    /// 
+    ///
     /// ## 复杂度
-    /// 
+    ///
     /// - 时间：O(N)。最小复杂度为O(1)
     /// - 空间：O(N)
     pub struct Solution;
@@ -114,7 +114,7 @@ pub mod solution_bfs {
                         let root = root.borrow();
                         let cur_sum = path_vals.pop_front().unwrap();
                         if root.left.is_none() && root.right.is_none() && cur_sum == sum {
-                            return true
+                            return true;
                         }
                         if let Some(left) = root.left.clone() {
                             path_vals.push_back(left.borrow().val + cur_sum);

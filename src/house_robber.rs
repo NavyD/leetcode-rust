@@ -16,7 +16,7 @@ pub mod solution_dp {
     /// dp[2]=4 // dp[2]=max(dp[1], dp[0]+nums[2])
     /// ```
     ///
-   /// 注意：如果`dp.len() = nums.len() + 1`，使用`dp[0] = 0, dp[1]=nums[0]`，
+    /// 注意：如果`dp.len() = nums.len() + 1`，使用`dp[0] = 0, dp[1]=nums[0]`，
     /// 这样就不需要判断了：
     ///
     /// ```ignore
@@ -32,9 +32,9 @@ pub mod solution_dp {
     ///     *dp.last().unwrap()
     /// }
     /// ```
-    /// 
+    ///
     /// 参考：
-    /// 
+    ///
     /// * [图解动态规划的解题四步骤（C++/Java/Python）](https://leetcode-cn.com/problems/house-robber/solution/dong-tai-gui-hua-jie-ti-si-bu-zou-xiang-jie-cjavap/)
     ///
     /// ## Submissions
@@ -42,7 +42,7 @@ pub mod solution_dp {
     /// date=20200621, mem=2.1, mem_beats=41.67, runtime=0, runtime_beats=100, url=https://leetcode.com/submissions/detail/356363887/
     ///
     /// date=20210314, mem=2, mem_beats=65, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/154988374/
-    /// 
+    ///
     /// date=20210517, mem=2.1, mem_beats=11, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/178198257/
     ///
     /// ## 复杂度

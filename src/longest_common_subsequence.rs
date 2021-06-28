@@ -61,7 +61,7 @@ pub mod solution_dp {
     /// date=20200127, mem=5.8, mem_beats=25, runtime=4, runtime_beats=91, url=https://leetcode-cn.com/submissions/detail/141504192/
     ///
     /// date=20200128, mem=5.8, mem_beats=25, runtime=4, runtime_beats=91, url=https://leetcode-cn.com/submissions/detail/141803274/
-    /// 
+    ///
     /// date=20200212, mem=5.6, mem_beats=84, runtime=4, runtime_beats=91, url=https://leetcode-cn.com/submissions/detail/145366141/
     pub struct Solution;
 

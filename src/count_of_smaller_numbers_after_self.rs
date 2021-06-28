@@ -116,12 +116,12 @@ impl SolutionByMergeSort {
     ///
     /// counts=[2,1,1,0]
     /// ```
-    /// 
+    ///
     /// - 为何是逆序 indexes
-    /// 
+    ///
     /// 使用`aux_indexes[index] = right`导致在个别测试用例中存在逆序情况，可能在4个元素以下的数组都
     /// 不能由于直接用下标导致逆序。可以用工`aux_indexes[index] = indexes[right]`修复
-    /// 
+    ///
     /// ```rust,ignore
     /// for left in lo..=mid {
     ///     while right <= hi && nums[indexes[left]] > nums[indexes[right]] {
@@ -136,7 +136,7 @@ impl SolutionByMergeSort {
     ///     aux_indexes[index] = indexes[left];
     ///     index += 1;
     /// }
-    /// 
+    ///
     /// while right <= hi {
     ///     // aux_indexes[index] = right;
     ///     aux_indexes[index] = indexes[right];
@@ -144,18 +144,18 @@ impl SolutionByMergeSort {
     ///     right += 1;
     /// }
     /// ```
-    /// 
+    ///
     /// ## Submissions
-    /// 
+    ///
     /// date=20200521, mem=2.5, mem_beats=100, runtime=8, runtime_beats=57.38, url=https://leetcode.com/submissions/detail/342473041/
-    /// 
+    ///
     /// author=navyd
-    /// 
+    ///
     /// ## 复杂度
-    /// 
+    ///
     /// - 时间：归并排序最大O(N log N)
     /// - 空间：counts, indexes, aux_indexes都是O(N)
-    /// 
+    ///
     pub fn count_smaller(nums: Vec<i32>) -> Vec<i32> {
         // create indexes, counts
         let n = nums.len();

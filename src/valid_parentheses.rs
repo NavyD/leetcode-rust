@@ -9,22 +9,22 @@ pub mod solution_stack {
     ///
     /// 若遇到左括号入栈，遇到右括号时将对应栈顶左括号出栈，
     /// 则遍历完所有括号后 stack 仍然为空
-    /// 
+    ///
     /// stack保持出现的相对的括号，在遇到相对括号时，stack pop对比是否一样
     ///
     /// 参考：
     ///
     /// - [Short java solution](https://leetcode.com/problems/valid-parentheses/discuss/9178/Short-java-solution)
     /// - [有效的括号（辅助栈法，极简+图解）](https://leetcode-cn.com/problems/valid-parentheses/solution/valid-parentheses-fu-zhu-zhan-fa-by-jin407891080/)
-    /// 
+    ///
     /// ### Submissions
     ///
     /// date=20200903, mem=2.1, mem_beats=20.88, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/104330959/
     ///
     /// date=20200904, mem=2.2, mem_beats=7.69, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/104667778/
-    /// 
+    ///
     /// date=20200913, mem=2.1, mem_beats=32。08, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/107687503/
-    /// 
+    ///
     /// ### 复杂度
     ///
     /// - 时间：O(n)

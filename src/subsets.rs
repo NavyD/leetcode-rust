@@ -15,7 +15,7 @@ pub mod solution_recursive {
     /// date=20201215, mem=2.1, mem_beats=21, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/131175081/
     ///
     /// date=20201217, mem=2.1, mem_beats=30, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/131761719/
-    /// 
+    ///
     /// date=20201223, mem=2.1, mem_beats=16, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/133216203/
     pub struct Solution;
 

@@ -119,7 +119,7 @@ pub mod solution_bfs {
     /// ### Submissions
     ///
     /// date=20210111, mem=2.2, mem_beats=100, runtime=16, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/137607120/
-    /// 
+    ///
     /// date=20210120, mem=2.3, mem_beats=80, runtime=20, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/139752875/
     pub struct Solution;
 

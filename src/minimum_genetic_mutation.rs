@@ -55,7 +55,7 @@ pub mod solution_dfs {
     /// date=20201221, mem=2, mem_beats=100, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/132618271/
     ///
     /// date=20201222, mem=2.1, mem_beats=100, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/132885625/
-    /// 
+    ///
     /// date=20201222, mem=2.1, mem_beats=16, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/138084453/
     pub struct Solution;
 

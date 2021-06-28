@@ -40,7 +40,7 @@ pub mod solution_backtracking {
     /// date=20201219, mem=2.2, mem_beats=63, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/132179132/
     ///
     /// date=20201220, mem=2.3, mem_beats=50, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/132332061/
-    /// 
+    ///
     /// date=20201228, mem=2.2, mem_beats=92, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/134422730/
     pub struct Solution;
 

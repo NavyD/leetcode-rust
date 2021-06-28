@@ -44,7 +44,7 @@ pub mod solution_dp_optimized {
     /// date=20200621, mem=2.1, mem_beats=22.22, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/98491120/
     ///
     /// date=20210111, mem=2.1, mem_beats=6.98, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/114824244/
-    /// 
+    ///
     /// date=20210222, mem=1.9, mem_beats=70, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/147558027/
     ///
     /// ### 复杂度

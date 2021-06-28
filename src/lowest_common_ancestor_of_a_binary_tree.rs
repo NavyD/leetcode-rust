@@ -57,8 +57,8 @@ pub mod solution_dfs {
     /// date=20201025, mem=4.4, mem_beats=50, runtime=4, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/118661709/
     ///
     /// date=20201124, mem=4.5, mem_beats=20, runtime=8, runtime_beats=93, url=https://leetcode-cn.com/submissions/detail/125885807/
-    /// 
-    /// date=20201124, mem=4, mem_beats=76, runtime=4, runtime_beats=95, url=https://leetcode-cn.com/submissions/detail/133524720/ 
+    ///
+    /// date=20201124, mem=4, mem_beats=76, runtime=4, runtime_beats=95, url=https://leetcode-cn.com/submissions/detail/133524720/
     pub struct Solution;
 
     impl Solution {

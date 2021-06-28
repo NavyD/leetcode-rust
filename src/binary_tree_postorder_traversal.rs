@@ -10,9 +10,9 @@ use std::rc::Rc;
 /// 20200815
 ///
 /// 第2次没什么问题
-/// 
+///
 /// 20201007
-/// 
+///
 /// 迭代都忘的差不多了
 pub mod solution_recursive {
     use super::*;
@@ -51,7 +51,7 @@ pub mod solution_bfs {
     /// date=20200815, mem=2.1, mem_beats=50, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/98283919/
     ///
     /// date=20200825, mem=2.1, mem_beats=14.29, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/101710776/
-    /// 
+    ///
     /// date=20201007, mem=2, mem_beats=68, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/113772403/
     ///
     /// ### 参考
@@ -99,7 +99,7 @@ pub mod solution_stack {
     /// date=20200815, mem=1.9, mem_beats=50, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/98284899/
     ///
     /// date=20200825, mem=1.9, mem_beats=85.71, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/101709346/
-    /// 
+    ///
     /// date=20201007, mem=1.9, mem_beats=88, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/113776063/
     ///
     /// ### 复杂度
@@ -139,8 +139,8 @@ mod tests {
     }
 
     fn test<F: Fn(Option<Rc<RefCell<TreeNode>>>) -> Vec<i32>>(func: F) {
-        assert_eq!(vec![3,2,1], func(btree![1,null,2,3]));
-        assert_eq!(vec![1,2,3], func(btree![3, 1, 2]));
+        assert_eq!(vec![3, 2, 1], func(btree![1, null, 2, 3]));
+        assert_eq!(vec![1, 2, 3], func(btree![3, 1, 2]));
         assert_eq!(vec![1], func(btree![1]));
     }
 }

@@ -85,24 +85,24 @@ pub mod solution_recursive {
     use crate::prelude::*;
 
     /// # 思路
-    /// 
+    ///
     /// rust所有权的方式不能在递归前反转链表，只能递归后返回反转的new_head作为next_head
-    /// 与上个head反转链接 
-    /// 
+    /// 与上个head反转链接
+    ///
     /// `head -> ... -> tail -X-> next_head -> ...` 反转链接 `... <- next_head <- head <- ... <- tail` 并返回new_head(tail)
-    /// 
+    ///
     /// ```rust,ignore
     /// Solution::reverse(head, next_head)
-    /// // error: move out of `next_head` 
+    /// // error: move out of `next_head`
     /// let next_head = Solution::reverse_k_group(next_head.take(), k);
     /// ```
     ///
     /// java先反转每段k个链表，递归回溯时连接相邻链表.
-    /// 
+    ///
     /// 为何要先判断`nextHead == null`，再`nextHead = nextHead.next;`,而不用`if ((nextHead = nextHead.next) == null)`？
-    /// 
+    ///
     /// k次循环中在最后一次时可允许nextHead为null，而(nextHead = nextHead.next) == null不会执行第k次
-    /// 
+    ///
     /// ![](https://pic.leetcode-cn.com/f63d5ca4d3f055ce8e4591c8bc51c288791f88da9ccec9617bc8bb51c26163a2.png)
     ///
     /// ```java
@@ -144,11 +144,11 @@ pub mod solution_recursive {
     /// - [递归思维：如何跳出细节？](https://leetcode-cn.com/problems/reverse-nodes-in-k-group/solution/di-gui-si-wei-ru-he-tiao-chu-xi-jie-by-labuladong/)
     /// - [递归java](https://leetcode-cn.com/problems/reverse-nodes-in-k-group/solution/di-gui-java-by-reedfan-2/)
     /// - [4ms](https://leetcode.com/submissions/api/detail/25/rust/4/)
-    /// 
+    ///
     /// ### Submissions
-    /// 
+    ///
     /// date=20200906, mem=2.3, mem_beats=36, runtime=4, runtime_beats=49, url=https://leetcode-cn.com/submissions/detail/103051900/
-    /// 
+    ///
     /// date=20200906, mem=2.3, mem_beats=64.29, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/105213328/
     ///
     /// ### 复杂度
@@ -172,7 +172,7 @@ pub mod solution_recursive {
             let next_head = Solution::reverse_k_group(next_head.take(), k);
             Solution::reverse(head, next_head)
         }
-        
+
         // head -> ... -> tail -x-> next_head -> ... 反转链接 ... <- next_head <- head <- ... <- tail 并返回new_head(tail)
         fn reverse(
             mut head: Option<Box<ListNode>>,

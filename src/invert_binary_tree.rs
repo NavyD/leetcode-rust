@@ -114,7 +114,7 @@ pub mod solution_dfs {
     /// date=20201014, mem=1.9, mem_beats=94.12, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/115672595/
     ///
     /// date=20201015, mem=2.1, mem_beats=5.88, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/115929298/
-    /// 
+    ///
     /// date=20201026, mem=1.9, mem_beats=81, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/118663353/
     ///
     /// ## 复杂度
@@ -157,7 +157,6 @@ mod tests {
         );
     }
 
-    
     // pub fn invert_tree(root: Option<Rc<RefCell<TreeNode>>>) -> Option<Rc<RefCell<TreeNode>>> {
 
     // }

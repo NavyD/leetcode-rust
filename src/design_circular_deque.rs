@@ -5,9 +5,9 @@
 /// 实现简单的deque还是不难的，java std有个更复杂的无界ArrayDeque，
 /// 这里有个linkedlist实现：
 /// [Java doubly LinkedList  solution, very straightforward](https://leetcode.com/problems/design-circular-deque/discuss/149371/Java-doubly-LinkedList-solution-very-straightforward)
-/// 
+///
 /// 20200926
-/// 
+///
 /// 注意不能写成：`data: vec![-1, k + 1],`
 pub mod solution_array {
     /// # 思路
@@ -130,7 +130,7 @@ pub mod solution_array {
     /// date=20200916, mem=2.4, mem_beats=100, runtime=12, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/108482454/
     ///
     /// date=20200926, mem=2.3, mem_beats=33.33, runtime=8, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/111479817/
-    /// 
+    ///
     /// ### 复杂度
     ///
     /// - 时间：O(1)。所有操作都是O(1)的

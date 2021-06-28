@@ -127,16 +127,19 @@ mod solution_map {
     mod tests {
         #[test]
         fn basics() {
-            let blacklist = vec![3,5,8,9];
+            let blacklist = vec![3, 5, 8, 9];
             let n = 10;
             let mut solution = super::Solution::new(n, blacklist.clone());
             let mut map = std::collections::HashMap::new();
             for _ in 0..20 {
                 let num = solution.pick();
-                map.insert(num, match map.get(&num) {
-                    Some(v) => v + 1,
-                    None => 1,
-                });
+                map.insert(
+                    num,
+                    match map.get(&num) {
+                        Some(v) => v + 1,
+                        None => 1,
+                    },
+                );
                 assert!(!blacklist.contains(&num) && num >= 0 && num < n);
             }
             assert!(map.len() > 1);
@@ -144,16 +147,15 @@ mod solution_map {
     }
 }
 
-
 #[allow(dead_code)]
 pub mod solution_binarysearch {
     use rand::prelude::*;
 
     /// 无法理解该解法与rust的binary search，
-    /// 
+    ///
     /// author=leetcode, references=https://leetcode-cn.com/problems/random-pick-with-blacklist/solution/hei-ming-dan-zhong-de-sui-ji-shu-by-leetcode-2/
-    /// 
-    /// author=ramazan_yilmaz, references=https://leetcode.com/problems/random-pick-with-blacklist/discuss/146545/Simple-Java-solution-with-Binary-Search 
+    ///
+    /// author=ramazan_yilmaz, references=https://leetcode.com/problems/random-pick-with-blacklist/discuss/146545/Simple-Java-solution-with-Binary-Search
     /// 这个解法复杂度可能是 pick是O(B)，binary是O(log B)但如果rand吋k=最小，极限时blacklist中都是连续的，则一直向前到0才能找到
     struct Solution {
         whitelist_len: usize,
@@ -186,19 +188,17 @@ pub mod solution_binarysearch {
                 let half = size / 2;
                 let mid = base + half;
                 let index = self.sorted_bl[mid] - mid as i32;
-                base = if index > k {
-                    base
-                } else {
-                    mid
-                };
+                base = if index > k { base } else { mid };
                 size -= half;
             }
             match self.sorted_bl.get(base) {
-                Some(v) => if v - base as i32 <= k {
-                    v + base as i32 + 1
-                } else {
-                    k
-                },
+                Some(v) => {
+                    if v - base as i32 <= k {
+                        v + base as i32 + 1
+                    } else {
+                        k
+                    }
+                }
                 None => base as i32,
             }
             // if lo == hi && (self.sorted_bl[lo] - lo as i32) <= k {
@@ -212,19 +212,22 @@ pub mod solution_binarysearch {
     #[cfg(test)]
     mod tests {
         use super::*;
-    
+
         #[test]
         fn solution_binarysearch() {
-            let blacklist = vec![3,5,8,9];
+            let blacklist = vec![3, 5, 8, 9];
             let n = 10;
             let mut solution = Solution::new(n, blacklist.clone());
             let mut map = std::collections::HashMap::new();
             for _ in 0..20 {
                 let num = solution.pick();
-                map.insert(num, match map.get(&num) {
-                    Some(v) => v + 1,
-                    None => 1,
-                });
+                map.insert(
+                    num,
+                    match map.get(&num) {
+                        Some(v) => v + 1,
+                        None => 1,
+                    },
+                );
                 assert!(!blacklist.contains(&num) && num >= 0 && num < n);
             }
             assert!(map.len() > 1);

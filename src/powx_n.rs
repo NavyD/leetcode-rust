@@ -3,12 +3,12 @@
 //! 可以考虑分治思想，如要计算x^9 => x^4*x^4*x => 变成计算x^4，x^4 => x^2*x^2
 
 /// 总结：
-/// 
+///
 /// 注意i32::MIN时的越界问题。当n=-2147483648时，-n as u32是正确的
 /// 但是当n = -1时 -n as u32 就增加了2^31最高位，可以将 n+1减少1变成
 /// -2147483647变成正数-(n + 1) = 2147483647，再加1变成2147483648.
 /// 如果n=-1时 -(n+1)=0 加1成1没有问题
-/// 
+///
 /// 当n<0时 `-(n + 1) as u32 - 1`
 pub mod solution_recursive {
     /// # 思路
@@ -105,7 +105,7 @@ pub mod solution_iterative {
     /// date=20201213, mem=2, mem_beats=47, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/130735989/
     ///
     /// date=20201215, mem=1.9, mem_beats=72, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/131208050/
-    /// 
+    ///
     /// date=20201223, mem=1.9, mem_beats=81, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/133203133/
     pub struct Solution;
     impl Solution {
@@ -138,7 +138,6 @@ mod tests {
     fn basic() {
         test(solution_recursive::Solution::my_pow);
         test(solution_iterative::Solution::my_pow);
-
     }
 
     fn test<F: Fn(f64, i32) -> f64>(func: F) {

@@ -18,16 +18,16 @@ pub mod solution_dp {
         /// T[i][1][0] = max(T[i - 1][1][0], T[i - 1][1][1] + prices[i])
         /// T[i][1][1] = max(T[i - 1][1][1], T[i - 1][0][0] - prices[i]) = max(T[i - 1][1][1], -prices[i])
         /// ```
-        /// 
+        ///
         /// 参考：
-        /// 
+        ///
         /// * [股票问题系列通解（转载翻译）](https://leetcode-cn.com/circle/article/qiAgHn/)
         /// * [Most consistent ways of dealing with the series of stock problems](https://leetcode.com/problems/best-time-to-buy-and-sell-stock-with-transaction-fee/discuss/108870/Most-consistent-ways-of-dealing-with-the-series-of-stock-problems)
-        /// 
+        ///
         /// ### Submissions
         ///
         /// date=20210619, mem=21.5, mem_beats=7, runtime=140, runtime_beats=7, url=https://leetcode-cn.com/submissions/detail/187916639/
-        /// 
+        ///
         /// date=20210620, mem=21.3, mem_beats=7, runtime=140, runtime_beats=7, url=https://leetcode-cn.com/submissions/detail/188161320/
         pub fn max_profit(prices: Vec<i32>) -> i32 {
             let n = prices.len();
@@ -50,13 +50,13 @@ pub mod solution_dp {
 pub mod solution_dp_optimized {
 
     /// # 思路
-    /// 
+    ///
     /// 注意顺序对profit_10计算前后对profit21没有影响
-    /// 
+    ///
     /// ### Submissions
-    /// 
+    ///
     /// date=20210619, mem=2.8, mem_beats=100, runtime=12, runtime_beats=71, url=https://leetcode-cn.com/submissions/detail/187918920/
-    /// 
+    ///
     /// date=20210620, mem=3, mem_beats=57, runtime=16, runtime_beats=35, url=https://leetcode-cn.com/submissions/detail/188162387/
     pub struct Solution;
 

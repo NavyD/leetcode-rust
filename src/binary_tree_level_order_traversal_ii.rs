@@ -37,26 +37,26 @@ use std::rc::Rc;
 pub mod solution_dfs {
     use super::*;
     /// # 思路
-    /// 
+    ///
     /// dfs回溯时插入
-    /// 
+    ///
     /// 如何确定下标？
-    /// 
+    ///
     /// 对于同一层，left和right，不能直接回溯下标0开始，由于先在left回溯，right可能存在更多的子结点，
     /// right可有更多层
-    /// 
+    ///
     /// ```ignore
     /// fn level_order(root: &Option<Rc<RefCell<TreeNode>>>, res: &mut Vec<Vec<i32>>) -> usize {
     /// ```
-    /// 
+    ///
     /// ## Submissions
-    /// 
+    ///
     /// date=20200714, mem=2.3, mem_beats=50, runtime=0, runtime_beats=100, url=https://leetcode.com/submissions/detail/366304542/
-    /// 
+    ///
     /// author=SOY, references=https://leetcode.com/problems/binary-tree-level-order-traversal-ii/discuss/34981/My-DFS-and-BFS-java-solution
-    /// 
+    ///
     /// ## 复杂度
-    /// 
+    ///
     /// - 时间：O(N)
     /// - 空间：O(N^2)
     pub struct Solution;
@@ -68,7 +68,11 @@ pub mod solution_dfs {
             res
         }
 
-        fn level_order(root: &Option<Rc<RefCell<TreeNode>>>, res: &mut Vec<Vec<i32>>, level: usize) {
+        fn level_order(
+            root: &Option<Rc<RefCell<TreeNode>>>,
+            res: &mut Vec<Vec<i32>>,
+            level: usize,
+        ) {
             if let Some(root) = root {
                 if level >= res.len() {
                     res.insert(0, vec![]);
@@ -86,19 +90,19 @@ pub mod solution_bfs {
     use super::*;
 
     /// # 思路
-    /// 
+    ///
     /// bfs一层层遍历所有结点
-    /// 
+    ///
     /// ## Submissions
-    /// 
+    ///
     /// date=20200718, mem=2.2, mem_beats=100, runtime=0, runtime_beats=100, url=https://leetcode.com/submissions/detail/368224847/
-    /// 
+    ///
     /// author=navyd
-    /// 
+    ///
     /// ## 复杂度
-    /// 
+    ///
     /// 树的高度为M，个数为N
-    /// 
+    ///
     /// - 时间：O(N)
     /// - 空间：O(N*M)
     pub struct Solution;

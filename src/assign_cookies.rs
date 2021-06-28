@@ -33,9 +33,9 @@ pub mod solution_greedy {
     /// ### Submissions
     ///
     /// date=20210111, mem=2.2, mem_beats=70, runtime=8, runtime_beats=10, url=https://leetcode-cn.com/submissions/detail/137634210/
-    /// 
+    ///
     /// date=20210112, mem=2.2, mem_beats=68, runtime=8, runtime_beats=27, url=https://leetcode-cn.com/submissions/detail/137810626/
-    /// 
+    ///
     /// date=20210119, mem=2.3, mem_beats=23, runtime=4, runtime_beats=27, url=https://leetcode-cn.com/submissions/detail/139513653/
     pub struct Solution;
 
@@ -43,7 +43,7 @@ pub mod solution_greedy {
         pub fn find_content_children(mut g: Vec<i32>, mut s: Vec<i32>) -> i32 {
             g.sort_unstable();
             s.sort_unstable();
-    
+
             let mut count = 0;
             let (mut i, mut j) = (0, 0);
             while i < g.len() && j < s.len() {

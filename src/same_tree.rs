@@ -1,13 +1,11 @@
 /// 总结：
-/// 
+///
 /// 1. 用java表示时出现不知道如何正确退出递归条件，用`if (p == null && q != null || (p != null && q == null))`
 /// 可以更精简`if p == null && q == null else if q == null || p == null`
-/// 
+///
 /// 2. rust的引用比较还是不熟，PartialEq的性质第一次知道
-
 use std::cell::RefCell;
 use std::rc::Rc;
-
 
 // Definition for a binary tree node.
 #[derive(Debug, PartialEq, Eq)]
@@ -70,11 +68,11 @@ pub mod solution_recursive {
 
 pub mod solution_derivable {
     use super::*;
-    
+
     /// # 思路
-    /// 
+    ///
     /// 利用rust`std::cmp::PartialEq`的derivable性质，比较所有字段是否相等
-    /// 
+    ///
     /// ## Submissions
     ///
     /// date=20200706, mem=2.1 mem_beats=47.62, runtime=0, runtime_beats=100, url=https://leetcode.com/submissions/detail/362717451/

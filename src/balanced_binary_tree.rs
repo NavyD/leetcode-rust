@@ -79,16 +79,16 @@ pub mod solution_bottom_to_top {
     /// 可在一次递归中快速判断结果
     ///
     /// 对root先序遍历，回塑时height+1，如果存在高度差>1则返回None
-    /// 
+    ///
     /// ## Submission
-    /// 
-    /// date=20200729, mem=2.7, mem_beats=100, runtime=0, runtime_beats=100, 
+    ///
+    /// date=20200729, mem=2.7, mem_beats=100, runtime=0, runtime_beats=100,
     /// url=https://leetcode.com/submissions/detail/373059302/
-    /// 
+    ///
     /// author=Krahets, references=https://leetcode-cn.com/problems/balanced-binary-tree/solution/balanced-binary-tree-di-gui-fang-fa-by-jin40789108/
-    /// 
+    ///
     /// ## 复杂度
-    /// 
+    ///
     /// - 时间：O(N)
     /// - 空间：O(N)
     pub struct Solution;

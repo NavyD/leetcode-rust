@@ -48,9 +48,9 @@ pub mod solution_dp {
     /// 前i天的最大利润。`problem(i) = 0.max(problem(i - 1) + prices[i] - prices[i - 1])`，第i天卖出的最大利润可以
     /// 通过累积差实现如：b3 = a3 - a2, b4 = a4 - a3, b5 = a5 - a4, b6 = a6 - a5. b3 + b4 + b5 + b6 = a6 - a2。
     /// `[参考](https://leetcode.com/problems/best-time-to-buy-and-sell-stock/discuss/39038/Kadane's-Algorithm-Since-no-one-has-mentioned-about-this-so-far-:)-(In-case-if-interviewer-twists-the-input)/36798)`
-    /// 
+    ///
     /// ## 方法3：[通解](https://leetcode-cn.com/circle/article/qiAgHn/)
-    /// 
+    ///
     /// ```ignore
     /// T[i][k][0] = max(T[i - 1][k][0], T[i - 1][k][1] + prices[i])
     /// T[i][k][1] = max(T[i - 1][k][1], T[i - 1][k - 1][0] - prices[i])
@@ -91,7 +91,7 @@ pub mod solution_dp {
     /// assert_eq!(max_profit(vec![7, 1, 5, 3, 6, 4]), 5);
     /// assert_eq!(max_profit_o1(vec![7, 1, 5, 3, 6, 4]), 5);
     /// ```
-    /// 
+    ///
     /// 参考：
     ///
     /// * [股票问题（Python3、C++）](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock/solution/gu-piao-wen-ti-python3-c-by-z1m/)
@@ -103,7 +103,7 @@ pub mod solution_dp {
     /// ### Submissions
     ///
     /// date=20210612, mem=2.8, mem_beats=73, runtime=12, runtime_beats=91, url=https://leetcode-cn.com/submissions/detail/186035718/
-    /// 
+    ///
     /// date=20210628, mem=3.6, mem_beats=10, runtime=16, runtime_beats=60, url=https://leetcode-cn.com/submissions/detail/190397847/
     pub struct Solution;
 
@@ -141,7 +141,7 @@ pub mod solution_dp_optimized {
     /// ### Submissions
     ///
     /// date=20210612, mem=3, mem_beats=6, runtime=16, runtime_beats=59, url=https://leetcode-cn.com/submissions/detail/186037766/
-    /// 
+    ///
     /// date=20210628, mem=2.9, mem_beats=40, runtime=28, runtime_beats=9, url=https://leetcode-cn.com/submissions/detail/190401119/
     pub struct Solution;
 

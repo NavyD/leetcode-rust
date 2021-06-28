@@ -3,7 +3,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 
 /// 注意不能用下面的match，导致(Some, Some)的模式会被(Some, _)执行
-/// 
+///
 /// ```rust,ignore
 /// match (root.left.clone(), root.right.clone()) {
 ///     (None, None) => return level,
@@ -25,9 +25,9 @@ pub mod solution_bfs {
     /// date=20200730, mem=2.5, mem_beats=100, runtime=0, runtime_beats=100, url=https://leetcode.com/submissions/detail/373480219/
     ///
     /// date=20201019, mem=3.4, mem_beats=5.88, runtime=28, runtime_beats=5.66, url=https://leetcode-cn.com/submissions/detail/116940727/
-    /// 
+    ///
     /// date=20201021, mem=3.4, mem_beats=5.88, runtime=28, runtime_beats=5.66, url=https://leetcode-cn.com/submissions/detail/117422208/
-    /// 
+    ///
     /// ## 复杂度
     ///
     /// - 时间：O(N)
@@ -98,9 +98,9 @@ pub mod solution_dfs {
     /// date=20200730, mem=2.9, mem_beats=100, runtime=0, runtime_beats=100, url=https://leetcode.com/submissions/detail/373460334/
     ///
     /// date=20201019, mem=3.7, mem_beats=5.88, runtime=32, runtime_beats=5.66, url=https://leetcode-cn.com/submissions/detail/116902948/
-    /// 
+    ///
     /// date=20201021, mem=3.7, mem_beats=5.88, runtime=32, runtime_beats=5.66, url=https://leetcode-cn.com/submissions/detail/117414522/
-    /// 
+    ///
     /// date=20201028, mem=12.8, mem_beats=5.71, runtime=44, runtime_beats=5.56, url=https://leetcode-cn.com/submissions/detail/119194666/
     ///
     /// ## 复杂度
@@ -138,6 +138,6 @@ mod tests {
     fn test<F: Fn(Option<Rc<RefCell<TreeNode>>>) -> i32>(func: F) {
         assert_eq!(func(btree![3, 9, 20, null, null, 15, 7]), 2);
         assert_eq!(func(btree![2, null, 3, null, 4, null, 5, null, 6]), 5);
-        assert_eq!(func(btree![1,2,3,4,5]), 2);
+        assert_eq!(func(btree![1, 2, 3, 4, 5]), 2);
     }
 }

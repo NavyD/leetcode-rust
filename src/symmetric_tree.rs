@@ -79,15 +79,15 @@ pub mod solution_queue {
     /// # 思路
     ///
     /// 用queue 一层一层比下去
-    /// 
+    ///
     /// ## Submissions
-    /// 
+    ///
     /// date=20200712, mem=2.1, mem_beats=64.71, runtime=0, runtime_beats=100, url=https://leetcode.com/submissions/detail/365614242/
-    /// 
+    ///
     /// author=navyd
-    /// 
+    ///
     /// ## 复杂度
-    /// 
+    ///
     /// - 时间：O(N)
     /// - 空间：O(N)
     pub struct Solution;

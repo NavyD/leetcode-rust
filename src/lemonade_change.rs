@@ -19,9 +19,9 @@ pub mod solution_greedy {
     /// ### Submissions
     ///
     /// date=20210113, mem=2, mem_beats=87, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/138025753/
-    /// 
+    ///
     /// date=20210114, mem=2, mem_beats=95, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/138296043/
-    /// 
+    ///
     /// date=20210127, mem=2, mem_beats=81, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/141525668/
     pub struct Solution;
 
@@ -71,6 +71,6 @@ mod tests {
         assert!(f(vec![5, 5, 10]));
 
         assert!(!f(vec![10, 10]));
-        assert!(!f(vec![5,5,10,10,20]));
+        assert!(!f(vec![5, 5, 10, 10, 20]));
     }
 }

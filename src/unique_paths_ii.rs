@@ -177,10 +177,10 @@ pub mod solution_dp_optimized {
     /// which is new dp[j] = old dp[j] + dp[j-1]
     /// which is current cell = top cell + left cell
     /// ```
-    /// 
+    ///
     /// 下面使用`dp.len=n+1`避免`if j>0`，初始化时不能使用dp[0]=1，dp[1]=1表示
     /// 计算第0列+1，如果使用dp[0]=1，就会在每行重复计算第0列+1，使得结果更大
-    /// 
+    ///
     /// ```
     /// pub fn unique_paths_with_obstacles(obstacle_grid: Vec<Vec<i32>>) -> i32 {
     ///     let (m, n) = (obstacle_grid.len(), obstacle_grid[0].len());
@@ -223,7 +223,7 @@ pub mod solution_dp_optimized {
     /// date=20210127, mem=2, mem_beats=43, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/141516342/
     ///
     /// date=20210525, mem=2, mem_beats=85, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/180638894/
-    /// 
+    ///
     /// date=20210613, mem=2.1, mem_beats=8, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/186290129/
     ///
     /// ## 复杂度

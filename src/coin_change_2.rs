@@ -39,7 +39,7 @@ pub mod solution_dp {
     /// date=20210524, mem=6.3, mem_beats=6.25, runtime=12, runtime_beats=6.25, url=https://leetcode-cn.com/submissions/detail/180329906/
     ///
     /// date=20210525, mem=6.3, mem_beats=6.25, runtime=12, runtime_beats=6.25, url=https://leetcode-cn.com/submissions/detail/180633984/
-    /// 
+    ///
     /// date=20210613, mem=6.2, mem_beats=16, runtime=8, runtime_beats=24, url=https://leetcode-cn.com/submissions/detail/186278937/
     pub struct Solution;
 
@@ -87,7 +87,7 @@ pub mod solution_dp_optimized {
     /// date=20210524, mem=1.9, mem_beats=100, runtime=0, runtime_beats=81, url=https://leetcode-cn.com/submissions/detail/180333918/
     ///
     /// date=20210524, mem=2, mem_beats=100, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/180634859/
-    /// 
+    ///
     /// date=20210613, mem=2.1, mem_beats=50, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/186281437/
     pub struct Solution;
 

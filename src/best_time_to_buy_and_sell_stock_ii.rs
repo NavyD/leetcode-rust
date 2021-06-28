@@ -90,7 +90,7 @@ pub mod solution_dp_optimized {
     /// ### Submissions
     ///
     /// date=20210618, mem=2.1, mem_beats=88, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/187704978/
-    /// 
+    ///
     /// date=20210619, mem=2.2, mem_beats=40, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/187925686/
     pub struct Solution;
 

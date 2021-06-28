@@ -60,7 +60,7 @@ pub mod solution_recursive {
                 let mut root = TreeNode::new(preorder[p_start]);
                 let i_root_idx = i_indexes.get(&root.val).unwrap();
                 let left_len = i_root_idx - i_start;
-                
+
                 root.left = if *i_root_idx == 0 {
                     // fixed: i_root_idx - 1
                     // 存在 attempt to subtract with overflow error for local test
@@ -78,7 +78,7 @@ pub mod solution_recursive {
                         i_indexes,
                     )
                 };
-                 
+
                 root.right = _helper(
                     preorder,
                     // 排除当前root节点
@@ -122,7 +122,7 @@ pub mod solution_recursive_slice {
     /// ### Submission
     ///
     /// date=20201220, mem=2.6, mem_beats=63, runtime=4, runtime_beats=72, url=https://leetcode-cn.com/submissions/detail/118908310/
-    /// 
+    ///
     /// date=20201220, mem=2.6, mem_beats=63, runtime=4, runtime_beats=72, url=
     pub struct Solution;
 

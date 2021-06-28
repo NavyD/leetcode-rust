@@ -65,6 +65,6 @@ mod tests {
         assert_eq!(f(vec![1], 0), -1);
         assert_eq!(f(vec![1, 3], 3), 1);
         assert_eq!(f(vec![5, 1, 3], 5), 0);
-        assert_eq!(f(vec![4,5,6,7,0,1,2], 1), 5);
+        assert_eq!(f(vec![4, 5, 6, 7, 0, 1, 2], 1), 5);
     }
 }

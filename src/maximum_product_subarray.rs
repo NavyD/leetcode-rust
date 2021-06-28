@@ -1,15 +1,15 @@
 //! 首次：
-//! 
+//!
 //! 0. 切分子数组找子数组的product
 //! 0.0 切分：如果当前cur*pre_prod < cur
 //!      pre_prod = cur.max(cur*pre_prod); max_prod = pre_prod.max(max_prod);
 //! 1. 比较所有的products 找出最大的
-//! 
+//!
 //! 没有考虑到当`nums[i]<0`时对乘积的影响
 
 pub mod solution_dp {
     /// # 思路
-    /// 
+    ///
     /// 如果与`maximum_subarray`定义一样的`problem(i) = nums[i].max(problem(i - 1)*nums[i])`简单的子问题，
     /// 在这里行不通了，如果当出现2个连接的负数无法解决：[-2,-1]
     ///
@@ -25,7 +25,7 @@ pub mod solution_dp {
     /// 要注意计算的积 比 当前num更大或小时, 必须切分新的一段,表示新的连续一段:
     ///
     /// dp方程：如果nums[i]，如`nums[i] > 0`时 `dp[i].max < 0`表示切分i为新的一段开始
-    /// 
+    ///
     /// ```ignore
     /// dp[i].min = min(nums[i], nums[i] * dp[i - 1].min) if nums[i] >= 0
     /// dp[i].max = max(nums[i], nums[i] * dp[i - 1].max) if nums[i] >= 0
@@ -43,9 +43,9 @@ pub mod solution_dp {
     /// ### Submissions
     ///
     /// date=20210308, mem=2.2, mem_beats=36, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/152482019/
-    /// 
+    ///
     /// date=20210309, mem=2.2, mem_beats=36, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/152894274/
-    /// 
+    ///
     /// date=20210523, mem=2.2, mem_beats=47, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/179982697/
     pub struct Solution;
 
@@ -54,9 +54,9 @@ pub mod solution_dp {
             // dp[i].0为min，dp[i].1为max
             let mut dp = vec![(0, 0); nums.len()];
             dp[0] = (nums[0], nums[0]);
-        
+
             let mut res = dp[0].1;
-            
+
             for i in 1..nums.len() {
                 let num = nums[i];
                 // 当num<0时交换dp[i-1] min,max
@@ -78,7 +78,7 @@ pub mod solution_dp_optimized {
     /// 思路：
     ///
     /// 在dp时只使用了i-1的值,可以使用一个变量替换
-    /// 
+    ///
     /// 参考：
     ///
     /// * [画解算法：152. 乘积最大子序列](https://leetcode-cn.com/problems/maximum-product-subarray/solution/hua-jie-suan-fa-152-cheng-ji-zui-da-zi-xu-lie-by-g/)
@@ -86,9 +86,9 @@ pub mod solution_dp_optimized {
     /// ### Submissions
     ///
     /// date=20210308, mem=2, mem_beats=81, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/152464307/
-    /// 
+    ///
     /// date=20210309, mem=2.1, mem_beats=81, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/152899923/
-    /// 
+    ///
     /// date=20210523, mem=2.1, mem_beats=53, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/179986506/
     ///
     /// date=20210530, mem=2, mem_beats=94, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/182157614/

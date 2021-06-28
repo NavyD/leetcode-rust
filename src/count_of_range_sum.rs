@@ -15,17 +15,17 @@
 ///
 /// 利用暴力求解时SolutionByViolentSum中的sums，由于题目要求`lower <= S[j]-S[i] <= upper`的数
 /// 量count，可以用merge sort对sums排序时统计sums[j]-sums[i]。
-/// 
+///
 /// 这个题本质和[Count of Smaller Numbers After Self](https://leetcode.com/problems/count-of-smaller-numbers-after-self/)
 /// 一样，都是求解逆序对的数量。
-/// 
+///
 /// ## 问题
-/// 
+///
 /// - 如何统计`lower <= sums[j]-sums[i] <= upper`的数量？
-/// 
+///
 /// 由于归并是有序的，对每个sums[left],找sums[right]中第1个满足`sums[right]-sums[left]<=lower`的
 /// 下标idx_lower，和满足`sums[right]-sums[left]>upper`的下标idx_upper，count=idx_upper-idx_lower
-/// 
+///
 /// ```rust,ignore
 /// for left in lo..mid + 1 {
 ///     // find min lower index
@@ -40,10 +40,10 @@
 /// }
 /// ```
 /// - 为何是right-left, 如何保证sums[j]-sums[i]不会多或少算？
-/// 
+///
 /// 由于归并排序的性质递归的保证了`sums[j]-sums[i]`只会算一次，由于计算后的j-i都会
 /// 到下次归并的left or right一个组，一个组不会再被分开归并
-/// 
+///
 /// ```ignore
 /// nums=[-2,5,-1], lower = -2, upper = 2
 /// sums=[0,-2,3,2]
@@ -53,8 +53,8 @@
 ///         : s[3]-s[0]
 ///         : s[2]-s[1]
 ///         : s[3]-s[1]
-/// ``` 
-/// 
+/// ```
+///
 /// # submissions
 ///
 /// date=20200517, mem=2.3, mem_beats=100, runtime=8, runtime_beats=100, url=https://leetcode.com/submissions/detail/340509441/
@@ -149,22 +149,22 @@ impl SolutionByMergeSortSum {
 }
 
 /// # 思路
-/// 
+///
 /// 题目要求在[i,j]内num之和sum[i,j]满足`lower <= sum[i,j] <= upper`，即每个i与
 /// 后面所有元素之间的和sum[i,j]都可能满足条件。
-/// 
+///
 /// 用sums数组保存每个num的和，避免重复计算。sums[j]-sums[i]表示sum[i,j]的和。
-/// 
+///
 /// ## 问题
-/// 
+///
 /// - 如何解决`sum[i,i]=sums[i]-sums[i]=0`的问题？
 ///
 /// 在迭代时用`sum[i,i]=sums[i+1]-sums[i] = nums[i]`，就是nums[i]这个元素，
 /// 如果用`sums[0] = 0, sums[0,0] = sums[1] - sums[0] = nums[0]`，保证nums[i]
 /// 被包括在结果中
-/// 
+///
 /// ## Examples
-/// 
+///
 /// ```ignore
 /// [-2,5,-1], lower = -2, upper = 2
 /// sums[0] = nums[0]                   = -2
@@ -174,22 +174,22 @@ impl SolutionByMergeSortSum {
 /// sum[0,0]    = sums[0]-sums[0] = 0
 /// sum[0,2]    = sums[2]-sums[0] = 2-(-2) = 4
 /// sum[2,2]    = sums[2]-sums[2] = 0
-/// 
+///
 /// // 如果sum[i,j] = sums[j+1] - sums[i], sums[0] = 0, sums[1] = nums[0]+sums[0]
 /// sum[0,0]    = sums[1]-sums[0] = -2
 /// sum[0,2]    = sums[3]-sums[0] = 2-0 = 2
 /// ```
 /// ## Submissions
-/// 
+///
 /// date=20200515, mem=2.2, mem_beats=100, runtime=140, runtime_beats=40, url=https://leetcode.com/submissions/detail/339532332/
-/// 
+///
 /// author=dietpepsi, references=https://leetcode.com/problems/count-of-range-sum/discuss/77990/Share-my-solution
-/// 
+///
 /// ## 复杂度
-/// 
+///
 /// - 时间：对sums双重for是O(N^2)
 /// - 空间：sums用的是O(N)
-/// 
+///
 pub struct SolutionByViolentSum;
 
 impl SolutionByViolentSum {
@@ -229,7 +229,7 @@ mod tests {
 
     fn test<T>(f: T)
     where
-        T: FnOnce(Vec<i32>, i32, i32) -> i32
+        T: FnOnce(Vec<i32>, i32, i32) -> i32,
     {
         let (nums, lower, upper) = (vec![-2, 5, -1], -2, 2);
         let count = f(nums, lower, upper);

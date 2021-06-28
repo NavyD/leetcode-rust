@@ -11,7 +11,7 @@ pub mod solution_bfs {
     /// date=20201220, mem=2.2, mem_beats=26, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/132326653/
     ///
     /// date=20201221, mem=2.2, mem_beats=26, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/132740574/
-    /// 
+    ///
     /// date=20210112, mem=2.1, mem_beats=91, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/137813347/
     pub struct Solution;
     impl Solution {

@@ -20,9 +20,9 @@ pub mod solution_sort {
 
 pub mod solution_hash {
     /// # 思路
-    /// 
+    ///
     /// 下面的方法是由于众数的元素数量多于n/2，所以在到最后的元素时必然会找到count > n/2
-    /// 
+    ///
     /// ```ignore
     /// pub fn majority_element(nums: Vec<i32>) -> i32 {
     ///     let mut counts = std::collections::HashMap::with_capacity(nums.len());
@@ -41,7 +41,7 @@ pub mod solution_hash {
     /// ```
     ///
     /// 多一次遍历
-    /// 
+    ///
     /// ```ignore
     /// pub fn majority_element(nums: Vec<i32>) -> i32 {
     ///     let mut counts = std::collections::HashMap::with_capacity(nums.len());
@@ -61,9 +61,9 @@ pub mod solution_hash {
     /// ### Submissions
     ///
     /// date=20201217, mem=2.4, mem_beats=18, runtime=4, runtime_beats=44, url=https://leetcode-cn.com/submissions/detail/131725247/
-    /// 
+    ///
     /// date=20201218, mem=2.3, mem_beats=86, runtime=4, runtime_beats=44, url=https://leetcode-cn.com/submissions/detail/132099536/
-    /// 
+    ///
     /// date=20201225, mem=2.3, mem_beats=29, runtime=4, runtime_beats=50, url=https://leetcode-cn.com/submissions/detail/133664081/
     pub struct Solution;
 
@@ -102,9 +102,9 @@ pub mod solution_divide {
     /// ### Submissions
     ///
     /// date=20201217, mem=2.3, mem_beats=86, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/131741299/
-    /// 
+    ///
     /// date=20201218, mem=2.5, mem_beats=6, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/132100515/
-    /// 
+    ///
     /// date=20201225, mem=2.3, mem_beats=62, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/133666622/
     pub struct Solution;
 
@@ -170,9 +170,9 @@ pub mod solution_moore {
     /// ### Submissions
     ///
     /// date=20201217, mem=2.2, mem_beats=97, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/131754036/
-    /// 
+    ///
     /// date=20201218, mem=2.3, mem_beats=83, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/132100983/
-    /// 
+    ///
     /// date=20201225, mem=2.3, mem_beats=37, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/133667496/
     pub struct Solution;
 

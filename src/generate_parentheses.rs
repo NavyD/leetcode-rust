@@ -185,7 +185,7 @@ pub mod solution_bfs {
     /// date=20201222, mem=2.2, mem_beats=22, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/132839666/
     ///
     /// date=20201223, mem=2.2, mem_beats=53, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/133191328/
-    /// 
+    ///
     /// date=20210114, mem=2.1, mem_beats=94, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/138304111/
     pub struct Solution;
 

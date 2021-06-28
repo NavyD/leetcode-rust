@@ -7,13 +7,13 @@
 ///
 /// 在solution_double_pointer中是用height[left]<height[right]区分左右，
 /// `height[left] < max_left`作为可信条件，不能光分可信条件了，忘记左右
-/// 
+///
 /// 20200928
-/// 
+///
 /// solution_column_dp要注意在left right max与下标的关系会影响计算高度差时
-/// 
+///
 /// 20201002
-/// 
+///
 /// solution_double_pointer注意如何分开双指针left,right条件，是根据`left_max<right_max`
 /// 而不是`height[left]<height[right]`，`left==right`也要处理
 pub mod solution_row {
@@ -159,16 +159,16 @@ pub mod solution_column_dp {
     ///
     /// max_right[i]不能与max_left在一个循环中从0开始找，则不会后面出现更大的值时前面的就不可用了，
     /// max_right[i]中的i必须从后面找起，才能使max_right作为i右边最大的列
-    /// 
+    ///
     /// ## 注意
-    /// 
+    ///
     /// 下面是另一种可行解，相比当前解法，`left_max[i] = left_max[i - 1].max(height[i])`
     /// 这里是left_max[i]表示在i是`1..=i`的最大值，right_max[i]表示`i..=len-1`的最大值，在找res的高度差
     /// `height_diff = left_max[i].min(right_max[i]) - height[i] >= 0`是一定成立的，可直接res+=height_diff
-    /// 
+    ///
     /// 如果` max_left[i] = max_left[i - 1].max(height[i - 1]);`表示i前的最大值，这个
     /// `height_diff = left_max[i].min(right_max[i]) - height[i]`是可能<0的
-    /// 
+    ///
     /// ```ignore
     /// pub fn trap(height: Vec<i32>) -> i32 {
     ///     let len = height.len();
@@ -193,7 +193,7 @@ pub mod solution_column_dp {
     ///     res
     /// }
     /// ```
-    /// 
+    ///
     /// 参考：
     ///
     /// - [详细通俗的思路分析，多解法](https://leetcode-cn.com/problems/trapping-rain-water/solution/xiang-xi-tong-su-de-si-lu-fen-xi-duo-jie-fa-by-w-8/)
@@ -259,13 +259,13 @@ pub mod solution_double_pointer {
     /// 如果left_max<right_max成立，那么它就知道自己能存多少水了。无论右边将来会不会出现更大的right_max，
     /// 都不影响这个结果。 所以当left_max<right_max时，我们就希望去处理left下标，
     /// 反之，我们希望去处理right下标
-    /// 
+    ///
     /// ```ignore
     /// while left <= right {
     ///     // left max is trusted
     ///     if left_max < right_max {
     ///         // ...
-    ///     } 
+    ///     }
     ///     // right max is trusted
     ///     else {
     ///         // ...
@@ -278,7 +278,7 @@ pub mod solution_double_pointer {
     ///     }//...
     /// }
     /// ```
-    /// 
+    ///
     /// 注意要处理`while left <= right {`，当`left==right`时，有left_max, right_max都是不包括当前
     /// 下标`left==right`的值，所以应有条件处理`left==right`
     ///
@@ -292,7 +292,7 @@ pub mod solution_double_pointer {
     /// date=20200917, mem=2, mem_beats=61.11, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/108826398/
     ///
     /// date=20200918, mem=1.9, mem_beats=100, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/109371378/
-    /// 
+    ///
     /// date=20201002, mem=2.1, mem_beats=56.25, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/112844228/
     ///
     /// ### 复杂度
@@ -320,7 +320,7 @@ pub mod solution_double_pointer {
                         left_max = height[left];
                     }
                     left += 1;
-                } 
+                }
                 // right max is trusted
                 else {
                     if height[right] < right_max {
@@ -349,13 +349,13 @@ pub mod solution_monotonous_stack {
     /// 方式类似于找高度，遇到第一个计算高度差height_diff与width，stack新的top与当前height计算的
     /// 高度差是不包含之前的高度，而是width包含，所以有：
     /// `(height_diff = height[i].min(height[*last]) - height[cur])*(i - last - 1)`
-    /// 
+    ///
     /// 以solution_column_dp来看，`height[i]`表示柱子right_max, `height[last]`表示可接雨水的柱子，stack.pop后的last`height[last]`
     /// 表示left_max柱子。是以last为接雨水的柱子计算的
     ///
     /// 栈内元素是单调递减的如：`[4, 3, 1, 0]`，如果是`height=[1,2,3]`则stack中不会存在任何元素，
     /// 每一次都有`height[i] > height[*last]`导致stack.pop()一直为空
-    /// 
+    ///
     /// 参考：
     ///
     /// - [单调栈O(n)解决，动图预警](https://leetcode-cn.com/problems/trapping-rain-water/solution/dan-diao-zhan-jie-jue-jie-yu-shui-wen-ti-by-sweeti/)
@@ -364,7 +364,7 @@ pub mod solution_monotonous_stack {
     /// ### Submissions
     ///
     /// date=20200918, mem=1.9, mem_beats=100, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/109363764/
-    /// 
+    ///
     /// date=20201002, mem=2, mem_beats=71.88, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/112851473/
     ///
     /// ### 复杂度

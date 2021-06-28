@@ -144,9 +144,9 @@ pub mod solution_divide_and_conquer {
     /// - nums.len() / 2 使用不当可导致当nums.len()=2时left:`..=1`,一直在left中无限循环，right:`2..`不成立。
     /// 如：`let mid = nums.len() / 2;let sub_max_sum = helper(&nums[..=mid]).max(helper(&nums[mid + 1..]));`
     /// 要注意mid的使用范围
-    /// 
+    ///
     /// 对于寻找跨中心范围可使用iter::fold api，由于要缓存中间结果，写起来也不是很优雅：
-    /// 
+    ///
     /// ```ignore
     /// let mut sum = 0;
     /// let left_max_sum1 = (lo..=mid).rfold(nums[mid], |acc, i| {
@@ -161,14 +161,14 @@ pub mod solution_divide_and_conquer {
     /// ```
     ///
     /// 参考：
-    /// 
+    ///
     /// * [How-to-solve-"Maximum-Subarray"-by-using-the-divide-and-conquer-approach](https://leetcode.com/problems/maximum-subarray/discuss/20372/How-to-solve-"Maximum-Subarray"-by-using-the-divide-and-conquer-approach/20607)
     /// * [最大子序和 c++实现四种解法 暴力法、动态规划、贪心法和分治法 图示讲解](https://leetcode-cn.com/problems/maximum-subarray/solution/zui-da-zi-xu-he-cshi-xian-si-chong-jie-fa-bao-li-f/)
-    /// 
+    ///
     /// ## Submissions
     ///
     /// date=20200620, mem=2.1, mem_beats=92.56, runtime=0, runtime_beats=100, url=https://leetcode.com/submissions/detail/355978516/
-    /// 
+    ///
     /// date=20200522, mem=2.1, mem_beats=54, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/179782354/
     ///
     /// date=20200523, mem=2.1, mem_beats=55, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/180015540/

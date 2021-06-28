@@ -5,13 +5,13 @@ use std::rc::Rc;
 pub mod solution_bfs {
     use super::*;
     /// # 思路
-    /// 
+    ///
     /// ### Submissions
-    /// 
+    ///
     /// date=20201225, mem=2.8, mem_beats=100, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/133615166/
-    /// 
+    ///
     /// date=20201227, mem=2.9, mem_beats=60, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/134083520/
-    /// 
+    ///
     /// date=20210115, mem=2.8, mem_beats=88, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/138593407/
     pub struct Solution;
 
@@ -48,16 +48,16 @@ pub mod solution_dfs {
     use super::*;
 
     /// # 思路
-    /// 
+    ///
     /// dfs利用每层的val并在后面的同层dfs比较大小替换。level从0开始，
     /// 如果res.len()==level表示第level层首次添加val，否则比较大小替换
-    /// 
+    ///
     /// ### Submissions
-    /// 
+    ///
     /// date=20201225, mem=3.1, mem_beats=14, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/133620233/
-    /// 
+    ///
     /// date=20201227, mem=2.9, mem_beats=70, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/134082381/
-    /// 
+    ///
     /// date=20210115, mem=2.8, mem_beats=77, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/138594427/
     pub struct Solution;
 
@@ -91,12 +91,11 @@ mod tests {
         test(solution_bfs::Solution::largest_values);
         test(solution_dfs::Solution::largest_values);
     }
-    
+
     fn test<F: Fn(Option<Rc<RefCell<TreeNode>>>) -> Vec<i32>>(f: F) {
         assert_eq!(f(btree![1, 3, 2, 5, 3, null, 9]), vec![1, 3, 9]);
         assert_eq!(f(btree![1, 2, 3]), vec![1, 3]);
-        assert_eq!(f(btree![1,null,2]), vec![1, 2]);
+        assert_eq!(f(btree![1, null, 2]), vec![1, 2]);
         assert_eq!(f(btree![]), vec![]);
     }
-    
 }

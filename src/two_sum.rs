@@ -1,10 +1,10 @@
 /// 总结
-/// 
+///
 /// 只想到暴力法
 pub mod solution_force {
 
     /// ### Submissions
-    /// 
+    ///
     /// date=20200816, mem=2.2, mem_beats=66.47, runtime=36, runtime_beats=21.42, url=https://leetcode-cn.com/submissions/detail/98495796/
     pub struct Solution;
 
@@ -47,15 +47,15 @@ pub mod solution_hash {
     /// 如果当前数没有进入hash map，target-时会无法获取，num存入后下次用到target-complement时可找到
     ///
     /// 参考：
-    /// 
+    ///
     /// - [Accepted Java O(n) Solution](https://leetcode.com/problems/two-sum/discuss/3/Accepted-Java-O(n)-Solution)
-    /// 
+    ///
     /// ### Submissions
     ///
     /// date=20200816, mem=2.2, mem_beats=72.46, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/98495478/
-    /// 
+    ///
     /// date=20200817, mem=2.3, mem_beats=51.16, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/98887674/
-    /// 
+    ///
     /// date=20200825, mem=2.3, mem_beats=52, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/101721676/
     ///
     /// ### 复杂度

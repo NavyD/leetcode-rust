@@ -57,7 +57,7 @@ pub mod solution_greedy {
     /// date=20210113, mem=2.9, mem_beats=10, runtime=16, runtime_beats=67, url=https://leetcode-cn.com/submissions/detail/138042161/
     ///
     /// date=20210114, mem=2.9, mem_beats=50, runtime=12, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/138291699/
-    /// 
+    ///
     /// date=20210128, mem=3, mem_beats=10, runtime=16, runtime_beats=70, url=https://leetcode-cn.com/submissions/detail/141807144/
     pub struct Solution;
 

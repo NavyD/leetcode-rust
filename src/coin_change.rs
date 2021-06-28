@@ -82,7 +82,7 @@ pub mod solution_dp {
     /// date=20210522, mem=2, mem_beats=86, runtime=16, runtime_beats=40, url=https://leetcode-cn.com/submissions/detail/179790819/
     ///
     /// date=20210523, mem=2, mem_beats=63, runtime=12, runtime_beats=60, url=https://leetcode-cn.com/submissions/detail/180025433/
-    /// 
+    ///
     /// date=20210613, mem=2, mem_beats=83, runtime=8, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/186249323/
     pub struct Solution;
 
@@ -124,7 +124,7 @@ pub mod solution_bfs {
     /// date=20210523, mem=2.1, mem_beats=46, runtime=12, runtime_beats=60, url=https://leetcode-cn.com/submissions/detail/180036176/
     ///
     /// date=20210524, mem=2.1, mem_beats=43, runtime=8, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/180334942/
-    /// 
+    ///
     /// date=20210613, mem=2, mem_beats=84, runtime=12, runtime_beats=64, url=https://leetcode-cn.com/submissions/detail/186258732/
     pub struct Solution;
 
@@ -136,7 +136,7 @@ pub mod solution_bfs {
 
             let mut queue = std::collections::VecDeque::new();
             queue.push_back(amount);
-            
+
             let amount = amount as usize;
             let mut visited = vec![false; amount + 1];
             visited[amount] = true;

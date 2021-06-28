@@ -33,7 +33,7 @@ pub mod solution_dp {
     /// ### Submissions
     ///
     /// date=20210620, mem=2.7, mem_beats=11, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/188156204/
-    /// 
+    ///
     /// date=20210628, mem=2.8, mem_beats=10, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/190384717/
     pub struct Solution;
 

@@ -74,22 +74,22 @@ pub mod solution_extend {
     ///
     /// s=abba // 中心在bb s[1],s[2]
     /// ```
-    /// 
+    ///
     /// ## Submissions
-    /// 
+    ///
     /// date=20200702, mem=1.9, mem_beats=100, runtime=4, runtime_beats=92.64, url=https://leetcode.com/submissions/detail/360911042/
-    /// 
+    ///
     /// rust使用closure时比正常函数更多内存
-    /// 
+    ///
     /// author=cdai, references=https://leetcode.com/problems/longest-palindromic-substring/discuss/2928/Very-simple-clean-java-solution/3700
-    /// 
+    ///
     /// author=liweiwei1419, references=https://leetcode-cn.com/problems/longest-palindromic-substring/solution/zhong-xin-kuo-san-dong-tai-gui-hua-by-liweiwei1419/
-    /// 
+    ///
     /// ## 复杂度
-    /// 
+    ///
     /// - 时间：O(N^2)
     /// - 空间：O(1)
-    /// 
+    ///
     pub struct Solution;
 
     impl Solution {
@@ -131,7 +131,6 @@ pub mod solution_extend {
             }
         }
     }
-
 }
 
 #[cfg(test)]

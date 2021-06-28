@@ -31,10 +31,10 @@ pub mod solution_bfs {
     /// 中点。通过中序遍历的方式先root -> left -> right递归
     ///
     /// 如何解决mid-1 -> 0 - 1时的问题
-    /// 
+    ///
     /// 当lo=0, hi=1时，mid=1，left=0, root=1，这时递归用lo=0, hi=mid-1=0
     /// 有mid=0, 下次递归时lo=0, hi=mid-1=-1使得usize runtime error
-    /// 
+    ///
     /// ```rust, ignore
     /// fn dfs(nums: &Vec<i32>, lo: usize, hi: usize) -> Option<Rc<RefCell<TreeNode>>> {
     ///     if lo > hi {
@@ -49,13 +49,13 @@ pub mod solution_bfs {
     ///     Some(root)
     /// }
     /// ```
-    /// 
+    ///
     /// 应该用`lo>=hi`时返回，当lo=0,hi=1时用mid=0作为node，
     /// 此时如果hi=len-1, mid=2，hi=4 => lo=3, hi=4会使得right=nums[3]=5
     /// 计算错误，hi=len时正确，lo=3, hi=5, mid=4，right=nums[4]=9
-    /// 
+    ///
     /// 还可以用slice代替下标[参考](https://leetcode.com/problems/convert-sorted-array-to-binary-search-tree/discuss/326589/Rust-0ms-3.4MB)
-    /// 
+    ///
     /// ```rust, ignore
     /// fn create_bst(nums: &[i32]) -> Option<Rc<RefCell<TreeNode>>> {
     ///     let l = nums.len();
@@ -70,17 +70,17 @@ pub mod solution_bfs {
     ///     Some(Rc::new(RefCell::new(node)))
     /// }
     /// ```
-    /// 
+    ///
     /// ## Submission
-    /// 
+    ///
     /// date=20200726, mem=3, mem_beats=100, runtime=0, runtime_beats=100, url=https://leetcode.com/submissions/detail/371722183/
-    /// 
+    ///
     /// author=petersmith7519, references=https://leetcode.com/problems/convert-sorted-array-to-binary-search-tree/discuss/509647/Rust-Solution-0ms-2.9MB
-    /// 
+    ///
     /// author=
-    /// 
+    ///
     /// ## 复杂度
-    /// 
+    ///
     /// - 时间：O(N)
     /// - 空间：O(log N)
     pub struct Solution;
@@ -95,9 +95,7 @@ pub mod solution_bfs {
                 return None;
             }
             let mid = lo + (hi - lo) / 2;
-            let root = Rc::new(RefCell::new(TreeNode::new(
-                nums[mid],
-            )));
+            let root = Rc::new(RefCell::new(TreeNode::new(nums[mid])));
             root.borrow_mut().left = Self::dfs(nums, lo, mid);
             root.borrow_mut().right = Self::dfs(nums, mid + 1, hi);
             Some(root)

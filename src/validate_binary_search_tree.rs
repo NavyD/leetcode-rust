@@ -65,18 +65,18 @@ pub mod solution_recursive {
     use super::*;
 
     /// # 思路
-    /// 
+    ///
     /// 使用递归与root对应范围限制检查
-    /// 
+    ///
     /// 注意：lower,upper必须比i32更大，使用i64。对一个子树，最小最大的val可用root.val确定
-    /// 
+    ///
     /// 参考：
-    /// 
+    ///
     /// - [三种解决方式，两种击败了100%的用户](https://leetcode-cn.com/problems/validate-binary-search-tree/solution/san-chong-jie-jue-fang-shi-liang-chong-ji-bai-liao/)
     /// - [验证二叉搜索树](https://leetcode-cn.com/problems/validate-binary-search-tree/solution/yan-zheng-er-cha-sou-suo-shu-by-leetcode-solution/)
-    /// 
+    ///
     /// ### Submissions
-    /// 
+    ///
     /// date=20201124, mem=3, mem_beats=43, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/125867022/
     pub struct Solution;
 
@@ -180,7 +180,7 @@ pub mod solution_dfs_iterative {
     /// date=20201015, mem=3.1, mem_beats=100, runtime=0, runtime_beats=100, url=https://leetcode.com/submissions/detail/408900690/
     ///
     /// date=20201016, mem=2.7, mem_beats=96.3, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/116151516/
-    /// 
+    ///
     /// date=20201124, mem=2.8, mem_beats=86, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/125875758/
     pub struct Solution;
     impl Solution {

@@ -49,7 +49,7 @@ pub struct SolutionByMergeSort;
 
 impl SolutionByMergeSort {
     /// # 思路
-    /// 
+    ///
     /// 尝试partition recurrence关系用DP解决，设在nums[i,j]中满足reverse pair条件数量为T(i,j)，
     /// m=(i+j)/2，将nums分为nums[i,m], nums[m+1,j]两个数组，此时要求出T(i,m),T(m+1,j)和两个数组
     /// 元素间满足reverse pair条件数量C[i,j]，通常还是要nums[i,j]每个元素比较才能找出C[i,j]，但
@@ -57,18 +57,18 @@ impl SolutionByMergeSort {
     /// T(0,n)=T(0,m)+T(m+1,n)+C[0,n]
     ///
     /// 对nums indexes排序merge时统计nums[i]>2*nums[j]数量
-    /// 
+    ///
     /// ## 问题
-    /// 
+    ///
     /// - 如何在merge时two-pointer找出C[i,j]，nums[i,m],nums[m+1,j]
-    /// 
+    ///
     ///   由于子数组已有序，对每个left只需在right中找到满足条件的offset并统计.在right中第1个不满足
     /// `nums[indexes[left]] > 2 * nums[indexes[idx_upper]]`下标idx_upper，计算
     /// `offset=idx_upper-(mid+1)`，注意要累加offset，只要存在left时offset>0，后面的left
     /// 至少满足之前的offset，并尝试比较后面的right
-    /// 
+    ///
     /// - 为何不能在判断`nums[indexes[left]] as i64 > 2 * nums[indexes[idx_upper]] as i64`时对right移动
-    /// 
+    ///
     /// ```ignore
     /// while idx_upper <= hi
     ///     && nums[indexes[left]] as i64 > 2 * nums[indexes[idx_upper]] as i64
@@ -81,7 +81,7 @@ impl SolutionByMergeSort {
     ///     }
     /// }
     /// ```
-    /// 
+    ///
     /// 由于idx_upper与right下标不是同步对应的，即可能有`num <= 2 * nums[indexes[idx_upper]] as i64 && num > left`时导致right移动，
     /// 但idx_upper不动，下标无法对应导致错误结果
     ///
@@ -90,15 +90,15 @@ impl SolutionByMergeSort {
     /// date=20200522, mem=3.2, mem_beats=100, runtime=96, runtime_beats=50, url=https://leetcode.com/submissions/detail/342936543/
     ///
     /// author=navyd
-    /// 
+    ///
     /// date=20200526, mem=3,3m mem_beats=100, runtime=60, runtime_beats=75, url=https://leetcode.com/submissions/detail/344776495/
-    /// 
+    ///
     /// author=fun4LeetCode, references=https://leetcode.com/problems/reverse-pairs/discuss/97268/General-principles-behind-problems-similar-to-%22Reverse-Pairs%22
-    /// 
+    ///
     /// ## 复杂度
-    /// 
+    ///
     /// - 时间：merge()中的double pointer是线性时间，总体复杂度还是O(N log N)
-    /// 
+    ///
     /// - 空间：O(N)
     ///
     pub fn reverse_pairs(nums: Vec<i32>) -> i32 {
@@ -125,8 +125,8 @@ impl SolutionByMergeSort {
         }
         let mid = lo + (hi - lo) / 2;
         let mut count = 0;
-        count += Self::merge_sort(nums, indexes, aux_indexes, lo, mid) 
-            + Self::merge_sort(nums, indexes, aux_indexes, mid + 1, hi) 
+        count += Self::merge_sort(nums, indexes, aux_indexes, lo, mid)
+            + Self::merge_sort(nums, indexes, aux_indexes, mid + 1, hi)
             + Self::merge(nums, indexes, aux_indexes, lo, mid, hi);
         count
     }
@@ -140,13 +140,8 @@ impl SolutionByMergeSort {
         hi: usize,
     ) -> usize {
         // count = idx_upper-mid-1
-        let (
-            mut count, 
-            mut idx_upper, 
-            mut index, 
-            mut right, 
-            mut left
-        ) = (0, mid + 1, lo, mid + 1, lo);
+        let (mut count, mut idx_upper, mut index, mut right, mut left) =
+            (0, mid + 1, lo, mid + 1, lo);
         while left <= mid {
             // get first index with left > 2*right
             while idx_upper <= hi
@@ -188,30 +183,30 @@ pub struct SolutionByBIT;
 impl SolutionByBIT {
     ///
     /// # 思路
-    /// 
+    ///
     /// 尝试用DP解决，设在nums[i,j]中满足reverse pair条件数量为T(i,j)，
     /// 对n个元素的nums[0,n-1]，如果我们已计算出T(0,n-1)，要得到下一个元素nums[n]
     /// 新的T(0,n)，这个nums[n]必须与nums[0..=n-1]前面所有元素比较统计得到reverse pair
     /// 数量C[0,n]，即`T(0,n)=T(0,n-1)+C[0,n]`
-    /// 
+    ///
     /// ```ignore
     /// T(i,i) = 0
-    /// 
+    ///
     /// nums=[1,3], T(0,1)=T(0,0)+C[0,1]
     /// C[0,1] = 0  <=> 1 < 2*3
     /// T(0,1) = 0
-    /// 
+    ///
     /// nums=[1,3,2], T(0,2)=T(0,1)+C[0,2]
     /// C[0,2] = 0  <=> 1 < 2*2
     ///                 3 < 2*2
     /// T(0,2) = 0
-    /// 
+    ///
     /// nums=[1,3,2,3], T(0,3)=T(0,2)+C[0,3]
     /// C[0,3] = 0  <=> 1 < 2*3
     ///                 3 < 2*3
     ///                 2 < 2*3
     /// T(0,3)=0
-    /// 
+    ///
     /// nums=[1,3,2,3,1], T(0,4)=T(0,3)+C[0,4]
     /// C[0,3] = 2  <=> 1 < 2*1
     ///                 3 > 2*1     1
@@ -219,9 +214,9 @@ impl SolutionByBIT {
     ///                 3 > 2*1     1
     /// T(0,4) = 2
     /// ```
-    /// 
+    ///
     /// 注意到对C[0,n]的计算每次都要N-1次比较，对于T(0,n)来说就是O(N^2)不能直接用下面递归代码或double for
-    /// 
+    ///
     /// ```rust
     /// // O(N^2)
     /// pub fn reverse_pairs(nums: Vec<i32>) -> i32 {
@@ -245,12 +240,12 @@ impl SolutionByBIT {
     ///     }
     ///     count
     /// }
-    /// 
+    ///
     /// assert_eq!(reverse_pairs(vec![]), 0);
     /// assert_eq!(reverse_pairs(vec![1, 3, 2, 3, 1]), 2);
     /// assert_eq!(reverse_pairs(vec![2, 4, 3, 5, 1]), 3);
     /// ```
-    /// 
+    ///
     /// 由于在这里元素顺序不重要，且计算C[0,n]时空间是不断扩展的，不能用静态空间，
     /// 用binary indexed tree可计算前缀和C[0,n]并扩展空间
     ///

@@ -92,7 +92,7 @@ pub mod solution_dp_optimized {
     /// date=2020128, mem=2.1, mem_beats=64, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/141798204/
     ///
     /// date=2020128, mem=2.4, mem_beats=10, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/145364332/
-    /// 
+    ///
     /// date=20210222, mem=2.1, mem_beats=59, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/147567568/
     pub struct Solution;
 
