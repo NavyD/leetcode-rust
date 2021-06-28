@@ -1,3 +1,4 @@
+#![allow(clippy::all)]
 pub use std::cell::RefCell;
 pub use std::rc::Rc;
 
