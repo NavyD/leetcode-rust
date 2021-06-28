@@ -368,7 +368,10 @@ pub mod solution_dfs_bfs_two_end {
                                 } else {
                                     (next, cur.clone())
                                 };
-                                word_successors.entry(cur).or_insert_with(Vec::new).push(next);
+                                word_successors
+                                    .entry(cur)
+                                    .or_insert_with(Vec::new)
+                                    .push(next);
                             }
                         }
                     }
