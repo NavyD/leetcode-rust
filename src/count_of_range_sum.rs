@@ -141,9 +141,7 @@ impl SolutionByMergeSortSum {
             right += 1;
             index += 1;
         }
-        for i in lo..hi + 1 {
-            sums[i] = aux_sums[i];
-        }
+        sums[lo..(hi + 1)].clone_from_slice(&aux_sums[lo..(hi + 1)]);
         count
     }
 }

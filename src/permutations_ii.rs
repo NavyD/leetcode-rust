@@ -77,7 +77,7 @@ pub mod solution_sort {
                     return;
                 }
                 for i in cur_idx..nums.len() {
-                    if i == cur_idx || &nums[i] != &nums[cur_idx] {
+                    if i == cur_idx || nums[i] != nums[cur_idx] {
                         nums.swap(i, cur_idx);
                         helper(nums.clone(), cur_idx + 1, res);
                     }

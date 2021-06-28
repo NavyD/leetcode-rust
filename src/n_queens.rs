@@ -147,7 +147,7 @@ pub mod solution_backtracking_each_position {
                 }
             }
 
-            fn _is_valid(path: &Vec<Vec<char>>, row: usize, col: usize, n: usize) -> bool {
+            fn _is_valid(path: &[Vec<char>], row: usize, col: usize, n: usize) -> bool {
                 // check cols
                 for i in 0..n {
                     if path[i][col] == QUEEN {

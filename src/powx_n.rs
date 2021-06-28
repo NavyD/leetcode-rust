@@ -67,7 +67,7 @@ pub mod solution_recursive {
     impl Solution {
         pub fn my_pow(x: f64, n: i32) -> f64 {
             fn _quick_pow(x: f64, n: u32) -> f64 {
-                if n <= 0 {
+                if n == 0 {
                     1.0
                 } else {
                     let sub_pow = _quick_pow(x, n / 2);
@@ -141,9 +141,10 @@ mod tests {
     }
 
     fn test<F: Fn(f64, i32) -> f64>(func: F) {
-        assert_eq!(func(2.00000, 10), 1024.00000);
-        assert_eq!(func(2.0, -1), 0.5);
-        assert_eq!(func(0.00001, 2147483647), 0.0);
-        assert_eq!(func(2.0, -2147483648), 0.0)
+        let error_margin = f64::EPSILON;
+        assert!((func(2.00000, 10) - 1024.00000).abs() < error_margin);
+        assert!((func(2.0, -1) - 0.5).abs() < error_margin);
+        assert!((func(0.00001, 2147483647) - 0.0).abs() < error_margin);
+        assert!((func(2.0, -2147483648) - 0.0).abs() < error_margin)
     }
 }

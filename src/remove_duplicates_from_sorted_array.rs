@@ -66,7 +66,7 @@ pub mod solution_double_pointer {
 
     impl Solution {
         pub fn remove_duplicates_4ms(nums: &mut Vec<i32>) -> i32 {
-            if nums.len() == 0 {
+            if nums.is_empty() {
                 return 0;
             }
             let mut i = 0;
@@ -76,7 +76,7 @@ pub mod solution_double_pointer {
                     nums[i] = nums[j];
                 }
             }
-            return i as i32 + 1;
+            i as i32 + 1
         }
 
         pub fn remove_duplicates(nums: &mut Vec<i32>) -> i32 {

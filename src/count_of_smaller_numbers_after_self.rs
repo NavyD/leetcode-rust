@@ -172,7 +172,7 @@ impl SolutionByMergeSort {
     }
 
     fn merge_sort(
-        nums: &Vec<i32>,
+        nums: &[i32],
         indexes: &mut Vec<usize>,
         aux_indexes: &mut Vec<usize>,
         counts: &mut Vec<i32>,
@@ -189,7 +189,7 @@ impl SolutionByMergeSort {
     }
 
     fn merge(
-        nums: &Vec<i32>,
+        nums: &[i32],
         indexes: &mut Vec<usize>,
         aux_indexes: &mut Vec<usize>,
         counts: &mut Vec<i32>,
@@ -216,9 +216,7 @@ impl SolutionByMergeSort {
             right += 1;
         }
 
-        for i in lo..=hi {
-            indexes[i] = aux_indexes[i];
-        }
+        indexes[lo..(hi + 1)].clone_from_slice(&aux_indexes[lo..(hi + 1)]);
     }
 }
 

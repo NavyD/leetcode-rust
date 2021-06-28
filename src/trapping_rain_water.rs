@@ -114,7 +114,7 @@ pub mod solution_column {
 
     impl Solution {
         pub fn trap(height: Vec<i32>) -> i32 {
-            if height.len() == 0 {
+            if height.is_empty() {
                 return 0;
             }
             let mut res = 0;
@@ -212,7 +212,7 @@ pub mod solution_column_dp {
 
     impl Solution {
         pub fn trap(height: Vec<i32>) -> i32 {
-            if height.len() == 0 {
+            if height.is_empty() {
                 return 0;
             }
             let mut res = 0;

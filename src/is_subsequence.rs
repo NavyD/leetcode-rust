@@ -50,9 +50,9 @@ pub mod solution_two_pointers {
             if s.len() > t.len() {
                 return false;
             }
-            let mut it_s = s.chars();
+            let it_s = s.chars();
             let mut it_t = t.chars();
-            while let Some(ch_s) = it_s.next() {
+            for ch_s in it_s {
                 loop {
                     if let Some(ch_t) = it_t.next() {
                         if ch_t == ch_s {

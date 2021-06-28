@@ -22,7 +22,7 @@ pub mod solution_recursive {
     impl Solution {
         pub fn subsets(nums: Vec<i32>) -> Vec<Vec<i32>> {
             fn _backtrack(
-                nums: &Vec<i32>,
+                nums: &[i32],
                 cur_idx: usize,
                 path: &mut Vec<i32>,
                 res: &mut Vec<Vec<i32>>,

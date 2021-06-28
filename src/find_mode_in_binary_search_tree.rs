@@ -25,7 +25,7 @@ pub mod solution_dfs {
             let mut counts = HashMap::new();
             Self::dfs_counts(root, &mut counts);
             let mut max_count = 0;
-            for (_, v) in &counts {
+            for v in counts.values() {
                 if max_count < *v {
                     max_count = *v;
                 }
@@ -185,12 +185,15 @@ pub mod solution_dfs_follow_up {
                         *cur_count = 1;
                     }
                 }
-                if cur_count == max_count {
-                    modes.push(root_val);
-                } else if cur_count > max_count {
-                    modes.clear();
-                    modes.push(root_val);
-                    *max_count = *cur_count;
+                use std::cmp::Ordering::*;
+                match cur_count.cmp(&max_count) {
+                    Greater => {
+                        modes.clear();
+                        modes.push(root_val);
+                        *max_count = *cur_count;
+                    }
+                    Equal => modes.push(root_val),
+                    Less => {}
                 }
                 *pre = Some(root.clone());
                 Self::find_mode_by_dfs_inorder(

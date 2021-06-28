@@ -72,6 +72,7 @@ pub mod solution_dfs {
                 p_val: i32,
                 q_val: i32,
             ) -> Option<Rc<RefCell<TreeNode>>> {
+                #[allow(clippy::blocks_in_if_conditions)] // todo fix
                 if root.as_ref().map_or(true, |root| {
                     root.borrow().val == p_val || root.borrow().val == q_val
                 }) {
@@ -85,7 +86,7 @@ pub mod solution_dfs {
                 } else if right.is_none() {
                     left
                 } else {
-                    Some(root.clone())
+                    Some(root)
                 }
             }
             _helper(root, p.unwrap().borrow().val, q.unwrap().borrow().val)

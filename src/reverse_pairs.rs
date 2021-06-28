@@ -114,7 +114,7 @@ impl SolutionByMergeSort {
     }
 
     fn merge_sort(
-        nums: &Vec<i32>,
+        nums: &[i32],
         indexes: &mut Vec<usize>,
         aux_indexes: &mut Vec<usize>,
         lo: usize,
@@ -132,7 +132,7 @@ impl SolutionByMergeSort {
     }
 
     fn merge(
-        nums: &Vec<i32>,
+        nums: &[i32],
         indexes: &mut Vec<usize>,
         aux_indexes: &mut Vec<usize>,
         lo: usize,
@@ -171,9 +171,7 @@ impl SolutionByMergeSort {
             index += 1;
         }
 
-        for i in lo..=hi {
-            indexes[i] = aux_indexes[i];
-        }
+        indexes[lo..(hi + 1)].clone_from_slice(&aux_indexes[lo..(hi + 1)]);
         count
     }
 }
@@ -304,27 +302,30 @@ impl SolutionByBIT {
         count as i32
     }
 
-    fn index(sorted_nums: &Vec<i32>, val: i64) -> usize {
+    fn index(sorted_nums: &[i32], val: i64) -> usize {
         let (mut lo, mut hi) = (0, sorted_nums.len() - 1);
         while lo <= hi {
             let mid = (hi + lo) / 2;
             let num = sorted_nums[mid] as i64;
-            if num < val {
-                lo = mid + 1;
-            } else if num > val {
-                if mid == 0 {
+            use std::cmp::Ordering::*;
+            match num.cmp(&val) {
+                Less => lo = mid + 1,
+                Greater => {
+                    if mid == 0 {
+                        break;
+                    }
+                    hi = mid - 1;
+                }
+                Equal => {
+                    lo = mid;
                     break;
                 }
-                hi = mid - 1;
-            } else {
-                lo = mid;
-                break;
             }
         }
         lo + 1
     }
 
-    fn get_sum(bits: &Vec<usize>, index: usize) -> usize {
+    fn get_sum(bits: &[usize], index: usize) -> usize {
         let mut sum = 0;
         let mut index = index;
         while index < bits.len() {

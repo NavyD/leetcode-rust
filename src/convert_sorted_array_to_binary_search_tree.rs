@@ -90,7 +90,7 @@ pub mod solution_bfs {
             Self::dfs(&nums, 0, nums.len())
         }
 
-        fn dfs(nums: &Vec<i32>, lo: usize, hi: usize) -> Option<Rc<RefCell<TreeNode>>> {
+        fn dfs(nums: &[i32], lo: usize, hi: usize) -> Option<Rc<RefCell<TreeNode>>> {
             if lo >= hi {
                 return None;
             }

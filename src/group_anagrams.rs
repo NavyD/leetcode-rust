@@ -57,7 +57,7 @@ pub mod solution_sort {
                 let mut key: Vec<u8> = s.bytes().collect();
                 key.sort_unstable();
                 // or_insert_with will not create vec every time
-                anagrams.entry(key).or_insert_with(|| Vec::new()).push(s);
+                anagrams.entry(key).or_insert_with(Vec::new).push(s);
             });
             anagrams.into_iter().map(|(_, v)| v).collect()
         }
@@ -95,7 +95,7 @@ pub mod solution_hash {
                 // Use the count bytes as the key
                 let mut key = [0; 26];
                 s.bytes().for_each(|b| key[b as usize - 'a' as usize] += 1);
-                anagrams.entry(key).or_insert_with(|| Vec::new()).push(s);
+                anagrams.entry(key).or_insert_with(Vec::new).push(s);
             });
             anagrams.into_iter().map(|(_, v)| v).collect()
         }
@@ -125,7 +125,7 @@ mod tests {
             .into_iter()
             .map(|s| s.to_string())
             .collect::<Vec<String>>();
-        let res = func(strs.clone());
+        let res = func(strs);
         // Simply check the length, check `Vec<Vec<_>>` a bit complicated
         assert_eq!(3, res.len());
     }

@@ -94,14 +94,12 @@ pub mod solution_queue {
 
     impl Solution {
         pub fn is_symmetric(root: Option<Rc<RefCell<TreeNode>>>) -> bool {
-            if let None = root {
+            if root.is_none() {
                 return true;
             }
             let root = root.unwrap();
             // let a = Rc::clone(root.);
-            let mut queue = vec![];
-            queue.push(root.borrow().left.clone());
-            queue.push(root.borrow().right.clone());
+            let mut queue = vec![root.borrow().left.clone(), root.borrow().right.clone()];
             while let (Some(left), Some(right)) = (queue.pop(), queue.pop()) {
                 match (left, right) {
                     (Some(left), Some(right)) => {

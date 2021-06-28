@@ -4,8 +4,8 @@ use crate::prelude::*;
 use std::cell::RefCell;
 use std::rc::Rc;
 
-const DELIMITER: &'static str = ",";
-const NONE: &'static str = "null";
+const DELIMITER: &str = ",";
+const NONE: &str = "null";
 
 pub mod solution_dfs {
     use super::*;

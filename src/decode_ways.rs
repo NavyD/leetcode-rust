@@ -69,11 +69,11 @@ pub mod solution_dp {
             };
             for i in 2..s.len() + 1 {
                 let second = s.get(i - 2..i).unwrap().parse::<u8>().unwrap();
-                if second >= 10 && second <= 26 {
+                if (10..=26).contains(&second) {
                     dp[i] += dp[i - 2];
                 }
                 let first = s.get(i - 1..i).unwrap().parse::<u8>().unwrap();
-                if first >= 1 && first <= 9 {
+                if (1..=9).contains(&first) {
                     dp[i] += dp[i - 1];
                 }
             }

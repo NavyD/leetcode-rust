@@ -30,13 +30,13 @@ pub mod solution_forward {
             let (mut i, mut j) = (0, 0);
             while i < m && j < n {
                 temp.push(if nums1[i] < nums2[j] {
-                    let v = nums1[i];
+                    let val = nums1[i];
                     i += 1;
-                    v
+                    val
                 } else {
-                    let v = nums2[j];
+                    let val = nums2[j];
                     j += 1;
-                    v
+                    val
                 });
             }
 
@@ -171,7 +171,7 @@ pub mod solution_sort {
                 nums1[m] = nums2[i];
                 m += 1;
             }
-            nums1.sort();
+            nums1.sort_unstable();
         }
     }
 

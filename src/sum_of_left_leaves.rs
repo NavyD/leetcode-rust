@@ -64,7 +64,7 @@ pub mod solution_dfs {
         }
 
         fn dfs_sum(root: Option<Rc<RefCell<TreeNode>>>, is_left: bool) -> i32 {
-            if let Some(root) = root.clone() {
+            if let Some(root) = root {
                 let root = root.borrow();
 
                 if is_left && root.left.is_none() && root.right.is_none() {

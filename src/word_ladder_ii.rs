@@ -138,7 +138,7 @@ pub mod solution_dfs_bfs {
                                 // 反向到上层的word重复添加
                                 word_successors
                                     .entry(cur_word.clone())
-                                    .or_insert(vec![])
+                                    .or_insert_with(Vec::new)
                                     .push(next_word);
                             }
                         }
@@ -368,7 +368,7 @@ pub mod solution_dfs_bfs_two_end {
                                 } else {
                                     (next, cur.clone())
                                 };
-                                word_successors.entry(cur).or_insert(vec![]).push(next);
+                                word_successors.entry(cur).or_insert_with(Vec::new).push(next);
                             }
                         }
                     }
@@ -441,7 +441,7 @@ pub mod solution_bfs_simple {
             queue.push_back(vec![begin_word.clone()]);
             // 当前的访问过的word节点
             let mut visited = HashSet::new();
-            visited.insert(begin_word.clone());
+            visited.insert(begin_word);
             // 下个level访问时保存word，避免path遗漏
             let mut next_visited = HashSet::new();
 

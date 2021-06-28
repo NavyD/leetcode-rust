@@ -73,7 +73,7 @@ pub mod solution_sort {
             let len = nums.len();
             let mut res = vec![];
             if len >= 3 {
-                nums.sort();
+                nums.sort_unstable();
                 for i in 0..len - 2 {
                     // 有序
                     if nums[i] > 0 {
@@ -86,21 +86,22 @@ pub mod solution_sort {
                     let (mut left, mut right) = (i + 1, len - 1);
                     while left < right {
                         let sum = nums[i] + nums[left] + nums[right];
-                        if sum == 0 {
-                            res.push(vec![nums[i], nums[left], nums[right]]);
-                            // 去重
-                            while left < right && nums[left + 1] == nums[left] {
+                        use std::cmp::Ordering::*;
+                        match sum.cmp(&0) {
+                            Greater => right -= 1,
+                            Less => left += 1,
+                            Equal => {
+                                res.push(vec![nums[i], nums[left], nums[right]]);
+                                // 去重
+                                while left < right && nums[left + 1] == nums[left] {
+                                    left += 1;
+                                }
+                                while left < right && nums[right - 1] == nums[right] {
+                                    right -= 1;
+                                }
+                                right -= 1;
                                 left += 1;
                             }
-                            while left < right && nums[right - 1] == nums[right] {
-                                right -= 1;
-                            }
-                            right -= 1;
-                            left += 1;
-                        } else if sum > 0 {
-                            right -= 1;
-                        } else {
-                            left += 1;
                         }
                     }
                 }

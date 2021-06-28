@@ -63,8 +63,7 @@ pub mod solution_bfs {
         pub fn postorder_traversal(root: Option<Rc<RefCell<TreeNode>>>) -> Vec<i32> {
             let mut vals = vec![];
             if let Some(root) = root {
-                let mut stack = vec![];
-                stack.push(root);
+                let mut stack = vec![root];
                 while let Some(root) = stack.pop() {
                     let root = root.borrow();
                     vals.push(root.val);

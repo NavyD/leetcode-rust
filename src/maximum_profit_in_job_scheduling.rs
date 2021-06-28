@@ -113,12 +113,11 @@ pub mod solution_dp {
                 });
             // sort jobs with end_time
             jobs.sort_unstable_by(|a, b| a.end_time.cmp(&b.end_time));
-            let mut dp: Vec<Dp> = Vec::new();
             // init dp[0]
-            dp.push(Dp {
+            let mut dp: Vec<Dp> = vec![Dp {
                 end_time: 0,
                 profit: 0,
-            });
+            }];
             for job in &jobs {
                 let idx = match dp.binary_search_by(|a| a.end_time.cmp(&(job.start_time))) {
                     // found

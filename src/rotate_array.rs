@@ -102,9 +102,7 @@ pub mod solution_ring {
                 let mut cur = start;
                 loop {
                     let next = (cur + k) % len;
-                    let temp = nums[next];
-                    nums[next] = prev_num;
-                    prev_num = temp;
+                    std::mem::swap(&mut nums[next], &mut prev_num);
                     cur = next;
                     count += 1;
                     if cur == start {
@@ -196,9 +194,7 @@ pub mod solution_reverse {
 
         fn reverse(nums: &mut Vec<i32>, mut lo: usize, mut hi: usize) {
             while lo < hi {
-                let temp = nums[lo];
-                nums[lo] = nums[hi];
-                nums[hi] = temp;
+                nums.swap(lo, hi);
                 lo += 1;
                 hi -= 1;
             }

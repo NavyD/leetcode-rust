@@ -46,7 +46,7 @@ pub mod solution_heap {
             }
             for i in (1..len).rev() {
                 // max to back
-                Self::swap(&mut nums, 0, i);
+                nums.swap(0, i);
                 Self::sift_down(&mut nums, 0, i - 1);
             }
             nums
@@ -65,15 +65,9 @@ pub mod solution_heap {
                 if nums[child] <= nums[k] {
                     break;
                 }
-                Self::swap(nums, k, child);
+                nums.swap(k, child);
                 k = child;
             }
-        }
-
-        fn swap(nums: &mut Vec<i32>, i: usize, j: usize) {
-            let temp = nums[i];
-            nums[i] = nums[j];
-            nums[j] = temp;
         }
     }
 }

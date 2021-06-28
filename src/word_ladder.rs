@@ -186,7 +186,7 @@ mod solution_dfs {
                 end: &str,
                 min_count: &mut i32,
                 path: &mut Vec<&'a str>,
-                word_list: &'a Vec<String>,
+                word_list: &'a [String],
             ) {
                 let count = path.len() as i32;
                 if count >= *min_count {

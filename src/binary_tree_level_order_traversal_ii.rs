@@ -115,7 +115,7 @@ pub mod solution_bfs {
             }
             let mut queue = std::collections::VecDeque::new();
             queue.push_back(root.unwrap());
-            while let Some(_) = queue.front() {
+            while queue.front().is_some() {
                 let mut vals = vec![];
                 // 当前层
                 for _ in 0..queue.len() {
