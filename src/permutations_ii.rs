@@ -98,7 +98,7 @@ pub mod solution_set {
     /// 
     /// 使用set来过滤结果
     /// 
-    /// 
+    /// ```ignore
     ///                      1,2,3
     ///         /               |                   \
     ///        1                2                   3
@@ -106,7 +106,8 @@ pub mod solution_set {
     ///      2   3          1       3           1       2
     ///     /     \
     ///    3       2    3               1   2               1
-    ///
+    /// ```ignore
+    /// 
     /// ### Submissions
     ///
     /// date=20201118, mem=2.1, mem_beats=46, runtime=20, runtime_beats=13, url=https://leetcode-cn.com/submissions/detail/124379964/
