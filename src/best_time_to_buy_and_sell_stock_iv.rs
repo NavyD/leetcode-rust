@@ -1,3 +1,4 @@
+/// 注意：k临界值、初始化、反向遍历k
 pub mod solution_dp {
     /// # 思路
     ///
@@ -17,10 +18,10 @@ pub mod solution_dp {
     /// ```
     ///
     /// 注意：dp[0].len = k + 1，从后遍历k
-    /// 
+    ///
     /// 初始化时k>=1开始dp[0][k][1]=-prices[0]，没有设置dp[0][0][1]的原因是k表示交易次数，而交易0次持有1股票
     /// 买入是不可能的与III类似
-    /// 
+    ///
     /// 空间优化：去除dp[i]使用dp[k][2]
     ///
     /// 参考：
@@ -32,6 +33,8 @@ pub mod solution_dp {
     /// ### Submissions
     ///
     /// date=20210620, mem=2.7, mem_beats=11, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/188156204/
+    /// 
+    /// date=20210628, mem=2.8, mem_beats=10, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/190384717/
     pub struct Solution;
 
     impl Solution {
@@ -42,7 +45,7 @@ pub mod solution_dp {
             let (n, k) = (prices.len(), k as usize);
             if k >= n / 2 {
                 let mut dp = vec![(0, 0); n];
-                dp[0].0 = 0;
+                // dp[0].0 = 0;
                 dp[0].1 = -prices[0];
 
                 for i in 1..n {
@@ -53,7 +56,7 @@ pub mod solution_dp {
             } else {
                 let mut dp = vec![vec![(0, 0); k + 1]; n];
                 for i in 1..=k {
-                    dp[0][i].0 = 0;
+                    // dp[0][i].0 = 0;
                     dp[0][i].1 = -prices[0];
                 }
 
