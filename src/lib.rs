@@ -24,6 +24,7 @@ pub mod best_time_to_buy_and_sell_stock;
 pub mod best_time_to_buy_and_sell_stock_ii;
 pub mod best_time_to_buy_and_sell_stock_iii;
 pub mod best_time_to_buy_and_sell_stock_iv;
+pub mod best_time_to_buy_and_sell_stock_with_cooldown;
 pub mod coin_change;
 pub mod coin_change_2;
 pub mod fibonacci_number;

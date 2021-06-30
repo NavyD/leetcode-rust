@@ -16,6 +16,21 @@
 ///     }
 /// }
 /// ```
+///
+/// 问题：为何在optimized中可以直接使用之前改变的变量但是结果与分开时相同
+///
+/// ```ignore
+/// // 在profit1计算时被之前的profit0影响
+/// profit0 = profit0.max(profit1 + prices[i]);
+/// profit1 = profit1.max(profit0 - prices[i]);
+///
+/// // 分开变量影响
+/// let newProfit1 = profit1.max(profit0 - prices[i]);
+/// let newProfit0 = profit0.max(profit1 + prices[i]);
+/// profit0 = newProfit0;
+/// profit1 = newProfit1;
+/// ```
+///
 pub mod solution_greedy {
     /// # 思路
     ///
@@ -92,14 +107,18 @@ pub mod solution_dp_optimized {
     /// date=20210618, mem=2.1, mem_beats=88, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/187704978/
     ///
     /// date=20210619, mem=2.2, mem_beats=40, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/187925686/
+    ///
+    /// date=20210630, mem=2.2, mem_beats=75, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/190959228/
     pub struct Solution;
 
     impl Solution {
         pub fn max_profit(prices: Vec<i32>) -> i32 {
             let (mut profit0, mut profit1) = (0, -prices[0]);
             for i in 1..prices.len() {
-                profit0 = profit0.max(profit1 + prices[i]);
-                profit1 = profit1.max(profit0 - prices[i]);
+                let next0 = profit0.max(profit1 + prices[i]);
+                let next1 = profit1.max(profit0 - prices[i]);
+                profit0 = next0;
+                profit1 = next1;
             }
             profit0
         }
