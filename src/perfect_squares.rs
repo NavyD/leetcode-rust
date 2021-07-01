@@ -1,0 +1,146 @@
+pub mod solution_backtracing {
+    /// # 思路
+    ///
+    /// 先把 n 减去一个平方数，然后求剩下的数分解成平方数和所需的最小个数.
+    /// 只需要从 (n-square1 + 1), (n-square2 + 1), (n-square.. + 1) 多种方案中选择最小的个数
+    /// 
+    /// 参考：
+    ///
+    /// * [详细通俗的思路分析，多解法](https://leetcode-cn.com/problems/perfect-squares/solution/xiang-xi-tong-su-de-si-lu-fen-xi-duo-jie-fa-by--51/)
+    ///
+    /// ### Submissions
+    ///
+    /// date=20210701, mem=2.6, mem_beats=5, runtime=64, runtime_beats=14, url=https://leetcode-cn.com/submissions/detail/191269383/
+    pub struct Solution;
+
+    impl Solution {
+        pub fn num_squares(n: i32) -> i32 {
+            fn backtrack(n: usize, cache: &mut Vec<i32>) -> i32 {
+                // 剪枝 重复计算
+                if cache[n] != MARK {
+                    return cache[n];
+                }
+                if n == 0 {
+                    return 0;
+                }
+                let mut count = i32::MAX;
+                for i in 1..=n {
+                    let square_num = i * i;
+                    if square_num > n {
+                        break;
+                    }
+                    // 计算剩下的 sum. 统计+1
+                    count = count.min(backtrack(n - square_num, cache) + 1)
+                }
+                cache[n] = count;
+                count
+            }
+            const MARK: i32 = -1;
+            let n = n as usize;
+            backtrack(n, &mut vec![MARK; n + 1])
+        }
+    }
+}
+
+pub mod solution_dp {
+    /// # 思路
+    ///
+    /// 定义problem(i)表示和为i的完全平方数的最少数量。如何计算，
+    /// 当从1开始计算square数遍历，每计算一个square，可以由 `problem(i-sqaure) + 1`
+    /// 计算出problem(i)，表示由i-square作为剩下的和。
+    /// 即`problem(i)=min(problem(i), problem(i-square)+1)`
+    ///
+    /// dp方程：`dp[i] = min(dp[i], dp[i - square] + 1) for square in 1..n`
+    ///
+    /// 初始化：len=n+1. 当i=1时，dp[1] = min(dp[1], dp[0] + 1) = 1，dp[0]应该初始化为0，`dp[1]=i32::MAX`
+    /// 即dp[i>0]=i32::MAX
+    ///
+    /// 参考：
+    ///
+    /// * [详细通俗的思路分析，多解法](https://leetcode-cn.com/problems/perfect-squares/solution/xiang-xi-tong-su-de-si-lu-fen-xi-duo-jie-fa-by--51/)
+    ///
+    /// ### Submissions
+    ///
+    /// date=20210701, mem=2.2, mem_beats=18, runtime=40, runtime_beats=45, url=https://leetcode-cn.com/submissions/detail/191283031/
+    ///
+    pub struct Solution;
+
+    impl Solution {
+        pub fn num_squares(n: i32) -> i32 {
+            let n = n as usize;
+            let mut dp = vec![i32::MAX; n + 1];
+            dp[0] = 0;
+
+            for i in 1..=n {
+                for j in 1..=i {
+                    let square = j * j;
+                    if square > i {
+                        break;
+                    }
+                    dp[i] = dp[i].min(dp[i - square] + 1);
+                }
+            }
+            dp[n]
+        }
+    }
+}
+
+pub mod solution_bfs {
+    /// # 思路
+    ///
+    /// 参考：
+    ///
+    /// * [详细通俗的思路分析，多解法](https://leetcode-cn.com/problems/perfect-squares/solution/xiang-xi-tong-su-de-si-lu-fen-xi-duo-jie-fa-by--51/)
+    ///
+    /// ### Submissions
+    ///
+    /// date=20210701, mem=2.3, mem_beats=15, runtime=164, runtime_beats=10, url=https://leetcode-cn.com/submissions/detail/191286428/
+    pub struct Solution;
+
+    impl Solution {
+        pub fn num_squares(n: i32) -> i32 {
+            let mut queue = std::collections::VecDeque::new();
+            queue.push_back(n);
+
+            let n = n as usize;
+            let mut visited = vec![false; n + 1];
+            visited[n] = true;
+
+            let mut steps = 0;
+            while !queue.is_empty() {
+                steps += 1;
+                for _ in 0..queue.len() {
+                    let cur_sum = queue.pop_front().unwrap();
+                    for i in 1..=cur_sum {
+                        let next_sum = cur_sum - i * i;
+                        if next_sum == 0 {
+                            return steps;
+                        } else if next_sum > 0 && !visited[next_sum as usize] {
+                            visited[next_sum as usize] = true;
+                            queue.push_back(next_sum);
+                        }
+                    }
+                }
+            }
+            unreachable!()
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn basic() {
+        test(solution_backtracing::Solution::num_squares);
+        test(solution_dp::Solution::num_squares);
+        test(solution_bfs::Solution::num_squares);
+    }
+
+    fn test<F: Fn(i32) -> i32>(f: F) {
+        assert_eq!(f(12), 3);
+        assert_eq!(f(13), 2);
+        assert_eq!(f(54), 3);
+    }
+}

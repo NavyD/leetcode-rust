@@ -36,6 +36,7 @@ pub mod maximum_subarray;
 pub mod triangle;
 pub mod unique_paths;
 pub mod unique_paths_ii;
+pub mod perfect_squares;
 
 // tree
 pub mod balanced_binary_tree;
