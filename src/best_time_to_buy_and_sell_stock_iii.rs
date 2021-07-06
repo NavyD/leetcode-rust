@@ -29,20 +29,22 @@ pub mod solution_dp {
         /// date=20210619, mem=21.5, mem_beats=7, runtime=140, runtime_beats=7, url=https://leetcode-cn.com/submissions/detail/187916639/
         ///
         /// date=20210620, mem=21.3, mem_beats=7, runtime=140, runtime_beats=7, url=https://leetcode-cn.com/submissions/detail/188161320/
+        ///
+        /// date=20210706, mem=7.3, mem_beats=16, runtime=36, runtime_beats=16, url=https://leetcode-cn.com/submissions/detail/192800162/
         pub fn max_profit(prices: Vec<i32>) -> i32 {
             let n = prices.len();
-            let mut dp = vec![vec![vec![0; 2]; 3]; n];
-            dp[0][1][1] = -prices[0];
-            dp[0][2][1] = -prices[0];
+            let mut dp = vec![vec![(0, 0); 3]; n];
+            dp[0][1].1 = -prices[0];
+            dp[0][2].1 = -prices[0];
 
             for i in 1..n {
-                dp[i][1][0] = dp[i - 1][1][0].max(dp[i - 1][1][1] + prices[i]);
-                dp[i][1][1] = dp[i - 1][1][1].max(dp[i - 1][0][0] - prices[i]);
+                dp[i][1].0 = dp[i - 1][1].0.max(dp[i - 1][1].1 + prices[i]);
+                dp[i][1].1 = dp[i - 1][1].1.max(dp[i - 1][0].0 - prices[i]);
 
-                dp[i][2][0] = dp[i - 1][2][0].max(dp[i - 1][2][1] + prices[i]);
-                dp[i][2][1] = dp[i - 1][2][1].max(dp[i - 1][1][0] - prices[i]);
+                dp[i][2].0 = dp[i - 1][2].0.max(dp[i - 1][2].1 + prices[i]);
+                dp[i][2].1 = dp[i - 1][2].1.max(dp[i - 1][1].0 - prices[i]);
             }
-            dp[n - 1][2][0]
+            dp[n - 1][2].0
         }
     }
 }
@@ -58,20 +60,23 @@ pub mod solution_dp_optimized {
     /// date=20210619, mem=2.8, mem_beats=100, runtime=12, runtime_beats=71, url=https://leetcode-cn.com/submissions/detail/187918920/
     ///
     /// date=20210620, mem=3, mem_beats=57, runtime=16, runtime_beats=35, url=https://leetcode-cn.com/submissions/detail/188162387/
+    ///
+    /// date=20210706, mem=2.8, mem_beats=88, runtime=16, runtime_beats=44, url=https://leetcode-cn.com/submissions/detail/192800961/
     pub struct Solution;
 
     impl Solution {
         pub fn max_profit(prices: Vec<i32>) -> i32 {
-            let (mut profit_10, mut profit_11) = (0, -prices[0]);
-            let (mut profit_20, mut profit_21) = (0, -prices[0]);
-            for i in 1..prices.len() {
-                profit_10 = profit_10.max(profit_11 + prices[i]);
-                profit_11 = profit_11.max(-prices[i]);
+            let (mut profit10, mut profit11) = (0, -prices[0]);
+            let (mut profit20, mut profit21) = (0, -prices[0]);
 
-                profit_20 = profit_20.max(profit_21 + prices[i]);
-                profit_21 = profit_21.max(profit_10 - prices[i]);
+            for i in 1..prices.len() {
+                profit10 = profit10.max(profit11 + prices[i]);
+                profit11 = profit11.max(-prices[i]);
+
+                profit20 = profit20.max(profit21 + prices[i]);
+                profit21 = profit21.max(profit10 - prices[i]);
             }
-            profit_20
+            profit20
         }
     }
 }

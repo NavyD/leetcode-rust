@@ -37,6 +37,7 @@ pub mod triangle;
 pub mod unique_paths;
 pub mod unique_paths_ii;
 pub mod perfect_squares;
+pub mod edit_distance;
 
 // tree
 pub mod balanced_binary_tree;

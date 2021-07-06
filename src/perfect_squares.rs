@@ -1,9 +1,9 @@
-pub mod solution_backtracing {
+pub mod solution_backtracking {
     /// # 思路
     ///
     /// 先把 n 减去一个平方数，然后求剩下的数分解成平方数和所需的最小个数.
     /// 只需要从 (n-square1 + 1), (n-square2 + 1), (n-square.. + 1) 多种方案中选择最小的个数
-    /// 
+    ///
     /// 参考：
     ///
     /// * [详细通俗的思路分析，多解法](https://leetcode-cn.com/problems/perfect-squares/solution/xiang-xi-tong-su-de-si-lu-fen-xi-duo-jie-fa-by--51/)
@@ -46,14 +46,14 @@ pub mod solution_dp {
     /// # 思路
     ///
     /// 定义problem(i)表示和为i的完全平方数的最少数量。如何计算，
-    /// 当从1开始计算square数遍历，每计算一个square，可以由 `problem(i-sqaure) + 1`
+    /// 当从1开始计算square数遍历，每计算一个square，可以由 `problem(i-square) + 1`
     /// 计算出problem(i)，表示由i-square作为剩下的和。
     /// 即`problem(i)=min(problem(i), problem(i-square)+1)`
     ///
     /// dp方程：`dp[i] = min(dp[i], dp[i - square] + 1) for square in 1..n`
     ///
-    /// 初始化：len=n+1. 当i=1时，dp[1] = min(dp[1], dp[0] + 1) = 1，dp[0]应该初始化为0，`dp[1]=i32::MAX`
-    /// 即dp[i>0]=i32::MAX
+    /// 初始化：len=n+1. 当i=1时，`dp[1] = min(dp[1], dp[0] + 1) = 1`，dp[0]应该初始化为0，`dp[1]=i32::MAX`
+    /// 即`dp[i>0]=i32::MAX`
     ///
     /// 参考：
     ///
@@ -63,6 +63,7 @@ pub mod solution_dp {
     ///
     /// date=20210701, mem=2.2, mem_beats=18, runtime=40, runtime_beats=45, url=https://leetcode-cn.com/submissions/detail/191283031/
     ///
+    /// date=20210706, mem=2.1, mem_beats=59, runtime=40, runtime_beats=45, url=https://leetcode-cn.com/submissions/detail/192796308/
     pub struct Solution;
 
     impl Solution {
@@ -95,6 +96,8 @@ pub mod solution_bfs {
     /// ### Submissions
     ///
     /// date=20210701, mem=2.3, mem_beats=15, runtime=164, runtime_beats=10, url=https://leetcode-cn.com/submissions/detail/191286428/
+    ///
+    /// date=20210706, mem=2.1, mem_beats=48, runtime=168, runtime_beats=7, url=https://leetcode-cn.com/submissions/detail/192797893/
     pub struct Solution;
 
     impl Solution {
@@ -109,15 +112,16 @@ pub mod solution_bfs {
             let mut steps = 0;
             while !queue.is_empty() {
                 steps += 1;
+
                 for _ in 0..queue.len() {
                     let cur_sum = queue.pop_front().unwrap();
                     for i in 1..=cur_sum {
-                        let next_sum = cur_sum - i * i;
-                        if next_sum == 0 {
+                        let rest_sum = cur_sum - i * i;
+                        if rest_sum == 0 {
                             return steps;
-                        } else if next_sum > 0 && !visited[next_sum as usize] {
-                            visited[next_sum as usize] = true;
-                            queue.push_back(next_sum);
+                        } else if rest_sum > 0 && !visited[rest_sum as usize] {
+                            visited[rest_sum as usize] = true;
+                            queue.push_back(rest_sum);
                         }
                     }
                 }
@@ -133,7 +137,7 @@ mod tests {
 
     #[test]
     fn basic() {
-        test(solution_backtracing::Solution::num_squares);
+        test(solution_backtracking::Solution::num_squares);
         test(solution_dp::Solution::num_squares);
         test(solution_bfs::Solution::num_squares);
     }

@@ -13,7 +13,7 @@ pub mod solution_dp {
     /// ### Submissions
     ///
     /// date=20210630, mem=2, mem_beats=75, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/190947805/
-    /// 
+    ///
     /// date=20210701, mem=2.2, mem_beats=20, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/191325218/
     pub struct Solution;
 
@@ -47,7 +47,7 @@ pub mod solution_dp_optimized {
     /// ### Submissions
     ///
     /// date=20210630, mem=2.1, mem_beats=50, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/190952666/
-    /// 
+    ///
     /// date=20210701, mem=2, mem_beats=80, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/191327047/
     pub struct Solution;
 
