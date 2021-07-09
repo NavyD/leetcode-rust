@@ -27,17 +27,17 @@ pub mod best_time_to_buy_and_sell_stock_iv;
 pub mod best_time_to_buy_and_sell_stock_with_cooldown;
 pub mod coin_change;
 pub mod coin_change_2;
+pub mod edit_distance;
 pub mod fibonacci_number;
 pub mod house_robber;
 pub mod house_robber_ii;
 pub mod longest_common_subsequence;
 pub mod maximum_product_subarray;
 pub mod maximum_subarray;
+pub mod perfect_squares;
 pub mod triangle;
 pub mod unique_paths;
 pub mod unique_paths_ii;
-pub mod perfect_squares;
-pub mod edit_distance;
 
 // tree
 pub mod balanced_binary_tree;
