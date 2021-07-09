@@ -4,6 +4,7 @@ pub mod solution_dp {
     ///
     /// 如果 k 超过一个临界值，最大收益就不再取决于允许的最大交易次数，而是取决于股票价格数组的长度。
     /// 一个有收益的交易至少需要两天（在前一天买入，在后一天卖出，前提是买入价格低于卖出价格）。
+    ///
     /// 如果股票价格数组的长度为 n，则有收益的交易的数量最多为 n / 2（整数除法）。因此 k 的临界值是 n / 2。
     /// 如果给定的 k 不小于临界值，即 k >= n / 2，则可以将 k 扩展为正无穷，此时问题等价于情况二
     ///
@@ -35,6 +36,8 @@ pub mod solution_dp {
     /// date=20210620, mem=2.7, mem_beats=11, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/188156204/
     ///
     /// date=20210628, mem=2.8, mem_beats=10, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/190384717/
+    ///
+    /// date=20210709, mem=2.7, mem_beats=18, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/193890379/
     pub struct Solution;
 
     impl Solution {
@@ -85,5 +88,6 @@ mod tests {
         assert_eq!(f(2, vec![2, 4, 1]), 2);
         assert_eq!(f(2, vec![3, 2, 6, 5, 0, 3]), 7);
         assert_eq!(f(2, vec![]), 0);
+        assert_eq!(f(2, vec![2,1,2,0,1]), 2);
     }
 }
