@@ -48,6 +48,8 @@ pub mod solution_greedy {
     /// date=20210115, mem=2.1, mem_beats=83, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/138591872/
     ///
     /// date=20210520, mem=2, mem_beats=70, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/179175793/
+    ///
+    /// date=20210714, mem=2.1, mem_beats=71, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/195600767/
     pub struct Solution;
 
     impl Solution {
@@ -99,6 +101,8 @@ pub mod solution_greedy_reversed {
     /// date=20210307, mem=2.3, mem_beats=10, runtime=528, runtime_beats=5, url=https://leetcode-cn.com/submissions/detail/152105220/
     ///
     /// date=20210520, mem=2.1, mem_beats=23, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/179180098/
+    ///
+    /// date=20210714, mem=2.1, mem_beats=71, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/195600767/
     pub struct Solution;
 
     impl Solution {
@@ -115,6 +119,86 @@ pub mod solution_greedy_reversed {
     }
 }
 
+pub mod solution_bfs {
+
+    /// # 思路
+    ///
+    /// 参考：
+    ///
+    /// * [O(n), BFS solution comment](https://leetcode.com/problems/jump-game-ii/discuss/18028/O(n)-BFS-solution/143760)
+    ///
+    /// ### Submissions
+    ///
+    /// date=20210714, mem=2.2, mem_beats=25, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/195608040/
+    pub struct Solution;
+
+    impl Solution {
+        pub fn jump(nums: Vec<i32>) -> i32 {
+            if nums.len() <= 1 {
+                return 0;
+            }
+
+            let (mut cur_max, mut idx) = (0, 0);
+            let mut level = 0;
+            while idx <= cur_max {
+                level += 1;
+                // 下一层最大的
+                let mut next_max = cur_max;
+                while idx <= cur_max {
+                    // 在当前层找 最跳最远的下标 作为下一层
+                    next_max = next_max.max(idx + nums[idx] as usize);
+                    if next_max >= nums.len() - 1 {
+                        return level;
+                    }
+                    idx += 1;
+                }
+                cur_max = next_max;
+            }
+            // 无法跳转到最后
+            unreachable!()
+        }
+    }
+}
+
+pub mod solution_dp {
+
+    /// # 思路
+    ///
+    /// 定义problem(i)表示最少的跳跃次数，对于i只需要在不断更新0..i对应的最小次数problem(i)
+    ///
+    /// dp方程：`dp[i] = dp[i].min(dp[j] + 1) for j in 0..i if j + nums[j] >= i`
+    ///
+    /// 初始化：dp[0] = 0, dp[1..n] = max
+    ///
+    /// 参考：
+    ///
+    /// * [动态规划 跳跃游戏 II](https://leetcode-cn.com/problems/jump-game-ii/solution/dong-tai-gui-hua-jie-fa-by-alchemist-5r/)
+    ///
+    /// ### Submissions
+    ///
+    /// date=20210714, mem=2.1, mem_beats=69, runtime=236, runtime_beats=5, url=https://leetcode-cn.com/submissions/detail/195613150/
+    pub struct Solution;
+
+    impl Solution {
+        pub fn jump(nums: Vec<i32>) -> i32 {
+            let n = nums.len();
+            let mut dp = vec![i32::MAX; n];
+            dp[0] = 0;
+
+            for i in 1..n {
+                for j in 0..i {
+                    // 可以到达i
+                    if j + nums[j] as usize >= i {
+                        // 跳跃 更新
+                        dp[i] = dp[i].min(dp[j] + 1);
+                    }
+                }
+            }
+            dp[n - 1] as i32
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -123,6 +207,8 @@ mod tests {
     fn basic() {
         test(solution_greedy::Solution::jump);
         test(solution_greedy_reversed::Solution::jump);
+        test(solution_bfs::Solution::jump);
+        test(solution_dp::Solution::jump);
     }
 
     fn test<F: Fn(Vec<i32>) -> i32>(f: F) {

@@ -36,16 +36,18 @@ pub mod solution_greedy {
     /// date=20210307, mem=2.1, mem_beats=69, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/152094236/
     ///
     /// date=20210709, mem=2.2, mem_beats=20, runtime=4, runtime_beats=71, url=https://leetcode-cn.com/submissions/detail/193894504/
+    ///
+    /// date=20210714, mem=2.1, mem_beats=60, runtime=4, runtime_beats=77, url=https://leetcode-cn.com/submissions/detail/195555315/
     pub struct Solution;
 
     impl Solution {
         pub fn can_jump(nums: Vec<i32>) -> bool {
-            let mut farthest_pos = 0;
-            for i in 0..nums.len() {
-                if i > farthest_pos {
+            let mut longest_pos = 0;
+            for (i, num) in nums.iter().enumerate() {
+                if i > longest_pos {
                     return false;
                 }
-                farthest_pos = farthest_pos.max(i + nums[i] as usize);
+                longest_pos = longest_pos.max(i + *num as usize);
             }
             true
         }
@@ -76,6 +78,8 @@ pub mod solution_greedy_reversed {
     /// date=20210307, mem=2, mem_beats=95, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/152096208/
     ///
     /// date=20210709, mem=2.1, mem_beats=37, runtime=4, runtime_beats=71, url=https://leetcode-cn.com/submissions/detail/193895494/
+    ///
+    /// date=20210714, mem=2.2, mem_beats=32, runtime=4, runtime_beats=77, url=https://leetcode-cn.com/submissions/detail/195561441/
     pub struct Solution;
 
     impl Solution {
@@ -141,6 +145,8 @@ pub mod solution_dp {
     /// ### Submissions
     ///
     /// date=20210709, mem=2.2, mem_beats=25, runtime=8, runtime_beats=51, url=https://leetcode-cn.com/submissions/detail/193916234/
+    ///
+    /// date=20210714, mem=2.3, mem_beats=7, runtime=8, runtime_beats=52, url=https://leetcode-cn.com/submissions/detail/195585312/
     pub struct Solution;
 
     impl Solution {
