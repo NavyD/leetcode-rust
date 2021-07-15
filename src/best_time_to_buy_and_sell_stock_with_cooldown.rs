@@ -15,13 +15,12 @@ pub mod solution_dp {
     /// date=20210630, mem=2, mem_beats=75, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/190947805/
     ///
     /// date=20210701, mem=2.2, mem_beats=20, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/191325218/
+    ///
+    /// date=20210715, mem=2, mem_beats=90, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/195942618/
     pub struct Solution;
 
     impl Solution {
         pub fn max_profit(prices: Vec<i32>) -> i32 {
-            if prices.is_empty() {
-                return 0;
-            }
             let n = prices.len();
             let mut dp = vec![(0, 0); n];
             dp[0].1 = -prices[0];
@@ -30,7 +29,7 @@ pub mod solution_dp {
                 dp[i].0 = dp[i - 1].0.max(dp[i - 1].1 + prices[i]);
                 dp[i].1 = dp[i - 1]
                     .1
-                    .max(if i >= 2 { dp[i - 2].0 } else { 0 } - prices[i]);
+                    .max(if i == 1 { 0 } else { dp[i - 2].0 } - prices[i]);
             }
             dp[n - 1].0
         }
@@ -49,6 +48,8 @@ pub mod solution_dp_optimized {
     /// date=20210630, mem=2.1, mem_beats=50, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/190952666/
     ///
     /// date=20210701, mem=2, mem_beats=80, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/191327047/
+    ///
+    /// date=20210715, mem=2, mem_beats=85, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/195945644/
     pub struct Solution;
 
     impl Solution {

@@ -26,6 +26,8 @@ pub mod solution_dp {
     ///
     /// date=20210311, mem=2, mem_beats=76, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/153810118/
     ///
+    /// date=20210714, mem=2, mem_beats=65, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/195958915/
+    ///
     /// ## 复杂度
     ///
     /// - 时间：O(N*M)
@@ -36,12 +38,9 @@ pub mod solution_dp {
         pub fn unique_paths(m: i32, n: i32) -> i32 {
             let (m, n) = (m as usize, n as usize);
             let mut dp = vec![vec![0; n]; m];
-            for i in 0..m {
-                dp[i][0] = 1;
-            }
-            for j in 0..n {
-                dp[0][j] = 1;
-            }
+            (0..m).for_each(|i| dp[i][0] = 1);
+            (0..n).for_each(|i| dp[0][i] = 1);
+
             for i in 1..m {
                 for j in 1..n {
                     dp[i][j] = dp[i - 1][j] + dp[i][j - 1];

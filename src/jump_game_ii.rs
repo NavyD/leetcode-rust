@@ -50,20 +50,22 @@ pub mod solution_greedy {
     /// date=20210520, mem=2, mem_beats=70, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/179175793/
     ///
     /// date=20210714, mem=2.1, mem_beats=71, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/195600767/
+    ///
+    /// date=20210715, mem=2, mem_beats=80, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/195921017/
     pub struct Solution;
 
     impl Solution {
         pub fn jump(nums: Vec<i32>) -> i32 {
             let mut steps = 0;
             // cur_end表示当前范围的最后下标， cur_longest_pos表示当前范围下可达到的最长位置
-            let (mut cur_end, mut cur_longest_pos) = (0, 0);
+            let (mut cur_end, mut longest_pos) = (0, 0);
             // 0位置steps 已经加1 避免在nums.len() - 1时steps+1
             let end = nums.len() - 1;
             for i in 0..end {
-                cur_longest_pos = cur_longest_pos.max(nums[i] as usize + i);
+                longest_pos = longest_pos.max(nums[i] as usize + i);
                 // 当前范围走完，走下一步
                 if i == cur_end {
-                    cur_end = cur_longest_pos;
+                    cur_end = longest_pos;
                     steps += 1;
                     // 提前检查到达
                     if cur_end >= end {
@@ -103,6 +105,8 @@ pub mod solution_greedy_reversed {
     /// date=20210520, mem=2.1, mem_beats=23, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/179180098/
     ///
     /// date=20210714, mem=2.1, mem_beats=71, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/195600767/
+    ///
+    /// date=20210714, mem=2.1, mem_beats=63, runtime=12, runtime_beats=15, url=https://leetcode-cn.com/submissions/detail/195922734/
     pub struct Solution;
 
     impl Solution {
@@ -123,13 +127,18 @@ pub mod solution_bfs {
 
     /// # 思路
     ///
+    /// 从i开始找能走最远的所有下标max, 在`i..max`中找下一层的`next i..max`，直到`max>=end`。
+    /// 也就是在每一层算一步一层走i..max都试一遍找下一步最大值
+    ///
     /// 参考：
     ///
     /// * [O(n), BFS solution comment](https://leetcode.com/problems/jump-game-ii/discuss/18028/O(n)-BFS-solution/143760)
-    ///
+    /// * [【宫水三叶】修改数据范围，可以从「简单 BFS」变为「挖掘性质」的贪心 DP 题](https://leetcode-cn.com/problems/jump-game-ii/solution/gong-shui-san-xie-xiu-gai-shu-ju-fan-wei-wylq/)
     /// ### Submissions
     ///
     /// date=20210714, mem=2.2, mem_beats=25, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/195608040/
+    ///
+    /// date=20210715, mem=2.2, mem_beats=34, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/195927371/
     pub struct Solution;
 
     impl Solution {
@@ -177,6 +186,8 @@ pub mod solution_dp {
     /// ### Submissions
     ///
     /// date=20210714, mem=2.1, mem_beats=69, runtime=236, runtime_beats=5, url=https://leetcode-cn.com/submissions/detail/195613150/
+    ///
+    /// date=20210714, mem=2, mem_beats=86, runtime=236, runtime_beats=5, url=https://leetcode-cn.com/submissions/detail/195934926/
     pub struct Solution;
 
     impl Solution {

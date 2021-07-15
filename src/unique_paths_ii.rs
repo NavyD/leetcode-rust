@@ -134,6 +134,8 @@ pub mod solution_dp {
     ///
     /// date=20210525, mem=2, mem_beats=85, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/180637540/
     ///
+    /// date=20210714, mem=2.1, mem_beats=35, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/195964223/
+    ///
     /// ## 复杂度
     ///
     /// - 时间：O(N*M)
