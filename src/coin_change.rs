@@ -1,23 +1,26 @@
 pub mod solution_dp {
     /// # 思路
     ///
-    /// 子问题：设`dp[i]`表示凑齐总价值 i 需要的最少硬币个数，`problem(i) = for coin in coins: min(problem(i - coin) + 1)`
-    ///
     /// 对于`coins = [1, 2, 5], amount = 11`, 凑成面值为 11 的最少硬币个数可以由以下三者的最小值得到：
     ///
     /// - 凑成面值为 10 的最少硬币个数 + 面值为 1 的这一枚硬币；
     /// - 凑成面值为 9 的最少硬币个数 + 面值为 2 的这一枚硬币；
     /// - 凑成面值为 6 的最少硬币个数 + 面值为 5 的这一枚硬币。
     ///
-    /// 即: `dp[11] = min(dp[10] + 1, dp[9] + 1, dp[6] + 1)`,在前一个最小硬币数+当前1个 硬币面值`coins[..]`取最小值
+    /// 子问题：设`problem(i)`表示凑齐总价值 i 需要的硬币个数，`problem(i) = problem(i - coin) + 1 for coin in coins`
     ///
+    /// 即: `dp[11] = min(dp[10] + 1, dp[9] + 1, dp[6] + 1)`,在前一个最小硬币数+当前1个 硬币面值`coins[..]`取最小值
     /// 即: `if i - coins[j] >= 0 { dp[i] = min(dp[i], dp[i - coins[j]] + 1) }`
     ///
-    /// dp方程：`dp[amount] = for coin in coins: if coin <= amount: min(dp[amount], 1 + dp[amount - coins[i]])`
+    /// dp方程：`dp[amount] = min(dp[amount], 1 + dp[amount - coins[i]]) for coin in coins if coin <= amount`
     ///
     /// 初始化：当amount=1时，dp[1] = coins[0] + dp[0] = 1 + 0，即dp[0]=Some(0)，其它初始化为None
     ///
-    /// 注意：有[动态规划、完全背包、BFS（包含完全背包问题公式推导）](https://leetcode-cn.com/problems/coin-change/solution/dong-tai-gui-hua-shi-yong-wan-quan-bei-bao-wen-ti-/)
+    /// 注意：
+    ///
+    /// - mark不能设置为i32::MAX，将会导致dp[i]=i32::MAX+1=-2147483648.min(xx)被设置为-2147483648
+    ///
+    /// - 有[动态规划、完全背包、BFS（包含完全背包问题公式推导）](https://leetcode-cn.com/problems/coin-change/solution/dong-tai-gui-hua-shi-yong-wan-quan-bei-bao-wen-ti-/)
     /// ` if (i - coin >= 0 && dp[i - coin] != amount + 1) {`，在找`dp[i]`时必须验证`dp[amount - coins[i]]`这个之前的是否存在，如果不存在说明无法使用凑出
     /// `dp[i]`。但是、但是、但是，对于从1..=amount开始dp[i]，dp[0]=0，dp[preidx=amount-coins[i]]是必存在的，
     /// 这个验证是不需要的，移除
@@ -84,6 +87,8 @@ pub mod solution_dp {
     /// date=20210523, mem=2, mem_beats=63, runtime=12, runtime_beats=60, url=https://leetcode-cn.com/submissions/detail/180025433/
     ///
     /// date=20210613, mem=2, mem_beats=83, runtime=8, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/186249323/
+    ///
+    /// date=20210716, mem=1.9, mem_beats=96, runtime=8, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/196350485/
     pub struct Solution;
 
     impl Solution {
