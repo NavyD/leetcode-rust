@@ -20,7 +20,7 @@ pub mod solution_dp {
     /// - 一种是没有用前k-1个硬币就凑齐了，
     /// - 一种是前面已经凑到了i-k，现在就差第k个硬币了。
     ///
-    /// dp方程：`dp[k][amount] = if coins[k-1] <= amount: dp[k][amount - coins[k-1]] + dp[k - 1][amount] else: dp[k -1][amount]`。
+    /// dp方程：`dp[k][i] = dp[k][i - coin] + dp[k - 1][i] if coin <= i else dp[k - 1][i] for coin in coins`
     ///
     /// 初始化：使`dp.len=coins.len + 1, dp[i].len=amount+1`，当只有1个硬币且刚好amount=coin
     /// 即`k=1,i=1`时`dp[1][1]=dp[0][1] + dp[1, 0]=1`，此时应该初始化dp[i][0]=1
@@ -41,17 +41,19 @@ pub mod solution_dp {
     /// date=20210525, mem=6.3, mem_beats=6.25, runtime=12, runtime_beats=6.25, url=https://leetcode-cn.com/submissions/detail/180633984/
     ///
     /// date=20210613, mem=6.2, mem_beats=16, runtime=8, runtime_beats=24, url=https://leetcode-cn.com/submissions/detail/186278937/
+    ///
+    /// 将`dp[i][0] = 1`放入`for i in 1..=coins_len {`导致执行用时太慢，单独使用for_each使用时降到0ms
+    /// date=20210717, mem=6.2, mem_beats=18, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/196659784/
     pub struct Solution;
 
     impl Solution {
         pub fn change(amount: i32, coins: Vec<i32>) -> i32 {
-            let amount = amount as usize;
-            let mut dp = vec![vec![0; amount + 1]; coins.len() + 1];
-            // 初始化 这里可以移除，dp过程不会出现dp[0][0]
-            dp[0][0] = 1;
-            for i in 1..=coins.len() {
-                // 初始化
-                dp[i][0] = 1;
+            let (amount, coins_len) = (amount as usize, coins.len());
+            let mut dp = vec![vec![0; amount + 1]; coins_len + 1];
+            // 初始化
+            (0..=coins_len).for_each(|i| dp[i][0] = 1);
+
+            for i in 1..=coins_len {
                 let coin = coins[i - 1] as usize;
                 for j in 1..=amount {
                     dp[i][j] = dp[i - 1][j];
@@ -60,7 +62,7 @@ pub mod solution_dp {
                     }
                 }
             }
-            *dp.last().and_then(|v| v.last()).unwrap()
+            dp[coins_len][amount]
         }
     }
 }
@@ -89,6 +91,8 @@ pub mod solution_dp_optimized {
     /// date=20210524, mem=2, mem_beats=100, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/180634859/
     ///
     /// date=20210613, mem=2.1, mem_beats=50, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/186281437/
+    ///
+    /// date=20210717, mem=2.1, mem_beats=52, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/196663774/
     pub struct Solution;
 
     impl Solution {

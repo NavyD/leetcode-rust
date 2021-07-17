@@ -32,6 +32,7 @@ pub mod fibonacci_number;
 pub mod house_robber;
 pub mod house_robber_ii;
 pub mod longest_common_subsequence;
+pub mod longest_valid_parentheses;
 pub mod maximum_product_subarray;
 pub mod maximum_subarray;
 pub mod perfect_squares;

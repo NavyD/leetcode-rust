@@ -131,6 +131,8 @@ pub mod solution_bfs {
     /// date=20210524, mem=2.1, mem_beats=43, runtime=8, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/180334942/
     ///
     /// date=20210613, mem=2, mem_beats=84, runtime=12, runtime_beats=64, url=https://leetcode-cn.com/submissions/detail/186258732/
+    ///
+    /// date=20210717, mem=2, mem_beats=80, runtime=8, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/196668718/
     pub struct Solution;
 
     impl Solution {
@@ -148,24 +150,24 @@ pub mod solution_bfs {
 
             // coins.sort_unstable();
 
-            let mut steps = 0;
+            let mut level = 0;
             while !queue.is_empty() {
-                steps += 1;
+                level += 1;
                 for _ in 0..queue.len() {
                     let amount = queue.pop_front().unwrap();
                     for coin in &coins {
                         let rest_amount = amount - coin;
-                        // 0找到最短路径
-                        if rest_amount == 0 {
-                            return steps;
-                        }
-                        if rest_amount < 0 {
-                            // break;
-                            continue;
-                        }
-                        if !visited[rest_amount as usize] {
-                            queue.push_back(rest_amount);
-                            visited[rest_amount as usize] = true;
+
+                        use std::cmp::Ordering::*;
+                        match rest_amount.cmp(&0) {
+                            Equal => return level,
+                            Less => continue,
+                            Greater => {
+                                if !visited[rest_amount as usize] {
+                                    visited[rest_amount as usize] = true;
+                                    queue.push_back(rest_amount);
+                                }
+                            }
                         }
                     }
                 }
