@@ -99,8 +99,8 @@ pub mod solution_extend {
             let mut max_idx = 0;
             let mut max_len = 0;
             for i in 0..n {
-                let odd_s_len = Self::extend(&bytes, i, i);
-                let even_s_len = Self::extend(&bytes, i, i + 1);
+                let odd_s_len = Self::extend(bytes, i, i);
+                let even_s_len = Self::extend(bytes, i, i + 1);
                 if odd_s_len > max_len {
                     max_idx = i - odd_s_len / 2;
                     max_len = odd_s_len;
