@@ -27,11 +27,11 @@ pub mod solution_violent {
     impl Solution {
         pub fn longest_valid_parentheses(s: String) -> i32 {
             const LEFT: char = '(';
-            fn is_valid(s: &str, stack: &mut Vec<char>) -> bool {
+            fn is_valid(s: &str, stack: &mut Vec<()>) -> bool {
                 stack.clear();
                 for c in s.chars() {
                     if c == LEFT {
-                        stack.push(c);
+                        stack.push(());
                     } else if stack.pop().is_none() {
                         // 右括号 未对应left
                         return false;
@@ -41,17 +41,15 @@ pub mod solution_violent {
             }
 
             let n = s.len();
-            if n < 2 {
-                return 0;
-            }
-
             let mut stack = vec![];
-            // 子字符串长度
-            for i in (0..=if n % 2 == 0 { n } else { n - 1 }).rev().step_by(2) {
-                // 在s中 从0开始遍历这个长度的字符串
-                for j in 0..=n - i {
-                    if is_valid(&s[j..j + i], &mut stack) {
-                        return i as i32;
+
+            // the length. from large to small, step = 2 and len is even
+            for len in (2..=if n & 1 == 0 { n } else { n - 1 }).rev().step_by(2) {
+                // get the slice of the length
+                for i in 0..=n - len {
+                    // check if the slice is valid
+                    if is_valid(&s[i..i + len], &mut stack) {
+                        return len as i32;
                     }
                 }
             }
@@ -73,7 +71,8 @@ pub mod solution_dp {
     ///     ![](https://pic.leetcode-cn.com/6f176074b305e1571da1ab74839d22436be5fba22b592d618d531ac79dae8a7a-%E6%88%AA%E5%B1%8F2020-04-17%E4%B8%8B%E5%8D%884.30.46.png)
     ///     - s[i-1]==`)`，要形成有效的括号对`((..))`要求i对应位置`i-dp[i-1]-1`必须是`(`，
     ///     i位置对最长有效括号长度为 i-1位置的最长括号长度 加上 当前位置新增的2。dp[i]=dp[i-1]+2
-    ///     *这里不要求对应i-1位置是有效的，由于dp[i-1]可以不是有效的？？*。
+    ///     *这里不要求对应i-1位置是有效的，由于dp[i-1]可以不是有效的？如果i-1不是有效子括号，则
+    ///     dp[i-1]=0, i-dp[i-1]-1=i-1，而i-1就是`)`无法与i `)`形成括号*。
     ///     如果i位置是有效括号，可能会与之前`i-dp[i-1]-2`形成连续括号dp[i]=dp[i-1]+2+dp[i-dp[i-1]-2]
     ///     ![](https://pic.leetcode-cn.com/6e07ddaac3b703cba03a9ea8438caf1407c4834b7b1e4c8ec648c34f2833a3b9-%E6%88%AA%E5%B1%8F2020-04-17%E4%B8%8B%E5%8D%884.26.34.png)
     ///
@@ -82,7 +81,7 @@ pub mod solution_dp {
     /// ```ignore
     /// if s[i] == '(' :
     ///     dp[i] = 0
-    /// if s[i] == ')' :
+    /// else:
     ///     if s[i - 1] == '(' :
     ///         dp[i] = dp[i - 2] + 2 #要保证i - 2 >= 0
     ///
@@ -100,6 +99,8 @@ pub mod solution_dp {
     /// ### Submissions
     ///
     /// date=20210731, mem=2, mem_beats=80, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/201642981/
+    ///
+    /// date=20210807, mem=2.3, mem_beats=17, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/204266408/
     pub struct Solution;
 
     impl Solution {
@@ -108,6 +109,7 @@ pub mod solution_dp {
             let s = s.as_bytes();
             let mut dp = vec![0; s.len()];
             let mut res = 0;
+
             for i in 1..s.len() {
                 if s[i] != LEFT {
                     if s[i - 1] == LEFT {
@@ -148,6 +150,8 @@ pub mod solution_stack {
     /// ### Submissions
     ///
     /// date=20210731, mem=2.2, mem_beats=46, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/201648180/
+    ///
+    /// date=20210807, mem=2, mem_beats=85, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/204272959/
     pub struct Solution;
 
     impl Solution {

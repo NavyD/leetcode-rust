@@ -38,6 +38,8 @@ pub mod solution_greedy {
     /// date=20210709, mem=2.2, mem_beats=20, runtime=4, runtime_beats=71, url=https://leetcode-cn.com/submissions/detail/193894504/
     ///
     /// date=20210714, mem=2.1, mem_beats=60, runtime=4, runtime_beats=77, url=https://leetcode-cn.com/submissions/detail/195555315/
+    ///
+    /// date=20210807, mem=2.1, mem_beats=66, runtime=8, runtime_beats=51, url=https://leetcode-cn.com/submissions/detail/204279270/
     pub struct Solution;
 
     impl Solution {
@@ -80,6 +82,8 @@ pub mod solution_greedy_reversed {
     /// date=20210709, mem=2.1, mem_beats=37, runtime=4, runtime_beats=71, url=https://leetcode-cn.com/submissions/detail/193895494/
     ///
     /// date=20210714, mem=2.2, mem_beats=32, runtime=4, runtime_beats=77, url=https://leetcode-cn.com/submissions/detail/195561441/
+    ///
+    /// date=20210807, mem=2.1, mem_beats=68, runtime=4, runtime_beats=97, url=https://leetcode-cn.com/submissions/detail/204283127/
     pub struct Solution;
 
     impl Solution {
@@ -147,6 +151,8 @@ pub mod solution_dp {
     /// date=20210709, mem=2.2, mem_beats=25, runtime=8, runtime_beats=51, url=https://leetcode-cn.com/submissions/detail/193916234/
     ///
     /// date=20210714, mem=2.3, mem_beats=7, runtime=8, runtime_beats=52, url=https://leetcode-cn.com/submissions/detail/195585312/
+    ///
+    /// date=20210807, mem=2.2, mem_beats=14, runtime=12, runtime_beats=20, url=https://leetcode-cn.com/submissions/detail/204288715/
     pub struct Solution;
 
     impl Solution {

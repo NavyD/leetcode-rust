@@ -52,6 +52,8 @@ pub mod solution_greedy {
     /// date=20210714, mem=2.1, mem_beats=71, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/195600767/
     ///
     /// date=20210715, mem=2, mem_beats=80, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/195921017/
+    ///
+    /// date=20210807, mem=2.1, mem_beats=71, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/204405510/
     pub struct Solution;
 
     impl Solution {
@@ -107,6 +109,8 @@ pub mod solution_greedy_reversed {
     /// date=20210714, mem=2.1, mem_beats=71, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/195600767/
     ///
     /// date=20210714, mem=2.1, mem_beats=63, runtime=12, runtime_beats=15, url=https://leetcode-cn.com/submissions/detail/195922734/
+    ///
+    /// date=20210807, mem=2.1, mem_beats=55, runtime=16, runtime_beats=16, url=https://leetcode-cn.com/submissions/detail/204407132/
     pub struct Solution;
 
     impl Solution {
@@ -134,37 +138,37 @@ pub mod solution_bfs {
     ///
     /// * [O(n), BFS solution comment](https://leetcode.com/problems/jump-game-ii/discuss/18028/O(n)-BFS-solution/143760)
     /// * [【宫水三叶】修改数据范围，可以从「简单 BFS」变为「挖掘性质」的贪心 DP 题](https://leetcode-cn.com/problems/jump-game-ii/solution/gong-shui-san-xie-xiu-gai-shu-ju-fan-wei-wylq/)
+    ///
     /// ### Submissions
     ///
     /// date=20210714, mem=2.2, mem_beats=25, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/195608040/
     ///
     /// date=20210715, mem=2.2, mem_beats=34, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/195927371/
+    ///
+    /// date=20210807, mem=2.1, mem_beats=49, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/204410640/
     pub struct Solution;
 
     impl Solution {
         pub fn jump(nums: Vec<i32>) -> i32 {
-            if nums.len() <= 1 {
-                return 0;
-            }
-
-            let (mut cur_max, mut idx) = (0, 0);
-            let mut level = 0;
-            while idx <= cur_max {
-                level += 1;
+            let (mut cur_max, mut i, end) = (0, 0, nums.len() - 1);
+            let mut steps = 0;
+            // 当只有一个元素时 steps=0不循环
+            while i < end {
+                steps += 1;
                 // 下一层最大的
                 let mut next_max = cur_max;
-                while idx <= cur_max {
+                while i <= cur_max {
                     // 在当前层找 最跳最远的下标 作为下一层
-                    next_max = next_max.max(idx + nums[idx] as usize);
-                    if next_max >= nums.len() - 1 {
-                        return level;
+                    next_max = next_max.max(i + nums[i] as usize);
+                    if next_max >= end {
+                        return steps;
                     }
-                    idx += 1;
+                    i += 1;
                 }
                 cur_max = next_max;
             }
-            // 无法跳转到最后
-            unreachable!()
+            // steps=0不循环
+            steps
         }
     }
 }
