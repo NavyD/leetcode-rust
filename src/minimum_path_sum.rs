@@ -1,22 +1,7 @@
-//! Given a m x n grid filled with non-negative numbers, find a path from top left to bottom right which minimizes the sum of all numbers along its path.
-//!
-//! Note: You can only move either down or right at any point in time.
-//!
-//! Example:
-//!
-//! Input:
-//! [
-//!   [1,3,1],
-//!   [1,5,1],
-//!   [4,2,1]
-//! ]
-//! Output: 7
-//! Explanation: Because the path 1→3→1→1→1 minimizes the sum.
-
 pub mod solution_dp {
     /// # 思路
     ///
-    /// dp[i][j]表示[i][j]的最小的路径和dp[i][j] = min(dp[i-1][j], dp[i][j-1]) + grid[i - 1][j - 1]
+    /// dp[i][j]表示[i][j]的最小的路径和`dp[i][j] = min(dp[i-1][j], dp[i][j-1]) + grid[i - 1][j - 1]`
     ///
     /// 初始值：
     /// `dp[0][0] = dp[1][0] = 0, dp[i][j] = i32.MAX`
@@ -31,7 +16,7 @@ pub mod solution_dp {
     ///
     /// date=20200704, mem=2.2, mem_beats=100, runtime=0, runtime_beats=100, url=https://leetcode.com/submissions/detail/361773633/
     ///
-    /// author=navyd
+    /// date=20210808, mem=2.3, mem_beats=66, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/204766255/
     ///
     /// ## 复杂度
     ///
@@ -41,25 +26,17 @@ pub mod solution_dp {
 
     impl Solution {
         pub fn min_path_sum(grid: Vec<Vec<i32>>) -> i32 {
-            let (row_len, col_len) = (grid.len(), grid[0].len());
-            let mut dp = vec![vec![std::i32::MAX; col_len + 1]; row_len + 1];
+            let (m, n) = (grid.len(), grid[0].len());
+            let mut dp = vec![vec![i32::MAX; n + 1]; m + 1];
             dp[0][1] = 0;
-            for i in 1..=row_len {
-                for j in 1..=col_len {
+            dp[1][0] = 0;
+
+            for i in 1..=m {
+                for j in 1..=n {
                     dp[i][j] = dp[i - 1][j].min(dp[i][j - 1]) + grid[i - 1][j - 1];
                 }
             }
-            dp[row_len][col_len]
-        }
-    }
-
-    #[cfg(test)]
-    mod tests {
-        use super::*;
-        #[test]
-        fn basics() {
-            let grid = vec![vec![1, 3, 1], vec![1, 5, 1], vec![4, 2, 1]];
-            assert_eq!(Solution::min_path_sum(grid), 7);
+            dp[m][n]
         }
     }
 }
@@ -76,7 +53,7 @@ pub mod solution_dp_improved {
     ///
     /// date=20200704, mem=2.4, mem_beats=14.29, runtime=0, runtime_beats=100, url=https://leetcode.com/submissions/detail/361781144/
     ///
-    /// author=navyd
+    /// date=20210808, mem=2.4, mem_beats=33, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/204770278/
     ///
     /// 为何这个mem比起dp[][]还要更多了？
     ///
@@ -88,25 +65,32 @@ pub mod solution_dp_improved {
 
     impl Solution {
         pub fn min_path_sum(grid: Vec<Vec<i32>>) -> i32 {
-            let col_len = grid[0].len();
-            let mut dp = vec![std::i32::MAX; col_len + 1];
+            let n = grid[0].len();
+            let mut dp = vec![std::i32::MAX; n + 1];
             dp[1] = 0;
-            for row in grid {
-                for j in 1..=col_len {
-                    dp[j] = dp[j].min(dp[j - 1]) + row[j - 1];
+
+            for i in 1..=grid.len() {
+                for j in 1..=n {
+                    dp[j] = dp[j].min(dp[j - 1]) + grid[i - 1][j - 1];
                 }
             }
-            dp[col_len]
+            dp[n]
         }
     }
+}
 
-    #[cfg(test)]
-    mod tests {
-        use super::*;
-        #[test]
-        fn basics() {
-            let grid = vec![vec![1, 3, 1], vec![1, 5, 1], vec![4, 2, 1]];
-            assert_eq!(Solution::min_path_sum(grid), 7);
-        }
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn basics() {
+        test(solution_dp::Solution::min_path_sum);
+        test(solution_dp_improved::Solution::min_path_sum);
+    }
+
+    fn test<F: Fn(Vec<Vec<i32>>) -> i32>(f: F) {
+        assert_eq!(f(vec![vec![1, 3, 1], vec![1, 5, 1], vec![4, 2, 1]]), 7);
+        assert_eq!(f(vec![vec![1, 2, 3], vec![4, 5, 6]]), 12);
     }
 }
