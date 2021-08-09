@@ -17,8 +17,8 @@ pub mod solution_dp {
     /// 即前k个硬币凑齐金额i的组合数等于前k-1个硬币凑齐金额i的组合数加上在原来i-k的基础上使用硬币的组合数。
     /// 说的更加直白一点，那就是用前k的硬币凑齐金额i，要分为两种情况考虑：
     ///
-    /// - 一种是没有用前k-1个硬币就凑齐了，
-    /// - 一种是前面已经凑到了i-k，现在就差第k个硬币了。
+    /// - 一种是用k-1个硬币就凑齐了：`dp[k - 1][i]`
+    /// - 一种是前面已经凑到了i-k，现在就差第k个硬币了：`dp[k][i-k]`
     ///
     /// dp方程：`dp[k][i] = dp[k][i - coin] + dp[k - 1][i] if coin <= i else dp[k - 1][i] for coin in coins`
     ///
@@ -44,6 +44,8 @@ pub mod solution_dp {
     ///
     /// 将`dp[i][0] = 1`放入`for i in 1..=coins_len {`导致执行用时太慢，单独使用for_each使用时降到0ms
     /// date=20210717, mem=6.2, mem_beats=18, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/196659784/
+    ///
+    /// date=20210809, mem=6.3, mem_beats=13, runtime=8, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/204905745/
     pub struct Solution;
 
     impl Solution {
@@ -70,10 +72,10 @@ pub mod solution_dp {
 pub mod solution_dp_optimized {
     /// # 思路
     ///
-    /// dp[coin][amount]中只使用`coin-1`优化：对于硬币从0到k，我们必须使用第k个硬币的时候，当前金额的组合数。
+    /// `dp[coin][amount]`中只使用`coin-1`优化：对于硬币从0到k，我们必须使用第k个硬币的时候，当前金额的组合数。
     /// 因此状态数组DP[i]表示的是对于第k个硬币能凑的组合数
     ///
-    /// 状态转移方程如下`DP[i] = DP[i] + DP[i-k]`
+    /// 状态转移方程如下`DP[i] = DP[i] + DP[i-k] for k in coins`
     ///
     /// 参考：
     ///
@@ -93,6 +95,8 @@ pub mod solution_dp_optimized {
     /// date=20210613, mem=2.1, mem_beats=50, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/186281437/
     ///
     /// date=20210717, mem=2.1, mem_beats=52, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/196663774/
+    ///
+    /// date=20210809, mem=2, mem_beats=68, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/204928097/
     pub struct Solution;
 
     impl Solution {
