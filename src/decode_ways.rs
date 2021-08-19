@@ -25,8 +25,18 @@ pub mod solution_dp {
     ///
     /// 我们只关心位置 i 自己能否形成独立 item 和位置 i 能够与上一位置（i-1）能否形成 item，而不关心 i-1 之前的位置。
     ///
-    /// `dp[i]`表示在`s[0..=i]`的解码数：`dp[i] = (is_decoded(s[i-1]) ? dp[i-1] : 0) + is_decoded(s[i-2..i] ? dp[i-2] : 0)`
-    /// 可令dp[0] = 1, dp[1] = is_decoded(s[0]) ? 1: 0，用`dp[n+1]`避免`s[i-2]`的判断
+    /// 定义 f[i] 为考虑前 i 个字符的解码方案数。对于字符串 s 的任意位置 i 而言，其存在三种情况：
+    ///
+    /// - 由位置 i 的单独作为一个 item，设为 a，转移的前提是 a 的数值范围为 [1,9]，转移逻辑为 `f[i] = f[i - 1]`。
+    /// - 由位置 i 的与前一位置（i-1）共同作为一个 item，设为 b，转移的前提是 b 的数值范围为 `[10,26]`，转移逻辑为 `f[i] = f[i - 2]`。
+    /// - 位置 i 既能作为独立 item 也能与上一位置形成 item，转移逻辑为 `f[i] = f[i - 1] + f[i - 2]`。
+    ///
+    /// dp方程：`dp[i] = dp[i - 1] if s[i - 1] != '0'. dp[i] += dp[i-2] if s[i-2] != '0' and 10<=s[i-2..i] <=26`
+    /// 这里的`dp[i] += dp[i-2]`表示了上面后两种情况，如果i不是一个item即`s[i]=0`，但能与i-1形成一个item不会执行
+    /// `dp[i] = dp[i - 1] if s[i - 1] != '0'`使用默认值`dp[i+1]=0`，但会执行`dp[i] += dp[i-2]`即`dp[i+1]=0+dp[i]`，
+    /// 使用`dp[i] += dp[i-2]`合并两种情况
+    ///
+    /// 初始化：`dp[0] = 1, dp[1] = is_decoded(s[0]) ? 1: 0`，用`dp[n+1]`避免`s[i-2]`的判断
     ///
     /// ```ignore
     /// s=226
@@ -83,6 +93,8 @@ pub mod solution_dp {
     ///
     /// date=20210809, mem=2, mem_beats=78, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/204884311/
     ///
+    /// date=20210819, mem=2.2, mem_beats=8, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/208914984/
+    ///
     /// ## 复杂度
     ///
     /// - 时间：O(N)
@@ -100,10 +112,12 @@ pub mod solution_dp {
             dp[1] = if s[0] == ZERO { 0 } else { 1 };
 
             for i in 2..=n {
+                // 当前位置 单独形成 item
                 if s[i - 1] != ZERO {
-                    dp[i] += dp[i - 1];
+                    dp[i] = dp[i - 1];
                 }
-                if s[i - 2] != ZERO && ((s[i - 2] - ZERO) * 10 + (s[i - 1] - ZERO)) <= 26 {
+                // 「当前位置」与「前一位置」共同形成 item
+                if s[i - 2] != ZERO && (s[i - 2] - ZERO) * 10 + (s[i - 1] - ZERO) <= 26 {
                     dp[i] += dp[i - 2];
                 }
             }
@@ -122,6 +136,8 @@ pub mod solution_dp_improved {
     /// ### Submissions
     ///
     /// date=20210809, mem=2, mem_beats=47, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/204893049/
+    ///
+    /// date=20210819, mem=2.1, mem_beats=16, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/208917380/
     pub struct Solution;
 
     impl Solution {
@@ -135,7 +151,7 @@ pub mod solution_dp_improved {
                 if s[i - 1] != ZERO {
                     next += cur;
                 }
-                if s[i - 2] != ZERO && ((s[i - 2] - ZERO) * 10 + (s[i - 1] - ZERO)) <= 26 {
+                if matches!((s[i - 2] - ZERO) * 10 + (s[i - 1] - ZERO), 10..=26) {
                     next += pre;
                 }
                 pre = cur;
@@ -157,6 +173,7 @@ mod tests {
     }
 
     fn test<F: Fn(String) -> i32>(f: F) {
+        assert_eq!(f("27".into()), 1);
         assert_eq!(f("12".into()), 2);
         assert_eq!(f("226".into()), 3);
         assert_eq!(f("0".into()), 0);
