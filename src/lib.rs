@@ -2,6 +2,10 @@
 // like this: for i in 0..nums.len() {
 #![allow(clippy::needless_range_loop)]
 
+pub use leetcode_prelude as prelude;
+
+pub use helper::utils;
+
 pub mod count_of_range_sum;
 pub mod count_of_smaller_numbers_after_self;
 pub mod maximum_profit_in_job_scheduling;
@@ -33,6 +37,7 @@ pub mod house_robber;
 pub mod house_robber_ii;
 pub mod longest_common_subsequence;
 pub mod longest_valid_parentheses;
+pub mod maximal_square;
 pub mod maximum_product_subarray;
 pub mod maximum_subarray;
 pub mod perfect_squares;
@@ -116,10 +121,6 @@ pub mod group_anagrams;
 pub mod valid_anagram;
 
 pub mod helper;
-pub use helper::utils;
-
-pub use leetcode_prelude as prelude;
-
 // greedy
 pub mod assign_cookies;
 pub mod jump_game;

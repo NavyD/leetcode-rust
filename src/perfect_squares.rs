@@ -52,7 +52,7 @@ pub mod solution_dp {
     /// 计算出problem(i)，表示由i-square作为剩下的和。
     /// 最小数量：`min(problem(i), problem(i-square)+1)`
     ///
-    /// dp方程：`dp[i] = min(dp[i], dp[i - square] + 1) for square in 1..n`
+    /// dp方程：`dp[i] = min(dp[i], dp[i - j*j] + 1) for j in 1..i`
     ///
     /// 初始化：len=n+1. 当i=1时，`dp[1] = min(dp[1], dp[0] + 1) = 1`，dp[0]应该初始化为0，`dp[1]=i32::MAX`
     /// 即`dp[1..]=i32::MAX`
@@ -68,6 +68,8 @@ pub mod solution_dp {
     /// date=20210706, mem=2.1, mem_beats=59, runtime=40, runtime_beats=45, url=https://leetcode-cn.com/submissions/detail/192796308/
     ///
     /// date=20210716, mem=2.2, mem_beats=35, runtime=36, runtime_beats=58, url=https://leetcode-cn.com/submissions/detail/196317183/
+    ///
+    /// date=20210823, mem=1.9, mem_beats=94, runtime=36, runtime_beats=53, url=https://leetcode-cn.com/submissions/detail/210337375/
     pub struct Solution;
 
     impl Solution {
@@ -78,11 +80,11 @@ pub mod solution_dp {
 
             for i in 1..=n {
                 for j in 1..=i {
-                    let rest_sum = i as i32 - (j * j) as i32;
-                    if rest_sum < 0 {
+                    if i >= j * j {
+                        dp[i] = dp[i].min(dp[i - j * j] + 1);
+                    } else {
                         break;
                     }
-                    dp[i] = dp[i].min(dp[rest_sum as usize] + 1);
                 }
             }
             dp[n]
@@ -106,14 +108,16 @@ pub mod solution_bfs {
     /// 优化了`else if rest_sum > 0 && !visited[rest_sum as usize] {`为break提前退出
     ///
     /// date=20210716, mem=1.9, mem_beats=96, runtime=4, runtime_beats=81, url=https://leetcode-cn.com/submissions/detail/196332621/
+    ///
+    /// date=20210823, mem=2.3, mem_beats=15, runtime=4, runtime_beats=81, url=https://leetcode-cn.com/submissions/detail/210344409/
     pub struct Solution;
 
     impl Solution {
         pub fn num_squares(n: i32) -> i32 {
+            let n = n as usize;
             let mut queue = std::collections::VecDeque::new();
             queue.push_back(n);
 
-            let n = n as usize;
             let mut visited = vec![false; n + 1];
             visited[n] = true;
 
@@ -123,14 +127,13 @@ pub mod solution_bfs {
                 for _ in 0..queue.len() {
                     let sum = queue.pop_front().unwrap();
                     for i in 1..=sum {
-                        let rest_sum = sum - i * i;
                         use std::cmp::Ordering::*;
-                        match rest_sum.cmp(&0) {
+                        match sum.cmp(&(i * i)) {
                             Greater => {
-                                let rest_sum = rest_sum as usize;
+                                let rest_sum = sum - i * i;
                                 if !visited[rest_sum] {
+                                    queue.push_back(rest_sum);
                                     visited[rest_sum] = true;
-                                    queue.push_back(rest_sum as i32);
                                 }
                             }
                             Equal => return steps,
