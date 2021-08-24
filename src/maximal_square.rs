@@ -11,6 +11,10 @@ pub mod solution_violent {
     /// （正方形的范围不能超出矩阵的行数和列数），在该边长范围内寻找只包含 1 的最大正方形；
     /// - 每次在下方新增一行以及在右方新增一列，判断新增的行和列是否满足所有元素都是 1
     ///
+    /// 注意：当只有一个位置为1符合时，`for k in 1..cur_side { -> for k in 1..1`不会执行
+    /// 内部找max_side的操作，如果没有`if matrix[i][j] == ONE { max_side = max_side.max(1)}`
+    /// 导致max_side=0出错
+    ///
     /// 参考：
     ///
     /// - [最大正方形 方法一：暴力法](https://leetcode-cn.com/problems/maximal-square/solution/zui-da-zheng-fang-xing-by-leetcode-solution/)
@@ -18,6 +22,8 @@ pub mod solution_violent {
     /// ### Submissions
     ///
     /// date=20210823, mem=4.9, mem_beats=22, runtime=12, runtime_beats=32, url=https://leetcode-cn.com/submissions/detail/210246498/
+    ///
+    /// date=20210824, mem=4.9, mem_beats=35, runtime=12, runtime_beats=32, url=https://leetcode-cn.com/submissions/detail/210627796/
     pub struct Solution;
 
     impl Solution {
@@ -69,8 +75,9 @@ pub mod solution_violent {
 pub mod solution_dp {
     /// # 思路
     ///
-    /// 用 dp(i,j) 表示以 (i, j) 为右下角，且只包含 1 的正方形的边长最大值。如果我们能计算出所有 dp(i,j) 的值，
-    /// 那么其中的最大值即为矩阵中只包含 1 的正方形的边长最大值，其平方即为最大正方形的面积。
+    /// 用 dp(i,j) 表示以 (i, j) 为右下角，且只包含 1 的正方形的边长最大值。
+    /// 如果我们能计算出所有 dp(i,j) 的值，那么其中的最大值即为矩阵中只包含 1 的正方形的边长最大值，
+    /// 其平方即为最大正方形的面积。
     ///
     /// 那么如何计算 dp 中的每个元素值呢？对于每个位置 (i,j)，检查在矩阵中该位置的值：
     ///
@@ -92,6 +99,8 @@ pub mod solution_dp {
     /// ### Submissions
     ///
     /// date=20210823, mem=4.9, mem_beats=13, runtime=8, runtime_beats=84, url=https://leetcode-cn.com/submissions/detail/210316151/
+    ///
+    /// date=20210824, mem=5, mem_beats=10, runtime=8, runtime_beats=84, url=https://leetcode-cn.com/submissions/detail/210632076/
     pub struct Solution;
 
     impl Solution {
@@ -125,6 +134,8 @@ pub mod solution_dp_optimized {
     /// ### Submissions
     ///
     /// date=20210823, mem=4.9, mem_beats=32, runtime=8, runtime_beats=83, url=https://leetcode-cn.com/submissions/detail/210325516/
+    ///
+    /// date=20210823, mem=4.7, mem_beats=96, runtime=12, runtime_beats=32, url=https://leetcode-cn.com/submissions/detail/210636403/
     pub struct Solution;
 
     impl Solution {

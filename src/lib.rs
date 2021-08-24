@@ -37,6 +37,7 @@ pub mod house_robber;
 pub mod house_robber_ii;
 pub mod longest_common_subsequence;
 pub mod longest_valid_parentheses;
+pub mod max_sum_of_rectangle_no_larger_than_k;
 pub mod maximal_square;
 pub mod maximum_product_subarray;
 pub mod maximum_subarray;
@@ -44,7 +45,6 @@ pub mod perfect_squares;
 pub mod triangle;
 pub mod unique_paths;
 pub mod unique_paths_ii;
-
 // tree
 pub mod balanced_binary_tree;
 pub mod binary_tree_level_order_traversal_ii;
