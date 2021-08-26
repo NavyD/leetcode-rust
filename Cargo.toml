@@ -9,3 +9,4 @@ edition = "2018"
 [dependencies]
 rand = "0.7"
 leetcode_prelude = "0.2"
+embed-doc-image = "0.1"
