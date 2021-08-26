@@ -18,6 +18,8 @@ pub mod solution_dp {
     ///
     /// date=20210808, mem=2.3, mem_beats=66, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/204766255/
     ///
+    /// date=20210826, mem=2.4, mem_beats=30, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/211678135/
+    ///
     /// ## 复杂度
     ///
     /// - 时间：O(N*M)
@@ -54,6 +56,8 @@ pub mod solution_dp_improved {
     /// date=20200704, mem=2.4, mem_beats=14.29, runtime=0, runtime_beats=100, url=https://leetcode.com/submissions/detail/361781144/
     ///
     /// date=20210808, mem=2.4, mem_beats=33, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/204770278/
+    ///
+    /// date=20210826, mem=2.5, mem_beats=6, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/211678964/
     ///
     /// 为何这个mem比起dp[][]还要更多了？
     ///
