@@ -63,6 +63,124 @@ pub mod solution_dp {
     }
 }
 
+pub mod solution_dp_binary {
+    /// # 思路
+    ///
+    /// 枚举以(i, 0)左边起点，1..right为右边界的area sum有序保存入treeset，这样
+    /// 只要当前area_sum - tree_set[i]任意一个就是一个以right-1..right的小矩阵和，
+    /// 利用tree set的有序性使用二分法可以快速找到当前area sum下最大的小矩阵和
+    ///
+    /// 向set中插入0是因为有可能不用减去子矩阵左边列与原矩阵左边列形成的子矩阵和
+    ///
+    /// 参考：
+    ///
+    /// - [【宫水三叶】优化枚举的基本思路 & 将二维抽象成一维 & 最大化「二分」效益 & 空间优化 前缀和 & 二分（抽象一维）](https://leetcode-cn.com/problems/max-sum-of-rectangle-no-larger-than-k/solution/gong-shui-san-xie-you-hua-mei-ju-de-ji-b-dh8s/)
+    ///
+    /// ### Submissions
+    ///
+    /// date=20210827, mem=2.2, mem_beats=50, runtime=252, runtime_beats=50
+    pub struct Solution;
+
+    impl Solution {
+        pub fn max_sum_submatrix(matrix: Vec<Vec<i32>>, k: i32) -> i32 {
+            let (rows, cols) = (matrix.len(), matrix[0].len());
+            let mut res = i32::MIN;
+
+            // 1. pre sum
+            let mut presum = vec![vec![0; cols + 1]; rows + 1];
+            for i in 1..=rows {
+                for j in 1..=cols {
+                    presum[i][j] = presum[i - 1][j] + presum[i][j - 1] - presum[i - 1][j - 1]
+                        + matrix[i - 1][j - 1];
+                }
+            }
+
+            // 2. enumerate up, down, right
+            for up in 1..=rows {
+                for down in up..=rows {
+                    // 3. find the area sum from the column 0 to the current right column
+                    let mut sums = std::collections::BTreeSet::new();
+                    sums.insert(0);
+                    for right in 1..=cols {
+                        let sum_right = presum[down][right] - presum[up - 1][right];
+                        // 4. max area sum
+                        if let Some(sum_left) = sums.range(sum_right - k..).next() {
+                            res = res.max(sum_right - sum_left);
+                        }
+                        sums.insert(sum_right);
+                    }
+                }
+            }
+            res
+        }
+    }
+}
+
+pub mod solution_dp_binary_optimized {
+    /// # 思路
+    ///
+    /// 最大化「二分」效益：先枚举的是「上下行」和「右边列」，然后通过 TreeSet 来「二分」出符合条件的「左边列」,
+    /// 将「二分过程」应用到数值较大的行或者列之中，这样才能最大化我们查找的效率
+    ///
+    /// 空间优化：`sum[fixed]`表示以i为上界，j为下界，fixed为固定这一列的和，`sum[fixed]`仅表示一列的和，所以要用
+    /// `a+=sum[fixed]`表示以fixed列为右边界的矩阵和
+    ///
+    /// ```java
+    /// for (int i = 1; i <= (isRight ? m : n); i++) {
+    ///     for (int j = i; j <= (isRight ? m : n); j++) {
+    ///         int a = 0;
+    ///         for (int fixed = 1; fixed <= (isRight ? n : m); fixed++) {
+    ///             sum[fixed] += isRight ? mat[j - 1][fixed - 1] : mat[fixed - 1][j - 1] ;
+    ///             a += sum[fixed];
+    ///             Integer b = ts.ceiling(a - k);
+    ///     }
+    /// }
+    /// ```
+    ///
+    /// 参考：
+    ///
+    /// - [【宫水三叶】优化枚举的基本思路 & 将二维抽象成一维 & 最大化「二分」效益 & 空间优化 前缀和 & 二分（抽象一维）](https://leetcode-cn.com/problems/max-sum-of-rectangle-no-larger-than-k/solution/gong-shui-san-xie-you-hua-mei-ju-de-ji-b-dh8s/)
+    ///
+    /// ### Submissions
+    ///
+    /// date=20210827, mem=2.1, mem_beats=100, runtime=256, runtime_beats=50
+    pub struct Solution;
+
+    impl Solution {
+        pub fn max_sum_submatrix(matrix: Vec<Vec<i32>>, k: i32) -> i32 {
+            let (rows, cols) = (matrix.len(), matrix[0].len());
+            let mut res = i32::MIN;
+
+            let rotated = matrix.len() < matrix[0].len();
+            let (rows, cols) = if rotated { (cols, rows) } else { (rows, cols) };
+            // 2. enumerate up, down, right
+            for up in 1..=rows {
+                let mut col_sums = vec![0; cols + 1];
+                for down in up..=rows {
+                    // 3. find the area sum from the column 0 to the current right column
+                    let mut sums = std::collections::BTreeSet::new();
+                    sums.insert(0);
+                    let mut sum_right = 0;
+                    for right in 1..=cols {
+                        col_sums[right] += if rotated {
+                            matrix[right - 1][down - 1]
+                        } else {
+                            matrix[down - 1][right - 1]
+                        };
+                        sum_right += col_sums[right];
+                        // 4. max area sum
+                        if let Some(sum_left) = sums.range(sum_right - k..).next() {
+                            res = res.max(sum_right - sum_left);
+                        }
+                        sums.insert(sum_right);
+                    }
+                }
+            }
+            res
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -70,6 +188,8 @@ mod tests {
     #[test]
     fn basics() {
         test(solution_dp::Solution::max_sum_submatrix);
+        test(solution_dp_binary::Solution::max_sum_submatrix);
+        test(solution_dp_binary_optimized::Solution::max_sum_submatrix);
     }
 
     fn test<F: Fn(Vec<Vec<i32>>, i32) -> i32>(f: F) {

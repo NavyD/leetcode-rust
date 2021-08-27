@@ -38,6 +38,8 @@ pub mod solution_dp {
     /// date=20210714, mem=3.8, mem_beats=37, runtime=4, runtime_beats=74, url=https://leetcode-cn.com/submissions/detail/195593127/
     ///
     /// date=20210808, mem=3.9, mem_beats=25, runtime=4, runtime_beats=71, url=https://leetcode-cn.com/submissions/detail/204780801/
+    ///
+    /// date=20210827, mem=3.9, mem_beats=30, runtime=4, runtime_beats=71
     pub struct Solution;
 
     impl Solution {
@@ -66,11 +68,11 @@ pub mod solution_dp {
 pub mod solution_dp_optimized {
     /// # 思路
     ///
-    /// 由定理二可知，dp[i][j]只和dp[i-1][j],dp[i][j-1],dp[i-1][j-1]三个量有关，即二维数组中，当前元素的左边，上边，左上角三个元素。
+    /// 由定理二可知，`dp[i][j]只和dp[i-1][j],dp[i][j-1],dp[i-1][j-1]`三个量有关，即二维数组中，当前元素的左边，上边，左上角三个元素。
     ///
     /// 那我们不用这么大的二维数组存啊！我们就用一维数组，表示原来二维数组中的一行，然后我们就反复覆盖里面的值。
-    /// dp[i-1][j]就是我当前左边的元素，dp[i][j-1]是没覆盖前我这里的值，dp[i-1][j-1]好像找不见了？那我们就单独用一个变量pre存着它，
-    /// 再初始化dp[i][0]=i
+    /// `dp[i-1][j]`就是我当前左边的元素，`dp[i][j-1]`是没覆盖前我这里的值，`dp[i-1][j-1]`好像找不见了？那我们就单独用一个变量pre存着它，
+    /// 再初始化`dp[i][0]=i`
     ///
     /// 参考：
     ///
@@ -82,6 +84,8 @@ pub mod solution_dp_optimized {
     /// date=20210709, mem=2, mem_beats=87, runtime=4, runtime_beats=71, url=https://leetcode-cn.com/submissions/detail/193870878/
     ///
     /// date=20210714, mem=1.9, mem_beats=94, runtime=4, runtime_beats=74, url=https://leetcode-cn.com/submissions/detail/195598575/
+    ///
+    /// date=20210827, mem=2.2, mem_beats=86, runtime=4, runtime_beats=71
     pub struct Solution;
 
     impl Solution {
