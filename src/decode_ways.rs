@@ -20,15 +20,18 @@
 /// 要计算解码方法，如果i是一个映射，则为dp[i-1]+1，如果s[i-1..=i]是
 /// 一个映射则dp[i-2]+1，即dp[i]= if is_map(s[i]): dp[i-1]+1 + else if is_map(s[i-1..=i]): dp[i-2]+1
 /// dp.len = s.len+1, dp[0] = 0, dp[1] = 1 if is_map(s[0]) else 0
+///
+/// 注意题意：不要变成这样`dp[i] += dp[i-1] + 1 if s[i] != 0 + 1 if 10 <= s[i-1..=i] <= 26`，
+/// 不是每增加一个数其解码方式+1了，如`16`解码方式为2，`166`解码还是2
 pub mod solution_dp {
     /// # 思路
     ///
     /// 我们只关心位置 i 自己能否形成独立 item 和位置 i 能够与上一位置（i-1）能否形成 item，而不关心 i-1 之前的位置。
     ///
-    /// 定义 f[i] 为考虑前 i 个字符的解码方案数。对于字符串 s 的任意位置 i 而言，其存在三种情况：
+    /// 定义 `f[i]` 为考虑前 i 个字符的解码方案数。对于字符串 s 的任意位置 i 而言，其存在三种情况：
     ///
-    /// - 由位置 i 的单独作为一个 item，设为 a，转移的前提是 a 的数值范围为 [1,9]，转移逻辑为 `f[i] = f[i - 1]`。
-    /// - 由位置 i 的与前一位置（i-1）共同作为一个 item，设为 b，转移的前提是 b 的数值范围为 `[10,26]`，转移逻辑为 `f[i] = f[i - 2]`。
+    /// - 由位置 i 的单独作为一个 item，设为 a，转移的前提是 a 的数值范围为 1..10，转移逻辑为 `f[i] = f[i - 1]`。
+    /// - 由位置 i 的与前一位置（i-1）共同作为一个 item，设为 b，转移的前提是 b 的数值范围为 `10..=26`，转移逻辑为 `f[i] = f[i - 2]`。
     /// - 位置 i 既能作为独立 item 也能与上一位置形成 item，转移逻辑为 `f[i] = f[i - 1] + f[i - 2]`。
     ///
     /// dp方程：`dp[i] = dp[i - 1] if s[i - 1] != '0'. dp[i] += dp[i-2] if s[i-2] != '0' and 10<=s[i-2..i] <=26`
@@ -94,6 +97,8 @@ pub mod solution_dp {
     /// date=20210809, mem=2, mem_beats=78, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/204884311/
     ///
     /// date=20210819, mem=2.2, mem_beats=8, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/208914984/
+    ///
+    /// date=20210830, mem=2.1, mem_beats=22, runtime=0, runtime_beats=100
     ///
     /// ## 复杂度
     ///

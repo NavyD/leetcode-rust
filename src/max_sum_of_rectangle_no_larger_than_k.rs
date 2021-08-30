@@ -6,8 +6,10 @@ pub mod solution_dp {
     ///
     /// ![](https://pic.leetcode-cn.com/1614646493-EriDmE-304.001.jpeg)
     ///
-    /// dp方程：定义 `dp[i][j]` 表示 从 `[0,0]` 位置到 `[i,j]` 位置的子矩形所有元素之和：
-    /// `dp[i][j]=dp[i−1][j]+dp[i][j−1]−dp[i−1][j−1]+matrix[i][j]`
+    /// 一旦找到了区域和S(O,D)，就可以枚举出任意区域和
+    ///
+    /// dp方程：定义 `dp[i][j]` 表示 从 `[0,0]` 位置到 `[i,j]` 位置区域所有元素之和：
+    /// `dp[i][j]=dp[i−1][j]+dp[i][j−1]−dp[i−1][j−1]+matrix[i][j] for i in 1..=rows: for j in 1..=cols`
     ///
     /// 根据前缀和`dp[i][j]`可以从任意一点(i,j)作为左上角开始以(i,j)右下方的点(p,q)形成的矩形面积，可以枚举每个点作为左
     /// 上角，搜索位于 (i,j) 的右下方的点 (p,q) 作为右下角，则有`area_sum = dp[p][q] - dp[i - 1][q] - dp[p][j - 1] + dp[i - 1][j - 1]`
@@ -27,6 +29,8 @@ pub mod solution_dp {
     /// ### Submissions
     ///
     /// date=20210826, mem=2.2, mem_beats=100, runtime=344, runtime_beats=50
+    ///
+    /// date=20210830, mem=2, mem_beats=100, runtime=344, runtime_beats=28
     #[embed_doc_image::embed_doc_image("img", "docs/images/2021-08-26-1119.png")]
     pub struct Solution;
 
@@ -51,7 +55,7 @@ pub mod solution_dp {
                         for q in j..=cols {
                             let area_sum =
                                 dp[p][q] - dp[p][j - 1] - dp[i - 1][q] + dp[i - 1][j - 1];
-                            if area_sum <= k && area_sum > res {
+                            if area_sum <= k && res < area_sum {
                                 res = area_sum;
                             }
                         }
@@ -66,9 +70,12 @@ pub mod solution_dp {
 pub mod solution_dp_binary {
     /// # 思路
     ///
-    /// 枚举以(i, 0)左边起点，1..right为右边界的area sum有序保存入treeset，这样
-    /// 只要当前area_sum - tree_set[i]任意一个就是一个以right-1..right的小矩阵和，
+    /// 在前缀和的基础上，枚举以(i, 0)左边起点，1..right为右边界的area sum有序保存入tree set，这样
+    /// 只要当前`area_sum - tree_set[i]`任意一个就是一个以right-1..right的小矩阵和，把之前的面积保存
+    /// 作为之后的减数。
     /// 利用tree set的有序性使用二分法可以快速找到当前area sum下最大的小矩阵和
+    ///
+    /// ![](https://pic.leetcode-cn.com/1618975243-AnNcYI-439B50D739F1D963EB2460394C5689B5.png)
     ///
     /// 向set中插入0是因为有可能不用减去子矩阵左边列与原矩阵左边列形成的子矩阵和
     ///
@@ -79,6 +86,8 @@ pub mod solution_dp_binary {
     /// ### Submissions
     ///
     /// date=20210827, mem=2.2, mem_beats=50, runtime=252, runtime_beats=50
+    ///
+    /// date=20210830, mem=2.2, mem_beats=14, runtime=248, runtime_beats=71
     pub struct Solution;
 
     impl Solution {
@@ -102,12 +111,14 @@ pub mod solution_dp_binary {
                     let mut sums = std::collections::BTreeSet::new();
                     sums.insert(0);
                     for right in 1..=cols {
-                        let sum_right = presum[down][right] - presum[up - 1][right];
+                        // sum of 0..right col
+                        let sum = presum[down][right] - presum[up - 1][right];
                         // 4. max area sum
-                        if let Some(sum_left) = sums.range(sum_right - k..).next() {
-                            res = res.max(sum_right - sum_left);
+                        if let Some(sum_left) = sums.range(sum - k..).next() {
+                            // area sum
+                            res = res.max(sum - sum_left);
                         }
-                        sums.insert(sum_right);
+                        sums.insert(sum);
                     }
                 }
             }
@@ -144,6 +155,69 @@ pub mod solution_dp_binary_optimized {
     /// ### Submissions
     ///
     /// date=20210827, mem=2.1, mem_beats=100, runtime=256, runtime_beats=50
+    ///
+    /// date=20210830, mem=2, mem_beats=100, runtime=252, runtime_beats=71
+    pub struct Solution;
+
+    impl Solution {
+        pub fn max_sum_submatrix(matrix: Vec<Vec<i32>>, k: i32) -> i32 {
+            let mut res = i32::MIN;
+            let (rows, cols) = (matrix.len(), matrix[0].len());
+            let rotated = rows < cols;
+            let (rows, cols) = if rotated { (cols, rows) } else { (rows, cols) };
+
+            // 2. enumerate up, down, col
+            for up in 0..rows {
+                // col_sums[i] is the sum of column 0..i in rows up to down
+                let mut col_sums = vec![0; cols];
+                for down in up..rows {
+                    // 3. find the area sum from the column 0..right
+                    let mut sums = std::collections::BTreeSet::new();
+                    sums.insert(0);
+                    // all sum of (down, cols)
+                    let mut sum = 0;
+                    for i in 0..cols {
+                        col_sums[i] += if rotated {
+                            matrix[i][down]
+                        } else {
+                            matrix[down][i]
+                        };
+                        sum += col_sums[i];
+
+                        // 4. max area sum
+                        if let Some(left_sum) = sums.range(sum - k..).next() {
+                            res = res.max(sum - left_sum);
+                        }
+                        sums.insert(sum);
+                    }
+                }
+            }
+            res
+        }
+    }
+}
+
+pub mod solution_dp_row_sums {
+    /// # 思路
+    ///
+    /// 以左右为边界找中间的行的和`row_sums[i]`，前缀和可以由`row_sums[i]`累加得到，区域和
+    /// 由任一行开始`row_sums[i] + row_sums[i+1] +...`
+    ///
+    /// ![](https://pic.leetcode-cn.com/b02979492d31c6b8e2e365d2efbd64ea485f69a32055661397c5849d3bd91251-image.png)
+    ///
+    /// dp方程：`row_sums[i] += matrix[i][right] for left in 0..cols: for right in left..cols: for i in 0..rows`
+    ///
+    /// 如何找到<=k的最大值：枚举子数组起点、终点，累计中间元素找出区域和
+    ///
+    /// 优化：并不是所有时候都值得遍历找 k [maximum_subarray][crate::maximum_subarray::solution_dp]
+    ///
+    /// 参考：
+    ///
+    /// - [Java，从暴力开始优化，配图配注释 三、数组滚动](https://leetcode-cn.com/problems/max-sum-of-rectangle-no-larger-than-k/solution/javacong-bao-li-kai-shi-you-hua-pei-tu-pei-zhu-shi/)
+    ///
+    /// ### Submissions
+    ///
+    /// date=20210830, mem=2.2, mem_beats=14, runtime=52, runtime_beats=100
     pub struct Solution;
 
     impl Solution {
@@ -151,28 +225,46 @@ pub mod solution_dp_binary_optimized {
             let (rows, cols) = (matrix.len(), matrix[0].len());
             let mut res = i32::MIN;
 
-            let rotated = matrix.len() < matrix[0].len();
-            let (rows, cols) = if rotated { (cols, rows) } else { (rows, cols) };
-            // 2. enumerate up, down, right
-            for up in 1..=rows {
-                let mut col_sums = vec![0; cols + 1];
-                for down in up..=rows {
-                    // 3. find the area sum from the column 0 to the current right column
-                    let mut sums = std::collections::BTreeSet::new();
-                    sums.insert(0);
-                    let mut sum_right = 0;
-                    for right in 1..=cols {
-                        col_sums[right] += if rotated {
-                            matrix[right - 1][down - 1]
-                        } else {
-                            matrix[down - 1][right - 1]
-                        };
-                        sum_right += col_sums[right];
-                        // 4. max area sum
-                        if let Some(sum_left) = sums.range(sum_right - k..).next() {
-                            res = res.max(sum_right - sum_left);
+            for left in 0..cols {
+                let mut row_sums = vec![0; rows];
+                for right in left..cols {
+                    for i in 0..rows {
+                        row_sums[i] += matrix[i][right];
+                    }
+
+                    // It is valid when k >= the sum of the max sub array
+                    {
+                        // 要尽量大，就尽量不要负数
+                        let (mut area_subsum, mut max_sum) = (row_sums[0], row_sums[0]);
+                        for i in 1..rows {
+                            if area_subsum > 0 {
+                                area_subsum += row_sums[i];
+                            } else {
+                                // 之前的和小于0 重新开始
+                                area_subsum = row_sums[i];
+                            }
+                            if area_subsum == k {
+                                return k;
+                            }
+                            max_sum = max_sum.max(area_subsum);
                         }
-                        sums.insert(sum_right);
+                        if max_sum <= k {
+                            res = res.max(max_sum);
+                            continue;
+                        }
+                    }
+
+                    // Find the largest area under the current column
+                    for up in 0..rows {
+                        let mut area_sum = 0;
+                        for down in up..rows {
+                            area_sum += row_sums[down];
+                            if area_sum == k {
+                                return k;
+                            } else if area_sum < k && res < area_sum {
+                                res = area_sum;
+                            }
+                        }
                     }
                 }
             }
@@ -190,12 +282,20 @@ mod tests {
         test(solution_dp::Solution::max_sum_submatrix);
         test(solution_dp_binary::Solution::max_sum_submatrix);
         test(solution_dp_binary_optimized::Solution::max_sum_submatrix);
+        test(solution_dp_row_sums::Solution::max_sum_submatrix);
     }
 
     fn test<F: Fn(Vec<Vec<i32>>, i32) -> i32>(f: F) {
         assert_eq!(f(vec![vec![1, 0, 1], vec![0, -2, 3]], 2), 2);
         assert_eq!(f(vec![vec![2, 2, -1]], 3), 3);
         assert_eq!(f(vec![vec![2, 2, -1]], 0), -1);
+        assert_eq!(
+            f(
+                vec![vec![5, -4, -3, 4], vec![-3, -4, 4, 5], vec![5, 1, 5, -4]],
+                -2
+            ),
+            -2
+        );
         assert_eq!(
             f(
                 vec![vec![5, -4, -3, 4], vec![-3, -4, 4, 5], vec![5, 1, 5, -4]],
