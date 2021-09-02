@@ -24,6 +24,8 @@ pub mod solution_violent {
     /// date=20210823, mem=4.9, mem_beats=22, runtime=12, runtime_beats=32, url=https://leetcode-cn.com/submissions/detail/210246498/
     ///
     /// date=20210824, mem=4.9, mem_beats=35, runtime=12, runtime_beats=32, url=https://leetcode-cn.com/submissions/detail/210627796/
+    ///
+    /// date=20210902, mem=5, mem_beats=8, runtime=16, runtime_beats=35
     pub struct Solution;
 
     impl Solution {
@@ -46,22 +48,15 @@ pub mod solution_violent {
                             if matrix[i + k][j + k] == ZERO {
                                 break;
                             }
-
-                            let mut has_square = true;
                             // 检查以列为起点看下标是否为1
-                            for m in 0..k {
-                                if matrix[i + k][j + m] == ZERO || matrix[i + m][j + k] == ZERO {
-                                    has_square = false;
-                                    break;
-                                }
-                            }
-
-                            // 出现1表示当前位置是 并记录最大边长
-                            if has_square {
-                                max_side = max_side.max(k + 1);
-                            } else {
+                            if (0..k).any(|m| {
+                                matrix[i + m][j + k] == ZERO || matrix[i + k][j + m] == ZERO
+                            }) {
                                 // 出现0表示当前位置之后不是正方形
                                 break;
+                            } else {
+                                // 出现1表示当前位置是 并记录最大边长
+                                max_side = max_side.max(k + 1);
                             }
                         }
                     }
@@ -75,7 +70,7 @@ pub mod solution_violent {
 pub mod solution_dp {
     /// # 思路
     ///
-    /// 用 dp(i,j) 表示以 (i, j) 为右下角，且只包含 1 的正方形的边长最大值。
+    /// 用 dp(i,j) 表示以 (i, j) 为右下角，且只包含 1 的正方形的 *边长最大值*。
     /// 如果我们能计算出所有 dp(i,j) 的值，那么其中的最大值即为矩阵中只包含 1 的正方形的边长最大值，
     /// 其平方即为最大正方形的面积。
     ///
@@ -101,13 +96,14 @@ pub mod solution_dp {
     /// date=20210823, mem=4.9, mem_beats=13, runtime=8, runtime_beats=84, url=https://leetcode-cn.com/submissions/detail/210316151/
     ///
     /// date=20210824, mem=5, mem_beats=10, runtime=8, runtime_beats=84, url=https://leetcode-cn.com/submissions/detail/210632076/
+    ///
+    /// date=20210902, mem=5, mem_beats=5, runtime=4, runtime_beats=100
     pub struct Solution;
 
     impl Solution {
         pub fn maximal_square(matrix: Vec<Vec<char>>) -> i32 {
             let (rows, cols) = (matrix.len(), matrix[0].len());
             let mut max_side = 0;
-
             let mut dp = vec![vec![0; cols + 1]; rows + 1];
 
             for i in 1..=rows {
@@ -118,7 +114,7 @@ pub mod solution_dp {
                     }
                 }
             }
-            (max_side * max_side) as i32
+            max_side * max_side as i32
         }
     }
 }
@@ -136,6 +132,8 @@ pub mod solution_dp_optimized {
     /// date=20210823, mem=4.9, mem_beats=32, runtime=8, runtime_beats=83, url=https://leetcode-cn.com/submissions/detail/210325516/
     ///
     /// date=20210823, mem=4.7, mem_beats=96, runtime=12, runtime_beats=32, url=https://leetcode-cn.com/submissions/detail/210636403/
+    ///
+    /// date=20210902, mem=4.8, mem_beats=70, runtime=4, runtime_beats=100
     pub struct Solution;
 
     impl Solution {
@@ -145,19 +143,20 @@ pub mod solution_dp_optimized {
 
             let mut dp = vec![0; cols + 1];
             for i in 1..=rows {
+                // dp[i-1][0]=dp[0]=0
                 let mut top_left = 0;
                 for j in 1..=cols {
-                    let next_top_left = dp[j];
+                    let next = dp[j];
                     if matrix[i - 1][j - 1] == '1' {
                         dp[j] = dp[j].min(dp[j - 1]).min(top_left) + 1;
                         max_side = max_side.max(dp[j]);
                     } else {
                         dp[j] = 0;
                     }
-                    top_left = next_top_left;
+                    top_left = next;
                 }
             }
-            (max_side * max_side) as i32
+            max_side * max_side as i32
         }
     }
 }
@@ -186,5 +185,15 @@ mod tests {
         assert_eq!(f(vec![vec!['1', '1'], vec!['1', '1']]), 4);
         assert_eq!(f(vec![vec!['0', '1'], vec!['1', '0']]), 1);
         assert_eq!(f(vec![vec!['0']]), 0);
+        assert_eq!(
+            f(vec![
+                vec!['1', '1', '1', '1', '1'],
+                vec!['1', '1', '1', '1', '1'],
+                vec!['0', '0', '0', '0', '0'],
+                vec!['1', '1', '1', '1', '1'],
+                vec!['1', '1', '1', '1', '1']
+            ]),
+            4
+        );
     }
 }

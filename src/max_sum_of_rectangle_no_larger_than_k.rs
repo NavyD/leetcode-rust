@@ -218,6 +218,8 @@ pub mod solution_dp_row_sums {
     /// ### Submissions
     ///
     /// date=20210830, mem=2.2, mem_beats=14, runtime=52, runtime_beats=100
+    ///
+    /// date=20210902, mem=2, mem_beats=100, runtime=80, runtime_beats=91
     pub struct Solution;
 
     impl Solution {
@@ -256,6 +258,7 @@ pub mod solution_dp_row_sums {
 
                     // Find the largest area under the current column
                     for up in 0..rows {
+                        // 从up..rows开始的区域和
                         let mut area_sum = 0;
                         for down in up..rows {
                             area_sum += row_sums[down];

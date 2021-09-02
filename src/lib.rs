@@ -33,6 +33,7 @@ pub mod coin_change;
 pub mod coin_change_2;
 pub mod edit_distance;
 pub mod fibonacci_number;
+pub mod frog_jump;
 pub mod house_robber;
 pub mod house_robber_ii;
 pub mod longest_common_subsequence;
@@ -45,6 +46,7 @@ pub mod perfect_squares;
 pub mod triangle;
 pub mod unique_paths;
 pub mod unique_paths_ii;
+
 // tree
 pub mod balanced_binary_tree;
 pub mod binary_tree_level_order_traversal_ii;
