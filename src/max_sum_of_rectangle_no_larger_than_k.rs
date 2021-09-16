@@ -1,4 +1,4 @@
-pub mod solution_dp {
+pub mod solution_dp_presum {
     /// # 思路
     ///
     /// 子问题：对于从左上角到右下角的一维前缀和：`S(O,D)=S(O,C)+S(O,B)−S(O,A)+D`，减去 S(O, A) 的原因是 S(O, C) 和 S(O, B) 中都有 S(O, A)，
@@ -31,6 +31,8 @@ pub mod solution_dp {
     /// date=20210826, mem=2.2, mem_beats=100, runtime=344, runtime_beats=50
     ///
     /// date=20210830, mem=2, mem_beats=100, runtime=344, runtime_beats=28
+    ///
+    /// date=20210916, mem=2.3, mem_beats=6, runtime=300, runtime_beats=26
     #[embed_doc_image::embed_doc_image("img", "docs/images/2021-08-26-1119.png")]
     pub struct Solution;
 
@@ -39,12 +41,12 @@ pub mod solution_dp {
             let (rows, cols) = (matrix.len(), matrix[0].len());
             let mut res = i32::MIN;
 
-            let mut dp = vec![vec![0; cols + 1]; rows + 1];
+            let mut presums = vec![vec![0; cols + 1]; rows + 1];
             // 1. pre sum in 0,0 -> i,j
             for i in 1..=rows {
                 for j in 1..=cols {
-                    dp[i][j] =
-                        dp[i - 1][j] + dp[i][j - 1] - dp[i - 1][j - 1] + matrix[i - 1][j - 1];
+                    presums[i][j] = presums[i - 1][j] + presums[i][j - 1] - presums[i - 1][j - 1]
+                        + matrix[i - 1][j - 1];
                 }
             }
 
@@ -53,8 +55,8 @@ pub mod solution_dp {
                 for j in 1..=cols {
                     for p in i..=rows {
                         for q in j..=cols {
-                            let area_sum =
-                                dp[p][q] - dp[p][j - 1] - dp[i - 1][q] + dp[i - 1][j - 1];
+                            let area_sum = presums[p][q] - presums[p][j - 1] - presums[i - 1][q]
+                                + presums[i - 1][j - 1];
                             if area_sum <= k && res < area_sum {
                                 res = area_sum;
                             }
@@ -70,7 +72,7 @@ pub mod solution_dp {
 pub mod solution_dp_binary {
     /// # 思路
     ///
-    /// 在前缀和的基础上，枚举以(i, 0)左边起点，1..right为右边界的area sum有序保存入tree set，这样
+    /// 在前缀和的基础上，枚举固定上下边界，以(i, 0)左边起点，1..right为右边界的area sum有序保存入tree set，这样
     /// 只要当前`area_sum - tree_set[i]`任意一个就是一个以right-1..right的小矩阵和，把之前的面积保存
     /// 作为之后的减数。
     /// 利用tree set的有序性使用二分法可以快速找到当前area sum下最大的小矩阵和
@@ -88,6 +90,8 @@ pub mod solution_dp_binary {
     /// date=20210827, mem=2.2, mem_beats=50, runtime=252, runtime_beats=50
     ///
     /// date=20210830, mem=2.2, mem_beats=14, runtime=248, runtime_beats=71
+    ///
+    /// date=20210916, mem=2.3, mem_beats=6, runtime=216, runtime_beats=66
     pub struct Solution;
 
     impl Solution {
@@ -96,10 +100,10 @@ pub mod solution_dp_binary {
             let mut res = i32::MIN;
 
             // 1. pre sum
-            let mut presum = vec![vec![0; cols + 1]; rows + 1];
+            let mut presums = vec![vec![0; cols + 1]; rows + 1];
             for i in 1..=rows {
                 for j in 1..=cols {
-                    presum[i][j] = presum[i - 1][j] + presum[i][j - 1] - presum[i - 1][j - 1]
+                    presums[i][j] = presums[i - 1][j] + presums[i][j - 1] - presums[i - 1][j - 1]
                         + matrix[i - 1][j - 1];
                 }
             }
@@ -110,10 +114,10 @@ pub mod solution_dp_binary {
                     // 3. find the area sum from the column 0 to the current right column
                     let mut sums = std::collections::BTreeSet::new();
                     sums.insert(0);
-                    for right in 1..=cols {
+                    for i in 1..=cols {
                         // sum of 0..right col
-                        let sum = presum[down][right] - presum[up - 1][right];
-                        // 4. max area sum
+                        let sum = presums[down][i] - presums[up - 1][i];
+                        // 4. max left sum: sum - sum_left <= k -> sum_left >= sum - k
                         if let Some(sum_left) = sums.range(sum - k..).next() {
                             // area sum
                             res = res.max(sum - sum_left);
@@ -157,6 +161,8 @@ pub mod solution_dp_binary_optimized {
     /// date=20210827, mem=2.1, mem_beats=100, runtime=256, runtime_beats=50
     ///
     /// date=20210830, mem=2, mem_beats=100, runtime=252, runtime_beats=71
+    ///
+    /// date=20210916, mem=2.2, mem_beats=33, runtime=112, runtime_beats=80
     pub struct Solution;
 
     impl Solution {
@@ -168,13 +174,13 @@ pub mod solution_dp_binary_optimized {
 
             // 2. enumerate up, down, col
             for up in 0..rows {
-                // col_sums[i] is the sum of column 0..i in rows up to down
+                // col_sums[i] is the sum of column 0..col in rows up to down
                 let mut col_sums = vec![0; cols];
                 for down in up..rows {
-                    // 3. find the area sum from the column 0..right
+                    // 3. find the area sum from the column 0..col
                     let mut sums = std::collections::BTreeSet::new();
                     sums.insert(0);
-                    // all sum of (down, cols)
+                    // all area sum of (up, 0) -> (down, i for col)
                     let mut sum = 0;
                     for i in 0..cols {
                         col_sums[i] += if rotated {
@@ -186,7 +192,12 @@ pub mod solution_dp_binary_optimized {
 
                         // 4. max area sum
                         if let Some(left_sum) = sums.range(sum - k..).next() {
-                            res = res.max(sum - left_sum);
+                            let area_sum = sum - left_sum;
+                            // early return
+                            if area_sum == k {
+                                return k;
+                            }
+                            res = res.max(area_sum);
                         }
                         sums.insert(sum);
                     }
@@ -201,25 +212,28 @@ pub mod solution_dp_row_sums {
     /// # 思路
     ///
     /// 以左右为边界找中间的行的和`row_sums[i]`，前缀和可以由`row_sums[i]`累加得到，区域和
-    /// 由任一行开始`row_sums[i] + row_sums[i+1] +...`
+    /// 由任一行开始`row_sums[i] + row_sums[i+1] +...`。在没有优化代码时与binary是一个思路
     ///
     /// ![](https://pic.leetcode-cn.com/b02979492d31c6b8e2e365d2efbd64ea485f69a32055661397c5849d3bd91251-image.png)
     ///
     /// dp方程：`row_sums[i] += matrix[i][right] for left in 0..cols: for right in left..cols: for i in 0..rows`
     ///
-    /// 如何找到<=k的最大值：枚举子数组起点、终点，累计中间元素找出区域和
+    /// 如何找到<=k的最大值：枚举子数组起点、终点，累计中间元素找出区域和。
     ///
-    /// 优化：并不是所有时候都值得遍历找 k [maximum_subarray][crate::maximum_subarray::solution_dp]
+    /// 优化：并不是所有时候都值得遍历找 k [maximum_subarray][crate::maximum_subarray::solution_dp::Solution]
     ///
     /// 参考：
     ///
     /// - [Java，从暴力开始优化，配图配注释 三、数组滚动](https://leetcode-cn.com/problems/max-sum-of-rectangle-no-larger-than-k/solution/javacong-bao-li-kai-shi-you-hua-pei-tu-pei-zhu-shi/)
+    /// - [画解算法：53. 最大子序和](https://leetcode-cn.com/problems/maximum-subarray/solution/hua-jie-suan-fa-53-zui-da-zi-xu-he-by-guanpengchn/)
     ///
     /// ### Submissions
     ///
     /// date=20210830, mem=2.2, mem_beats=14, runtime=52, runtime_beats=100
     ///
     /// date=20210902, mem=2, mem_beats=100, runtime=80, runtime_beats=91
+    ///
+    /// date=20210916, mem=2.2, mem_beats=100, runtime=48, runtime_beats=100
     pub struct Solution;
 
     impl Solution {
@@ -282,7 +296,7 @@ mod tests {
 
     #[test]
     fn basics() {
-        test(solution_dp::Solution::max_sum_submatrix);
+        test(solution_dp_presum::Solution::max_sum_submatrix);
         test(solution_dp_binary::Solution::max_sum_submatrix);
         test(solution_dp_binary_optimized::Solution::max_sum_submatrix);
         test(solution_dp_row_sums::Solution::max_sum_submatrix);

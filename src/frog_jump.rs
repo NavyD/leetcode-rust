@@ -1,5 +1,7 @@
 //! 题意为青蛙要在i位置上跳`next_k = k|+-1`距离后的位置要在石子stones列表中找到，
 //! 即`stones[i] + next_k in stones`
+//!
+//! dp时要注意如何找出前后k关系
 
 pub mod solution_backtracking {
     /// # 思路
@@ -18,6 +20,8 @@ pub mod solution_backtracking {
     /// date=20210902, mem=5.8, mem_beats=66, runtime=8, runtime_beats=100
     ///
     /// date=20210904, mem=5.9, mem_beats=25, runtime=12, runtime_beats=75
+    ///
+    /// date=20210915, mem=5.8, mem_beats=70, runtime=8, runtime_beats=100
     pub struct Solution;
 
     impl Solution {
@@ -64,17 +68,17 @@ pub mod solution_dp {
     ///
     /// 令 `dp[i][k]` 表示青蛙能否达到 现在所处的石子编号 为 i 且 上一次跳跃距离为 k 的状态，可以
     /// 由上一次所在的石子编号j与跳跃的距离k决定。对于第 i 个石子，我们首先枚举所有的 j表示在i上可跳的位置，
-    /// 这里的上一次跳跃距离k可以在i的基础上由`j in 1..=i-1`跳过来的步长`k=stones[i]-stones[j]`，
-    /// 而在第 j 个石子上我们至多只能跳出 j+1 的距离`k <= j+1`
-    ///
-    /// - dp方程：`dp[i][k] = dp[j][k] || dp[j][k-1] || dp[j][k+1] for j in 0..i, k=stones[i]-stones[j] if k <= j+1`
-    /// - 初始化：`dp[0][0]=true`则`dp[1][1] = dp[0][0] = true`
+    /// 这里的上一次跳跃距离k可以在i的基础上由`j in 1..=i-1`跳过来的步长`k=stones[i]-stones[j]`。
     ///
     /// 优化
     ///
-    /// 1. 由于在j位置上最多跳出距离`k <= j+1`，从距离k小开始一旦遇到`k>j+1`，表示后面的是不可达退出，反向
-    /// 枚举j `for j in (0..i).rev()`
-    /// 2. 如果发现n-1可以到达时提前返回：`if i == n - 1 && dp[i][k]: return true`
+    /// 1. 第 j 个石子上我们至多只能跳出 j+1 的距离`k <= j+1`，因为每次跳跃，下标至少增加 1，而步长最多增加 1
+    /// 从距离k小开始一旦遇到`k>j+1`，表示后面的是不可达退出，反向枚举j `for j in (0..i).rev()`。
+    /// 1. 如果发现n-1可以到达时提前返回：`if i == n - 1 && dp[i][k]: return true`，否则需要主动在n-1中找
+    /// 到达的k：`for k in 0..n if dp[n-1][k]: return true`
+    ///
+    /// - dp方程：`dp[i][k] = dp[j][k] || dp[j][k-1] || dp[j][k+1] for j in i..0, k=stones[i]-stones[j] if k > j+1 break`
+    /// - 初始化：`dp[0][0]=true`则`dp[1][1] = dp[0][0] = true`
     ///
     /// 参考：
     ///
@@ -84,6 +88,8 @@ pub mod solution_dp {
     /// ### Submissions
     ///
     /// date=20210904, mem=5.8, mem_beats=100, runtime=28, runtime_beats=25
+    ///
+    /// date=20210916, mem=5.8, mem_beats=100, runtime=12, runtime_beats=80
     pub struct Solution;
 
     impl Solution {
@@ -112,7 +118,7 @@ pub mod solution_dp {
 pub mod solution_bfs {
     /// # 思路
     ///
-    /// 从[super::solution_backtracking]修改
+    /// 从[super::solution_backtracking::Solution]修改
     ///
     /// 参考：
     ///
@@ -178,9 +184,5 @@ mod tests {
         assert!(!f(vec![0, 1, 2, 3, 4, 8, 9, 11]));
         assert!(f(vec![0, 1]));
         assert!(!f(vec![0, 2]));
-    }
-
-    pub fn can_cross(stones: Vec<i32>) -> bool {
-        todo!()
     }
 }
