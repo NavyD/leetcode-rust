@@ -46,6 +46,7 @@ pub mod perfect_squares;
 pub mod triangle;
 pub mod unique_paths;
 pub mod unique_paths_ii;
+pub mod split_array_largest_sum;
 
 // tree
 pub mod balanced_binary_tree;
