@@ -43,10 +43,11 @@ pub mod maximal_square;
 pub mod maximum_product_subarray;
 pub mod maximum_subarray;
 pub mod perfect_squares;
+pub mod split_array_largest_sum;
+pub mod student_attendance_record_ii;
 pub mod triangle;
 pub mod unique_paths;
 pub mod unique_paths_ii;
-pub mod split_array_largest_sum;
 
 // tree
 pub mod balanced_binary_tree;
