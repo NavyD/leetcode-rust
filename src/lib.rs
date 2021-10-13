@@ -45,6 +45,7 @@ pub mod maximum_subarray;
 pub mod perfect_squares;
 pub mod split_array_largest_sum;
 pub mod student_attendance_record_ii;
+pub mod task_scheduler;
 pub mod triangle;
 pub mod unique_paths;
 pub mod unique_paths_ii;

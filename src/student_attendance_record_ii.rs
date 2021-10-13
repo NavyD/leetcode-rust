@@ -12,6 +12,8 @@ pub mod solution_backtracking {
         /// 在递归中参数present不用考虑传入，只考虑其它2种的影响。
         /// 缓存(day,absents,lates) 的方案数以避免重复计算
         ///
+        /// 注意：presents是总量，lates是仅考虑连续出现，在不是present是依然保持presents，而不是lates是传入0
+        ///
         /// 参考：
         ///
         /// - [【宫水三叶】一题三解 :「记忆化搜索」&「动态规划」&「矩阵快速幂」](https://leetcode-cn.com/problems/student-attendance-record-ii/solution/gong-shui-san-xie-yi-ti-san-jie-ji-yi-hu-fdfx/)
@@ -43,9 +45,9 @@ pub mod solution_backtracking {
                 let next_day = day - 1;
                 // absent
                 let mut reward = backtrack(next_day, absents + 1, 0, cached_rewards) % MOD;
-                // late
+                // late 连续的late
                 reward = (reward + backtrack(next_day, absents, lates + 1, cached_rewards)) % MOD;
-                // present
+                // present 保持总数absent
                 reward = (reward + backtrack(next_day, absents, 0, cached_rewards)) % MOD;
 
                 cached_rewards[day][absents][lates] = reward;
@@ -67,9 +69,19 @@ pub mod solution_dp {
     /// - 当前填入的是 A，i-1 天即之前肯定没填过 A，同时所有的 late 状态都可以转移到过来：昨天是P 或对应3种L
     /// - 当前填入的是 L，i-1 天最多只能有一个连续的 L，其他的状态依次转移过来：
     ///
+    /// 对于`dp[i][1][0]`转移状态可以表示：
+    ///
+    /// - 填入P：之前已存在一个A，之后不可有A，所有状态由late转移过来`dp[i][1][..]`
+    /// - 填入A：之前没有A，可以由late转移过来`dp[i][0][..]`
+    ///
+    /// 由于之前是这是 可能获得出勤奖励的记录情况 数量，两种情况都是可能的，所以
+    /// `dp[i][1][0] = (dp[i][1][0] + dp[i - 1][0].iter().sum::<i64>()) % MOD;`
+    ///
     /// ### Submissions
     ///
     /// date=20211012, mem=16.3, mem_beats=31, runtime=244, runtime_beats=21
+    ///
+    /// date=20211013, mem=16.4, mem_beats=24, runtime=184, runtime_beats=34
     pub struct Solution;
 
     impl Solution {
