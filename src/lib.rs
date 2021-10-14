@@ -42,6 +42,7 @@ pub mod max_sum_of_rectangle_no_larger_than_k;
 pub mod maximal_square;
 pub mod maximum_product_subarray;
 pub mod maximum_subarray;
+pub mod palindromic_substrings;
 pub mod perfect_squares;
 pub mod split_array_largest_sum;
 pub mod student_attendance_record_ii;

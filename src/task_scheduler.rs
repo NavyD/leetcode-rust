@@ -15,7 +15,12 @@ pub mod solution_bucket {
     ///     ![](https://pic.leetcode-cn.com/893c01db5923889a865d7a4fe71de22b9519fc5a673473196ab58f26c1073ed2-image.png)
     ///
     /// 最后只需要比较这两种情况，如果是idle时存在空闲时间，idle时间长 idle > busy，而busy时排满不存在空闲时间busy时间短idle<=busy
-    /// TODO 为何要输出busy.max(idle)，按理是Min？
+    ///
+    /// * 为何要输出busy.max(idle)，按理是Min？
+    ///
+    /// 由于在busy时所有任务都被安排没有空闲时间，如果按照1在idle时图中体现就是两个F任务没有被
+    /// 运行（列数由n决定，busy时多出的任务不会影响n），结果偏小busy>=idle不符合；而在idle时空闲
+    /// 结果大于tasks.len，即使用busy.max(idle)保证结果
     ///
     /// 在找last_tasks时通过计数的方式，只有数量与max_tasks相同的task才能放到最后的桶中
     ///
@@ -28,6 +33,7 @@ pub mod solution_bucket {
     ///
     /// date=20211013, mem=2.7, mem_beats=27, runtime=12, runtime_beats=100
     ///
+    /// date=20211014, mem=2.7, mem_beats=27, runtime=20, runtime_beats=66
     pub struct Solution;
 
     impl Solution {
