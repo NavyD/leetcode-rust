@@ -42,6 +42,7 @@ pub mod max_sum_of_rectangle_no_larger_than_k;
 pub mod maximal_square;
 pub mod maximum_product_subarray;
 pub mod maximum_subarray;
+pub mod minimum_window_substring;
 pub mod palindromic_substrings;
 pub mod perfect_squares;
 pub mod split_array_largest_sum;
@@ -50,7 +51,6 @@ pub mod task_scheduler;
 pub mod triangle;
 pub mod unique_paths;
 pub mod unique_paths_ii;
-
 // tree
 pub mod balanced_binary_tree;
 pub mod binary_tree_level_order_traversal_ii;

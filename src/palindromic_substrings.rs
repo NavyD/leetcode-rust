@@ -16,6 +16,8 @@ pub mod solution_dp {
     /// ### Submissions
     ///
     /// date=20211014, mem=3.1, mem_beats=5, runtime=4, runtime_beats=23
+    ///
+    /// date=20211015, mem=3, mem_beats=5, runtime=4, runtime_beats=23
     pub struct Solution;
 
     impl Solution {
@@ -50,11 +52,14 @@ pub mod solution_extend {
     /// ### Submissions
     ///
     /// date=20211014, mem=2, mem_beats=94, runtime=0, runtime_beats=100
+    ///
+    /// date=20211015, mem=2, mem_beats=94, runtime=0, runtime_beats=100
     pub struct Solution;
 
     impl Solution {
         pub fn count_substrings(s: String) -> i32 {
-            fn extend_count(s: &[u8], mut left: usize, mut right: usize) -> i32 {
+            let s = s.as_bytes();
+            let extends = |mut left: usize, mut right: usize| {
                 let mut count = 0;
                 while right < s.len() && s[left] == s[right] {
                     count += 1;
@@ -65,11 +70,10 @@ pub mod solution_extend {
                     right += 1;
                 }
                 count
-            }
-            let s = s.as_bytes();
+            };
             let mut res = 0;
             for i in 0..s.len() {
-                res += extend_count(s, i, i) + extend_count(s, i, i + 1);
+                res += extends(i, i) + extends(i, i + 1);
             }
             res
         }
