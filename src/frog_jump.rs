@@ -40,7 +40,7 @@ pub mod solution_backtracking {
                         && stones
                             // find next
                             .binary_search(&(stones[0] + next_k))
-                            .map(|next| backtrack(&stones[next..], next_k, &mut crosses[next..]))
+                            .map(|i| backtrack(&stones[i..], next_k, &mut crosses[i..]))
                             // not found next
                             .unwrap_or(false)
                     {
@@ -53,10 +53,11 @@ pub mod solution_backtracking {
             }
 
             let n = stones.len();
-            if n < 2 || stones[1] > 1 {
-                return false;
+            if stones[1] > 1 {
+                false
+            } else {
+                backtrack(&stones[1..], 1, &mut vec![vec![None; n]; n])
             }
-            backtrack(&stones[1..], 1, &mut vec![vec![None; n]; n])
         }
     }
 }
@@ -90,6 +91,8 @@ pub mod solution_dp {
     /// date=20210904, mem=5.8, mem_beats=100, runtime=28, runtime_beats=25
     ///
     /// date=20210916, mem=5.8, mem_beats=100, runtime=12, runtime_beats=80
+    ///
+    /// date=20211027, mem=5.7, mem_beats=83, runtime=16, runtime_beats=41
     pub struct Solution;
 
     impl Solution {

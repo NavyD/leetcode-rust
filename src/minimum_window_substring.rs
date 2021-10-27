@@ -22,27 +22,29 @@ pub mod solution_sliding_window {
     ///
     /// date=20211015, mem=2, mem_beats=94, runtime=0, runtime_beats=100
     ///
+    /// date=20211027, mem=2.1, mem_beats=95, runtime=0, runtime_beats=100
     pub struct Solution;
 
     impl Solution {
         pub fn min_window(s: String, t: String) -> String {
             let (s, t) = (s.as_bytes(), t.as_bytes());
             // count for t
-            let (mut window_counts, mut window_count) = ([0; 128], t.len());
+            let (mut window_counts, mut window_size) = ([0; 128], 0);
             t.iter().for_each(|b| window_counts[*b as usize] += 1);
 
+            let (mut start_idx, mut min_len) = (0, usize::MAX);
+
             let (mut left, mut right) = (0, 0);
-            let (mut window_start_idx, mut min_window_len) = (0, usize::MAX);
             // sliding in s
             while right < s.len() {
                 let i = s[right] as usize;
                 // count if need c
                 if window_counts[i] > 0 {
-                    window_count -= 1;
+                    window_size += 1;
                 }
                 window_counts[i] -= 1;
 
-                if window_count == 0 {
+                if window_size == t.len() {
                     // narrow left if window contains all t
                     while left <= right {
                         let i = s[left] as usize;
@@ -55,14 +57,14 @@ pub mod solution_sliding_window {
 
                     // get min window size and new left pointer
                     let len = right - left + 1;
-                    if len < min_window_len {
-                        min_window_len = len;
-                        window_start_idx = left;
+                    if len < min_len {
+                        min_len = len;
+                        start_idx = left;
                     }
 
                     // slide next from last left, make it invald
                     window_counts[s[left] as usize] += 1;
-                    window_count += 1;
+                    window_size -= 1;
                     left += 1;
                 }
 
@@ -70,15 +72,11 @@ pub mod solution_sliding_window {
             }
 
             // res
-            if min_window_len == usize::MAX {
+            if min_len == usize::MAX {
                 String::new()
             } else {
-                unsafe {
-                    std::str::from_utf8_unchecked(
-                        &s[window_start_idx..window_start_idx + min_window_len],
-                    )
-                }
-                .to_string()
+                unsafe { std::str::from_utf8_unchecked(&s[start_idx..start_idx + min_len]) }
+                    .to_string()
             }
         }
     }
