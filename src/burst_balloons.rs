@@ -109,6 +109,46 @@ pub mod solution_recursive {
     }
 }
 
+pub mod solution_dp {
+
+    /// # 思路
+    ///
+    /// dp方程：`dp[i][j] = dp[i][k] + dp[k][j] + val[i] * val[k] * val[j]`
+    ///
+    ///
+    /// 参考：
+    ///
+    /// * [[这个菜谱, 自己在家也能做] 关键思路解释](https://leetcode-cn.com/problems/burst-balloons/solution/zhe-ge-cai-pu-zi-ji-zai-jia-ye-neng-zuo-guan-jian-/)
+    /// * [戳气球](https://leetcode-cn.com/problems/burst-balloons/solution/chuo-qi-qiu-by-leetcode-solution/)
+    ///
+    /// ### Submissions
+    ///
+    /// date=20211029, mem=2.9, mem_beats=60, runtime=44, runtime_beats=100
+    pub struct Solution;
+
+    impl Solution {
+        pub fn max_coins(mut nums: Vec<i32>) -> i32 {
+            nums.insert(0, 1);
+            nums.push(1);
+            let n = nums.len();
+
+            let mut dp = vec![vec![0; n]; n];
+            for len in 3..=n {
+                for left in 0..=n - len {
+                    let right = left + len - 1;
+                    let mut max_coins = 0;
+                    for k in left + 1..right {
+                        max_coins = max_coins
+                            .max(dp[left][k] + dp[k][right] + nums[left] * nums[right] * nums[k]);
+                    }
+                    dp[left][right] = max_coins;
+                }
+            }
+            dp[0][n - 1]
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -116,6 +156,7 @@ mod tests {
     #[test]
     fn basics() {
         test(solution_recursive::Solution::max_coins);
+        test(solution_dp::Solution::max_coins);
     }
 
     fn test<F: Fn(Vec<i32>) -> i32>(f: F) {
