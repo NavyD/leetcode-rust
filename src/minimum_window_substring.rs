@@ -10,6 +10,11 @@ pub mod solution_sliding_window {
     /// 1. 不断增加i使滑动窗口缩小，因为是要求最小字串，所以将不必要的元素排除在外，使长度减小，直到碰到一个必须包含的元素，这个时候不能再扔了，再扔就不满足条件了，记录此时滑动窗口的长度，并保存最小值
     /// 1. 让i再增加一个位置，这个时候滑动窗口肯定不满足条件了，那么继续从步骤一开始执行，寻找新的满足条件的滑动窗口，如此反复，直到j超出了字符串S范围。
     ///
+    /// 如何判断滑动窗口包含了 T 的所有元素？
+    ///
+    /// 当滑动窗口扩展或者收缩的时候，去维护这个 need 字典对应元素数量-1或+1。当数量<0时表示元素多余了，
+    /// 即当 need 中所有元素的数量都小于等于 0 时，表示当前滑动窗口不再需要任何元素。
+    ///
     /// ![](https://assets.leetcode-cn.com/solution-static/76/76_fig1.gif)
     ///
     /// 参考：
@@ -23,6 +28,8 @@ pub mod solution_sliding_window {
     /// date=20211015, mem=2, mem_beats=94, runtime=0, runtime_beats=100
     ///
     /// date=20211027, mem=2.1, mem_beats=95, runtime=0, runtime_beats=100
+    ///
+    /// date=20220315, mem=2.3, mem_beats=48, runtime=0, runtime_beats=100
     pub struct Solution;
 
     impl Solution {
@@ -40,10 +47,12 @@ pub mod solution_sliding_window {
                 let i = s[right] as usize;
                 // count if need c
                 if window_counts[i] > 0 {
+                    // expand
                     window_size += 1;
                 }
                 window_counts[i] -= 1;
 
+                // try narrow
                 if window_size == t.len() {
                     // narrow left if window contains all t
                     while left <= right {
