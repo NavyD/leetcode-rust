@@ -22,15 +22,17 @@ pub mod solution_backtracking {
     /// date=20210904, mem=5.9, mem_beats=25, runtime=12, runtime_beats=75
     ///
     /// date=20210915, mem=5.8, mem_beats=70, runtime=8, runtime_beats=100
+    ///
+    /// date=20220316, mem=5.9, mem_beats=20, runtime=8, runtime_beats=100
     pub struct Solution;
 
     impl Solution {
         pub fn can_cross(stones: Vec<i32>) -> bool {
-            fn backtrack(stones: &[i32], k: i32, crosses: &mut [Vec<Option<bool>>]) -> bool {
+            fn backtrack(stones: &[i32], k: i32, cache: &mut [Vec<Option<bool>>]) -> bool {
                 if stones.len() == 1 {
                     return true;
                 }
-                if let Some(v) = crosses[0][k as usize] {
+                if let Some(v) = cache[0][k as usize] {
                     return v;
                 }
                 for i in -1..=1 {
@@ -40,15 +42,15 @@ pub mod solution_backtracking {
                         && stones
                             // find next
                             .binary_search(&(stones[0] + next_k))
-                            .map(|i| backtrack(&stones[i..], next_k, &mut crosses[i..]))
+                            .map(|i| backtrack(&stones[i..], next_k, &mut cache[i..]))
                             // not found next
                             .unwrap_or(false)
                     {
-                        crosses[0][k as usize] = Some(true);
+                        cache[0][k as usize] = Some(true);
                         return true;
                     }
                 }
-                crosses[0][k as usize] = Some(false);
+                cache[0][k as usize] = Some(false);
                 false
             }
 
@@ -73,8 +75,8 @@ pub mod solution_dp {
     ///
     /// 优化
     ///
-    /// 1. 第 j 个石子上我们至多只能跳出 j+1 的距离`k <= j+1`，因为每次跳跃，下标至少增加 1，而步长最多增加 1
-    /// 从距离k小开始一旦遇到`k>j+1`，表示后面的是不可达退出，反向枚举j `for j in (0..i).rev()`。
+    /// 1. 第 j 个石子上我们至多只能跳出 j+1 的距离`k <= j+1`，因为每次跳跃，下标至少增加 1，而步长最多增加 1。
+    /// 从距离k小开始一旦遇到`k>j+1`，表示后面的是不可达退出，反向枚举`for j in (0..i).rev()`。
     /// 1. 如果发现n-1可以到达时提前返回：`if i == n - 1 && dp[i][k]: return true`，否则需要主动在n-1中找
     /// 到达的k：`for k in 0..n if dp[n-1][k]: return true`
     ///
@@ -93,6 +95,8 @@ pub mod solution_dp {
     /// date=20210916, mem=5.8, mem_beats=100, runtime=12, runtime_beats=80
     ///
     /// date=20211027, mem=5.7, mem_beats=83, runtime=16, runtime_beats=41
+    ///
+    /// date=20220316, mem=5.7, mem_beats=40, runtime=8, runtime_beats=100
     pub struct Solution;
 
     impl Solution {
@@ -151,7 +155,7 @@ pub mod solution_bfs {
 
             // 不需要分层次了
             while let Some((cur, k)) = queue.pop_front() {
-                for i in -1..2 {
+                for i in -1..=1 {
                     let next_k = k + i;
                     if next_k == 0 {
                         continue;
@@ -187,5 +191,8 @@ mod tests {
         assert!(!f(vec![0, 1, 2, 3, 4, 8, 9, 11]));
         assert!(f(vec![0, 1]));
         assert!(!f(vec![0, 2]));
+        assert!(!f(vec![
+            0, 2, 4, 5, 6, 8, 9, 11, 14, 17, 18, 19, 20, 22, 23, 24, 25, 27, 30
+        ]));
     }
 }
