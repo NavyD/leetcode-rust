@@ -12,7 +12,8 @@ pub mod solution_backtracking {
         /// 在递归中参数present不用考虑传入，只考虑其它2种的影响。
         /// 缓存(day,absents,lates) 的方案数以避免重复计算
         ///
-        /// 注意：presents是总量，lates是仅考虑连续出现，在不是present是依然保持presents，而不是lates是传入0
+        /// 注意：presents是总量，lates是仅考虑连续出现，在不是present是依然保持presents，而不是lates是传入0，
+        /// 因为一旦是非late，则连续的迟到次数重置为0
         ///
         /// 参考：
         ///
@@ -22,6 +23,8 @@ pub mod solution_backtracking {
         /// ### Submissions
         ///
         /// date=20211012, mem=24.3, mem_beats=8, runtime=380, runtime_beats=5
+        ///
+        /// date=20220318, mem=24.1, mem_beats=50, runtime=388, runtime_beats=50
         pub fn check_record(n: i32) -> i32 {
             const MOD: i32 = 1_000_000_007;
             const MARK: i32 = -1;
@@ -74,6 +77,8 @@ pub mod solution_dp {
     /// - 填入P：之前已存在一个A，之后不可有A，所有状态由late转移过来`dp[i][1][..]`
     /// - 填入A：之前没有A，可以由late转移过来`dp[i][0][..]`
     ///
+    /// 注意：当前是present或absent时late状态都是0，无法转移late的状态的
+    ///
     /// 由于之前是这是 可能获得出勤奖励的记录情况 数量，两种情况都是可能的，所以
     /// `dp[i][1][0] = (dp[i][1][0] + dp[i - 1][0].iter().sum::<i64>()) % MOD;`
     ///
@@ -82,6 +87,14 @@ pub mod solution_dp {
     /// date=20211012, mem=16.3, mem_beats=31, runtime=244, runtime_beats=21
     ///
     /// date=20211013, mem=16.4, mem_beats=24, runtime=184, runtime_beats=34
+    ///
+    /// date=20220318, mem=16.4, mem_beats=50, runtime=208, runtime_beats=50
+    ///
+    /// 参考：
+    ///
+    /// * [学生出勤记录 II 方法一：动态规划](https://leetcode-cn.com/problems/student-attendance-record-ii/solution/xue-sheng-chu-qin-ji-lu-ii-by-leetcode-s-kdlm/)
+    /// * [彤哥来刷题啦】一题六解：DFS -> 记忆化 -> DP -> 降维 -> 降维 -> 滚动数组，娓娓道来，小白都能](https://leetcode-cn.com/problems/student-attendance-record-ii/solution/tong-ge-lai-shua-ti-la-yi-ti-liu-jie-dfs-s5fa/)
+    ///
     pub struct Solution;
 
     impl Solution {
