@@ -94,6 +94,8 @@ pub mod solution_iterative {
 }
 
 pub mod solution_recursive {
+    use embed_doc_image::embed_doc_image;
+
     use crate::prelude::*;
 
     /// # 思路
@@ -104,7 +106,7 @@ pub mod solution_recursive {
     /// - 终止条件：head 为空指针或者 next 为空指针，也就是当前无节点或者只有一个节点，无法进行交换
     /// - 返回值：交换完成的子链表
     ///
-    /// [画解](swap_nodes_in_pairs.drawio.png)
+    /// ![画解][nodes]
     ///
     ///
     /// ```java
@@ -141,6 +143,9 @@ pub mod solution_recursive {
     ///
     /// - 时间：O(N)
     /// - 空间：O(log N)
+    // Failed to load image at /home/navyd/Workspaces/projects/leetcode-rust/swap_nodes_in_pairs.drawio.png
+    // 可能是无法加载drawio格式中的json内容
+    #[embed_doc_image("nodes", "docs/images/swap_nodes_in_pairs.drawio.png")]
     pub struct Solution;
 
     impl Solution {
