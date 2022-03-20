@@ -1,9 +1,9 @@
 pub mod solution_dp {
     /// # 思路
     ///
-    /// 如果i..j是回文子串，那i == j+1，且i+1..j-1也是回文子串
+    /// 如果`i..j`是回文子串，那`i == j+1`，且`i+1..j-1`也是回文子串
     ///
-    /// dp方程：dp[i][j] = true if s[i]==s[j] and (j < i or dp[i+1][j-1])
+    /// dp方程：`dp[i][j] = true if s[i]==s[j] and (j < i or dp[i+1][j-1])`
     ///
     /// 初始化：一个字符必是回文子串`dp[i][i]=true for i in 0..n`
     ///
@@ -18,23 +18,26 @@ pub mod solution_dp {
     /// date=20211014, mem=3.1, mem_beats=5, runtime=4, runtime_beats=23
     ///
     /// date=20211015, mem=3, mem_beats=5, runtime=4, runtime_beats=23
+    ///
+    /// date=20220320, mem=2.9, mem_beats=12, runtime=4, runtime_beats=25
     pub struct Solution;
 
     impl Solution {
         pub fn count_substrings(s: String) -> i32 {
             let s = s.as_bytes();
             let n = s.len();
+            let mut count = 0;
+
             let mut dp = vec![vec![false; n]; n];
-            let mut res = 0;
             for j in 0..n {
                 for i in 0..=j {
                     if s[i] == s[j] && (j - i <= 2 || dp[i + 1][j - 1]) {
                         dp[i][j] = true;
-                        res += 1;
+                        count += 1;
                     }
                 }
             }
-            res
+            count
         }
     }
 }
@@ -54,14 +57,18 @@ pub mod solution_extend {
     /// date=20211014, mem=2, mem_beats=94, runtime=0, runtime_beats=100
     ///
     /// date=20211015, mem=2, mem_beats=94, runtime=0, runtime_beats=100
+    ///
+    /// date=20220320, mem=2.1, mem_beats=25, runtime=0, runtime_beats=100
     pub struct Solution;
 
     impl Solution {
         pub fn count_substrings(s: String) -> i32 {
             let s = s.as_bytes();
+            let n = s.len();
+
             let extends = |mut left: usize, mut right: usize| {
                 let mut count = 0;
-                while right < s.len() && s[left] == s[right] {
+                while right < n && s[left] == s[right] {
                     count += 1;
                     if left == 0 {
                         break;
@@ -71,11 +78,12 @@ pub mod solution_extend {
                 }
                 count
             };
-            let mut res = 0;
-            for i in 0..s.len() {
-                res += extends(i, i) + extends(i, i + 1);
+
+            let mut count = 0;
+            for i in 0..n {
+                count += extends(i, i) + extends(i, i + 1);
             }
-            res
+            count
         }
     }
 }
