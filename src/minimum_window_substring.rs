@@ -33,6 +33,7 @@ pub mod solution_sliding_window {
     /// date=20220315, mem=2.3, mem_beats=48, runtime=0, runtime_beats=100
     ///
     /// date=20220323, mem=2.2, mem_beats=69, runtime=0, runtime_beats=100
+    // https://assets.leetcode-cn.com/solution-static/76/76_fig1.gif
     #[embed_doc_image("a", "docs/images/2022-03-23-17-51-35.gif")]
     pub struct Solution;
 
