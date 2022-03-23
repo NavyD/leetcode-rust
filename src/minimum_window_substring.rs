@@ -1,4 +1,5 @@
 pub mod solution_sliding_window {
+    use embed_doc_image::embed_doc_image;
 
     /// # 思路
     ///
@@ -15,7 +16,7 @@ pub mod solution_sliding_window {
     /// 当滑动窗口扩展或者收缩的时候，去维护这个 need 字典对应元素数量-1或+1。当数量<0时表示元素多余了，
     /// 即当 need 中所有元素的数量都小于等于 0 时，表示当前滑动窗口不再需要任何元素。
     ///
-    /// ![](https://assets.leetcode-cn.com/solution-static/76/76_fig1.gif)
+    /// ![pic][a]
     ///
     /// 参考：
     ///
@@ -30,6 +31,9 @@ pub mod solution_sliding_window {
     /// date=20211027, mem=2.1, mem_beats=95, runtime=0, runtime_beats=100
     ///
     /// date=20220315, mem=2.3, mem_beats=48, runtime=0, runtime_beats=100
+    ///
+    /// date=20220323, mem=2.2, mem_beats=69, runtime=0, runtime_beats=100
+    #[embed_doc_image("a", "docs/images/2022-03-23-17-51-35.gif")]
     pub struct Solution;
 
     impl Solution {
