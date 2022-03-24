@@ -157,6 +157,8 @@ pub mod solution_dp {
     /// date=20211029, mem=2.9, mem_beats=60, runtime=44, runtime_beats=100
     ///
     /// date=20220314, mem=2.4, mem_beats=62, runtime=28, runtime_beats=87
+    ///
+    /// date=20220324, mem=2.5, mem_beats=40, runtime=40, runtime_beats=70
     pub struct Solution;
 
     impl Solution {
