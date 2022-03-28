@@ -20,6 +20,8 @@ pub mod solution_dp {
     /// date=20211015, mem=3, mem_beats=5, runtime=4, runtime_beats=23
     ///
     /// date=20220320, mem=2.9, mem_beats=12, runtime=4, runtime_beats=25
+    ///
+    /// date=20220328, mem=3, mem_beats=10, runtime=4, runtime_beats=40
     pub struct Solution;
 
     impl Solution {
@@ -59,6 +61,8 @@ pub mod solution_extend {
     /// date=20211015, mem=2, mem_beats=94, runtime=0, runtime_beats=100
     ///
     /// date=20220320, mem=2.1, mem_beats=25, runtime=0, runtime_beats=100
+    ///
+    /// date=20220328, mem=2.1, mem_beats=40, runtime=0, runtime_beats=100
     pub struct Solution;
 
     impl Solution {
@@ -79,11 +83,7 @@ pub mod solution_extend {
                 count
             };
 
-            let mut count = 0;
-            for i in 0..n {
-                count += extends(i, i) + extends(i, i + 1);
-            }
-            count
+            (0..n).fold(0, |acc, e| acc + extends(e, e) + extends(e, e + 1))
         }
     }
 }
