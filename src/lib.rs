@@ -142,3 +142,6 @@ pub mod search_a_2d_matrix;
 pub mod search_in_rotated_sorted_array;
 pub mod sqrtx;
 pub mod valid_perfect_square;
+
+// trie
+pub mod implement_trie_prefix_tree;
