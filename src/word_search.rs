@@ -29,6 +29,7 @@ pub mod solution_backtracking {
     ///
     /// date=20220330, mem=2, mem_beats=77, runtime=52, runtime_beats=93
     ///
+    /// date=20220406, mem=2, mem_beats=86, runtime=52, runtime_beats=93
     #[embed_doc_image("pic", "docs/images/2022-03-30-20-48-58.png")]
     #[embed_doc_image("end", "docs/images/2022-03-30-20-55-18.png")]
     pub struct Solution;
@@ -55,7 +56,7 @@ pub mod solution_backtracking {
                 // exist(board, i, j-1, word, ind+1) ||
                 // exist(board, i, j+1, word, ind+1) ||
                 // exist(board, i+1, j, word, ind+1);
-                let found = found(board, i + 1, j, word)
+                let res = found(board, i + 1, j, word)
                     || found(board, i, j + 1, word)
                     || if i > 0 {
                         found(board, i - 1, j, word)
@@ -71,7 +72,7 @@ pub mod solution_backtracking {
                 // recover
                 board[i][j] = cur_char;
 
-                found
+                res
             }
 
             for i in 0..board.len() {
