@@ -1,14 +1,26 @@
 #[allow(unused)]
-mod solution_node {
+pub mod solution_node {
+    use embed_doc_image::embed_doc_image;
+
+    /// # 思路
+    ///
+    /// 结构
+    ///
+    /// ![][pic]
+    ///
     /// 参考：
     ///
     /// * [【宫水三叶】一题双解 :「二维数组」&「TrieNode」](https://leetcode-cn.com/problems/implement-trie-prefix-tree/solution/gong-shui-san-xie-yi-ti-shuang-jie-er-we-esm9/)
     /// * [Trie Tree 的实现 (适合初学者)🌳](https://leetcode-cn.com/problems/implement-trie-prefix-tree/solution/trie-tree-de-shi-xian-gua-he-chu-xue-zhe-by-huwt/)
     /// * [Rust Solution 8ms beats 100.00%](https://leetcode.com/problems/implement-trie-prefix-tree/discuss/301435/Rust-Solution-8ms-beats-100.00)
     ///
+    /// ### Submissions
+    ///
     /// date=20220329, mem=13.3, mem_beats=88, runtime=12, runtime_beats=100
     ///
-    struct Trie {
+    /// date=20220407, mem=13.4, mem_beats=37, runtime=20, runtime_beats=60
+    #[embed_doc_image("pic", "docs/images/2022-04-07-12-56-03.png")]
+    pub struct Trie {
         root: Node,
     }
 
@@ -25,7 +37,7 @@ mod solution_node {
 
         fn insert(&mut self, word: String) {
             let cur = word.bytes().map(index).fold(&mut self.root, |cur, i| {
-                cur.children[i].get_or_insert_with(|| Box::new(Default::default()))
+                cur.children[i].get_or_insert_with(Default::default)
             });
             cur.is_end = true;
         }
