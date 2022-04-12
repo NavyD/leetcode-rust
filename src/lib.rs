@@ -1,6 +1,7 @@
 // 允许在循环中使用索引而不是只用iter
 // like this: for i in 0..nums.len() {
 #![allow(clippy::needless_range_loop)]
+#![allow(clippy::ptr_arg)]
 
 pub use leetcode_prelude as prelude;
 

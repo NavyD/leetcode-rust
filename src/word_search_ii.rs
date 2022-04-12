@@ -63,6 +63,102 @@ pub mod solution_backtracking {
     }
 }
 
+pub mod solution_trie {
+    /// # 思路
+    ///
+    /// 参考：
+    ///
+    /// * [Java 15ms Easiest Solution (100.00%)](https://leetcode.com/problems/word-search-ii/discuss/59780/Java-15ms-Easiest-Solution-(100.00))
+    ///
+    /// ### Submissions
+    ///
+    /// date=20220412, mem=3.7, mem_beats=66, runtime=92, runtime_beats=83
+    pub struct Solution;
+
+    impl Solution {
+        pub fn find_words(mut board: Vec<Vec<char>>, words: Vec<String>) -> Vec<String> {
+            #[derive(Debug, Clone)]
+            struct Node {
+                word: Option<String>,
+                children: Vec<Option<Box<Node>>>,
+            }
+
+            impl Default for Node {
+                fn default() -> Self {
+                    Self {
+                        word: None,
+                        children: vec![None::<Box<Node>>; 26],
+                    }
+                }
+            }
+
+            fn build_trie(words: Vec<String>) -> Node {
+                let mut root: Node = Default::default();
+                for word in words {
+                    let mut next = &mut root;
+                    for cur in word.chars() {
+                        next = next.children[index(cur)]
+                            .get_or_insert_with(Default::default)
+                            .as_mut();
+                    }
+                    next.word = Some(word);
+                }
+                root
+            }
+
+            const MARK: char = '#';
+
+            #[inline(always)]
+            fn index(i: char) -> usize {
+                i as usize - 'a' as usize
+            }
+
+            fn backtrack(
+                board: &mut [Vec<char>],
+                i: usize,
+                j: usize,
+                mut root: &mut Node,
+                res: &mut Vec<String>,
+            ) {
+                if i >= board.len() || j >= board[0].len() {
+                    return;
+                }
+
+                let cur = board[i][j];
+                if cur == MARK || root.children[index(cur)].is_none() {
+                    return;
+                }
+
+                root = root.children[index(cur)].as_deref_mut().unwrap();
+                if let Some(word) = root.word.take() {
+                    res.push(word);
+                }
+                board[i][j] = MARK;
+
+                backtrack(board, i + 1, j, root, res);
+                backtrack(board, i, j + 1, root, res);
+                if i > 0 {
+                    backtrack(board, i - 1, j, root, res);
+                }
+                if j > 0 {
+                    backtrack(board, i, j - 1, root, res);
+                }
+
+                board[i][j] = cur;
+            }
+
+            let mut root = build_trie(words);
+            let mut res = vec![];
+            for i in 0..board.len() {
+                for j in 0..board[0].len() {
+                    backtrack(&mut board, i, j, &mut root, &mut res);
+                }
+            }
+            res
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use std::collections::HashSet;
@@ -72,6 +168,7 @@ mod tests {
     #[test]
     fn basics() {
         test(solution_backtracking::Solution::find_words);
+        test(solution_trie::Solution::find_words);
     }
 
     fn test<F: Fn(Vec<Vec<char>>, Vec<String>) -> Vec<String>>(f: F) {
