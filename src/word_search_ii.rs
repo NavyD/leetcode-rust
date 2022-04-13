@@ -73,10 +73,13 @@ pub mod solution_trie {
     /// ### Submissions
     ///
     /// date=20220412, mem=3.7, mem_beats=66, runtime=92, runtime_beats=83
+    ///
+    /// date=20220413, mem=3.7, mem_beats=66, runtime=96, runtime_beats=83
     pub struct Solution;
 
     impl Solution {
         pub fn find_words(mut board: Vec<Vec<char>>, words: Vec<String>) -> Vec<String> {
+            // RC and refcell can be used
             #[derive(Debug, Clone)]
             struct Node {
                 word: Option<String>,
@@ -120,10 +123,6 @@ pub mod solution_trie {
                 mut root: &mut Node,
                 res: &mut Vec<String>,
             ) {
-                if i >= board.len() || j >= board[0].len() {
-                    return;
-                }
-
                 let cur = board[i][j];
                 if cur == MARK || root.children[index(cur)].is_none() {
                     return;
@@ -135,8 +134,12 @@ pub mod solution_trie {
                 }
                 board[i][j] = MARK;
 
-                backtrack(board, i + 1, j, root, res);
-                backtrack(board, i, j + 1, root, res);
+                if i < board.len() - 1 {
+                    backtrack(board, i + 1, j, root, res);
+                }
+                if j < board[0].len() - 1 {
+                    backtrack(board, i, j + 1, root, res);
+                }
                 if i > 0 {
                     backtrack(board, i - 1, j, root, res);
                 }
@@ -149,6 +152,7 @@ pub mod solution_trie {
 
             let mut root = build_trie(words);
             let mut res = vec![];
+
             for i in 0..board.len() {
                 for j in 0..board[0].len() {
                     backtrack(&mut board, i, j, &mut root, &mut res);
