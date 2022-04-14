@@ -11,15 +11,16 @@ pub mod solution_backtracking {
     pub struct Solution;
 
     impl Solution {
-        pub fn find_words(board: Vec<Vec<char>>, words: Vec<String>) -> Vec<String> {
-            const DIR: [(isize, isize); 4] = [(1, 0), (-1, 0), (0, 1), (0, -1)];
-            fn found(
-                board: &[Vec<char>],
+        pub fn find_words(mut board: Vec<Vec<char>>, words: Vec<String>) -> Vec<String> {
+            const DIRS: [(isize, isize); 4] = [(1, 0), (-1, 0), (0, 1), (0, -1)];
+            const MARK: char = '#';
+
+            fn backtrack(
+                board: &mut [Vec<char>],
                 i: usize,
                 j: usize,
                 words: &mut std::collections::HashSet<String>,
                 cur_word: &mut String,
-                vis: &mut [Vec<bool>],
                 res: &mut Vec<String>,
             ) {
                 if cur_word.len() > 10 {
@@ -29,33 +30,50 @@ pub mod solution_backtracking {
                     res.push(cur_word.to_string());
                 }
 
-                for (x, y) in DIR {
+                // if cur == MARK {
+                //     return;
+                // }
+
+                // board[i][j] = MARK;
+                // cur_word.push(cur);
+
+                // if i < board.len() - 1 {
+                //     backtrack(board, i + 1, j, words, cur_word, res)
+                // }
+                // if j < board[0].len() - 1 {
+                //     backtrack(board, i, j + 1, words, cur_word, res)
+                // }
+                // if i > 0 {
+                //     backtrack(board, i - 1, j, words, cur_word, res)
+                // }
+                // if j > 0 {
+                //     backtrack(board, i, j - 1, words, cur_word, res)
+                // }
+                // board[i][j] = cur_word.pop().unwrap();
+
+                for (x, y) in DIRS {
                     let (i, j) = (i as isize + x, j as isize + y);
                     if i >= 0 && j >= 0 {
                         let (i, j) = (i as usize, j as usize);
-                        if i < board.len() && j < board[0].len() && !vis[i][j] {
-                            vis[i][j] = true;
+                        if i < board.len() && j < board[0].len() && board[i][j] != MARK {
                             cur_word.push(board[i][j]);
-                            found(board, i, j, words, cur_word, vis, res);
-                            vis[i][j] = false;
-                            cur_word.pop();
+                            board[i][j] = MARK;
+                            backtrack(board, i, j, words, cur_word, res);
+                            board[i][j] = cur_word.pop().unwrap();
                         }
                     }
                 }
             }
 
             let mut words = words.into_iter().collect::<std::collections::HashSet<_>>();
-            let (m, n) = (board.len(), board[0].len());
-            let mut vis = vec![vec![false; n]; m];
             let mut res = vec![];
             let mut cur_word = String::new();
             for i in 0..board.len() {
                 for j in 0..board[0].len() {
                     cur_word.push(board[i][j]);
-                    vis[i][j] = true;
-                    found(&board, i, j, &mut words, &mut cur_word, &mut vis, &mut res);
-                    vis[i][j] = false;
-                    cur_word.pop();
+                    board[i][j] = MARK;
+                    backtrack(&mut board, i, j, &mut words, &mut cur_word, &mut res);
+                    board[i][j] = cur_word.pop().unwrap();
                 }
             }
             res
@@ -66,9 +84,19 @@ pub mod solution_backtracking {
 pub mod solution_trie {
     /// # 思路
     ///
+    /// 删除被匹配的单词：
+    ///
+    /// 当board[i][j]全是a且单词列表 `["a", "aa", "aaa", "aaaa"]`时，每次i+1,j+1都会
+    /// 找到a，需要去重。可以使用hashset对结果去重或回溯时移除树单词
+    ///
+    /// 匹配路径：
+    ///
+    /// 回溯时不需要考虑board[i][j]当前是否是trie中词的前缀，只需要看是否对应子结点word一样
+    ///
     /// 参考：
     ///
     /// * [Java 15ms Easiest Solution (100.00%)](https://leetcode.com/problems/word-search-ii/discuss/59780/Java-15ms-Easiest-Solution-(100.00))
+    /// * [单词搜索 II](https://leetcode-cn.com/problems/word-search-ii/solution/dan-ci-sou-suo-ii-by-leetcode-solution-7494/)
     ///
     /// ### Submissions
     ///
@@ -201,6 +229,13 @@ mod tests {
             vec![vec!['a', 'b'], vec!['c', 'd']],
             vec!["abcb".to_string()],
         );
+        let expected = vec![];
+        assert_eq!(res.len(), expected.len(),);
+        assert_eq!(
+            res.into_iter().collect::<HashSet<_>>(),
+            expected.into_iter().collect()
+        );
+        let res = f(vec![vec!['a', 'a']], vec!["aaa".to_string()]);
         let expected = vec![];
         assert_eq!(res.len(), expected.len(),);
         assert_eq!(
