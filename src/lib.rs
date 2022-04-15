@@ -148,3 +148,4 @@ pub mod valid_perfect_square;
 pub mod implement_trie_prefix_tree;
 pub mod word_search;
 pub mod word_search_ii;
+pub mod number_of_provinces;
