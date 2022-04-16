@@ -35,6 +35,44 @@ pub mod solution_dfs {
     }
 }
 
+pub mod solution_bfs {
+    /// # 思路
+    ///
+    /// 参考：
+    ///
+    /// * [DFS + BFS + 并查集，3 种方法计算无向图连通域数量](https://leetcode-cn.com/problems/number-of-provinces/solution/dfs-bfs-bing-cha-ji-3-chong-fang-fa-ji-s-edkl/)
+    ///
+    /// ### Submissions
+    ///
+    /// date=20220416, mem=2.2, mem_beats=50, runtime=0, runtime_beats=100
+    pub struct Solution;
+
+    impl Solution {
+        pub fn find_circle_num(is_connected: Vec<Vec<i32>>) -> i32 {
+            let n = is_connected.len();
+
+            let mut provinces = 0;
+            let mut visited = vec![false; n];
+            let mut queue = std::collections::VecDeque::new();
+            for i in 0..n {
+                if !visited[i] {
+                    queue.push_back(i);
+                    while let Some(j) = queue.pop_front() {
+                        for k in 0..n {
+                            if is_connected[j][k] == 1 && !visited[k] {
+                                visited[k] = true;
+                                queue.push_back(k);
+                            }
+                        }
+                    }
+                    provinces += 1;
+                }
+            }
+            provinces
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -42,6 +80,7 @@ mod tests {
     #[test]
     fn basics() {
         test(solution_dfs::Solution::find_circle_num);
+        test(solution_bfs::Solution::find_circle_num);
     }
 
     fn test<F: Fn(Vec<Vec<i32>>) -> i32>(f: F) {
