@@ -13,6 +13,8 @@ pub mod solution_dfs {
     /// date=20220415, mem=2.2, mem_beats=100, runtime=0, runtime_beats=100
     ///
     /// date=20220508, mem=2.2, mem_beats=33, runtime=0, runtime_beats=100
+    ///
+    /// date=20220514, mem=2.4, mem_beats=22, runtime=0, runtime_beats=100
     pub struct Solution;
 
     impl Solution {
@@ -92,24 +94,27 @@ pub mod solution_union {
     ///
     /// * [DFS + BFS + 并查集，3 种方法计算无向图连通域数量](https://leetcode-cn.com/problems/number-of-provinces/solution/dfs-bfs-bing-cha-ji-3-chong-fang-fa-ji-s-edkl/)
     /// * [Java solution, Union Find](https://leetcode.com/problems/number-of-provinces/discuss/101336/Java-solution-Union-Find)
+    /// * [方法三：并查集](https://leetcode.cn/problems/number-of-provinces/solution/sheng-fen-shu-liang-by-leetcode-solution-eyk0/)
+    /// * [[Python/C++/Java] 多图详解并查集](https://leetcode.cn/problems/number-of-provinces/solution/python-duo-tu-xiang-jie-bing-cha-ji-by-m-vjdr/)
     ///
     /// ### Submissions
     ///
     /// date=20220508, mem=2.1, mem_beats=77, runtime=0, runtime_beats=100
-
+    ///
+    /// date=20220514, mem=2.1, mem_beats=74, runtime=0, runtime_beats=100
     pub struct Solution;
 
     impl Solution {
         pub fn find_circle_num(is_connected: Vec<Vec<i32>>) -> i32 {
             struct UnionFind {
                 parent: Vec<usize>,
-                count: usize,
+                count: i32,
             }
 
             impl UnionFind {
                 fn new(n: usize) -> Self {
                     Self {
-                        count: n,
+                        count: n as i32,
                         parent: (0..n).into_iter().collect(),
                     }
                 }
@@ -123,9 +128,9 @@ pub mod solution_union {
                 }
 
                 fn union(&mut self, p: usize, q: usize) {
-                    let (parent_p, parent_q) = (self.find(p), self.find(q));
-                    if parent_p != parent_q {
-                        self.parent[parent_p] = parent_q;
+                    let (pp, pq) = (self.find(p), self.find(q));
+                    if pp != pq {
+                        self.parent[pp] = pq;
                         self.count -= 1;
                     }
                 }
@@ -141,7 +146,7 @@ pub mod solution_union {
                 }
             }
 
-            uf.count as i32
+            uf.count
         }
     }
 }

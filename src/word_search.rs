@@ -30,54 +30,40 @@ pub mod solution_backtracking {
     /// date=20220330, mem=2, mem_beats=77, runtime=52, runtime_beats=93
     ///
     /// date=20220406, mem=2, mem_beats=86, runtime=52, runtime_beats=93
+    ///
+    /// date=20220514, mem=2.1, mem_beats=34, runtime=60, runtime_beats=66
     #[embed_doc_image("pic", "docs/images/2022-03-30-20-48-58.png")]
     #[embed_doc_image("end", "docs/images/2022-03-30-20-55-18.png")]
     pub struct Solution;
 
     impl Solution {
         pub fn exist(mut board: Vec<Vec<char>>, word: String) -> bool {
-            fn found(board: &mut [Vec<char>], i: usize, j: usize, word: &[u8]) -> bool {
-                if word.is_empty() {
-                    return true;
-                }
-                let cur_char = word[0] as char;
+            const MARK: char = '*';
 
-                // for java: if(i > board.length-1 || i <0 || j<0 || j >board[0].length-1 || board[i][j]!=word.charAt(ind))
-                if i >= board.len() || j >= board[0].len() || board[i][j] != cur_char {
+            fn find(board: &mut [Vec<char>], i: usize, j: usize, word: &[u8]) -> bool {
+                let cur = word[0] as char;
+                if cur == MARK || cur != board[i][j] {
                     return false;
                 }
-
-                // mark
-                board[i][j] = '*';
+                // fixed issuse: board: [["a"]], word: "a"
+                else if word.len() <= 1 {
+                    return true;
+                }
 
                 let word = &word[1..];
-                // for java:
-                // exist(board, i-1, j, word, ind+1) ||
-                // exist(board, i, j-1, word, ind+1) ||
-                // exist(board, i, j+1, word, ind+1) ||
-                // exist(board, i+1, j, word, ind+1);
-                let res = found(board, i + 1, j, word)
-                    || found(board, i, j + 1, word)
-                    || if i > 0 {
-                        found(board, i - 1, j, word)
-                    } else {
-                        false
-                    }
-                    || if j > 0 {
-                        found(board, i, j - 1, word)
-                    } else {
-                        false
-                    };
+                board[i][j] = MARK;
+                let found = (i > 0 && find(board, i - 1, j, word))
+                    || (i < board.len() - 1 && find(board, i + 1, j, word))
+                    || (j > 0 && find(board, i, j - 1, word))
+                    || (j < board[0].len() - 1 && find(board, i, j + 1, word));
+                board[i][j] = cur;
 
-                // recover
-                board[i][j] = cur_char;
-
-                res
+                found
             }
 
             for i in 0..board.len() {
                 for j in 0..board[0].len() {
-                    if found(&mut board, i, j, word.as_bytes()) {
+                    if find(&mut board, i, j, word.as_bytes()) {
                         return true;
                     }
                 }
