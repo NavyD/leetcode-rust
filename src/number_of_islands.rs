@@ -206,17 +206,19 @@ pub mod solution_union {
     /// ### Submissions
     ///
     /// date=20220515, mem=9, mem_beats=12, runtime=8, runtime_beats=100
+    ///
+    /// date=20220524, mem=8.8, mem_beats=65, runtime=12, runtime_beats=68
     pub struct Solution;
 
     impl Solution {
         pub fn num_islands(grid: Vec<Vec<char>>) -> i32 {
             const LAND: char = '1';
-            const DIRS: [(usize, usize); 2] = [(1, 0), (0, 1)];
 
             struct UnionFind {
                 count: i32,
                 parent: Vec<usize>,
                 cols: usize,
+                rank: Vec<u32>,
             }
             impl UnionFind {
                 fn new(rows: usize, cols: usize) -> Self {
@@ -225,6 +227,7 @@ pub mod solution_union {
                         count: count as i32,
                         parent: (0..count).collect::<Vec<_>>(),
                         cols,
+                        rank: vec![0; count],
                     }
                 }
 
@@ -237,11 +240,18 @@ pub mod solution_union {
                 }
 
                 fn union(&mut self, p: usize, q: usize) {
-                    let (p, q) = (self.find(p), self.find(q));
-                    if p != q {
-                        self.parent[p] = q;
-                        self.count -= 1;
+                    let (mut p, mut q) = (self.find(p), self.find(q));
+                    if p == q {
+                        return;
                     }
+                    use std::cmp::Ordering::*;
+                    match self.rank[p].cmp(&self.rank[q]) {
+                        Equal => self.rank[q] += 1,
+                        Greater => std::mem::swap(&mut p, &mut q),
+                        _ => {}
+                    }
+                    self.parent[p] = q;
+                    self.count -= 1;
                 }
 
                 #[inline(always)]
@@ -257,11 +267,11 @@ pub mod solution_union {
             for i in 0..rows {
                 for j in 0..cols {
                     if grid[i][j] == LAND {
-                        for (x, y) in DIRS {
-                            let (x, y) = (i + x, j + y);
-                            if x < rows && y < cols && grid[x][y] == LAND {
-                                uf.union(uf.index(i, j), uf.index(x, y));
-                            }
+                        if i > 0 && grid[i - 1][j] == LAND {
+                            uf.union(uf.index(i, j), uf.index(i - 1, j));
+                        }
+                        if j > 0 && grid[i][j - 1] == LAND {
+                            uf.union(uf.index(i, j), uf.index(i, j - 1));
                         }
                     } else {
                         spaces += 1;
@@ -285,30 +295,33 @@ mod tests {
     }
 
     fn test<F: Fn(Vec<Vec<char>>) -> i32>(func: F) {
-        let grid = [
-            ["1", "1", "1", "1", "0"],
-            ["1", "1", "0", "1", "0"],
-            ["1", "1", "0", "0", "0"],
-            ["0", "0", "0", "0", "0"],
-        ]
-        .iter()
-        .map(|a| a.iter().map(|e| e.chars().next().unwrap()).collect())
-        .collect();
-        assert_eq!(func(grid), 1);
-
-        let grid = [
-            ["1", "1", "0", "0", "0"],
-            ["1", "1", "0", "0", "0"],
-            ["0", "0", "1", "0", "0"],
-            ["0", "0", "0", "1", "1"],
-        ]
-        .into_iter()
-        .map(|a| {
+        fn arr<const M: usize, const N: usize>(a: [[&str; N]; M]) -> Vec<Vec<char>> {
             a.into_iter()
-                .flat_map(|e| e.chars().next())
+                .map(|a| {
+                    a.into_iter()
+                        .map(|s| s.chars().next().unwrap())
+                        .collect::<Vec<_>>()
+                })
                 .collect::<Vec<_>>()
-        })
-        .collect::<Vec<_>>();
-        assert_eq!(func(grid), 3);
+        }
+
+        assert_eq!(
+            func(arr([
+                ["1", "1", "1", "1", "0"],
+                ["1", "1", "0", "1", "0"],
+                ["1", "1", "0", "0", "0"],
+                ["0", "0", "0", "0", "0"],
+            ])),
+            1
+        );
+        assert_eq!(
+            func(arr([
+                ["1", "1", "0", "0", "0"],
+                ["1", "1", "0", "0", "0"],
+                ["0", "0", "1", "0", "0"],
+                ["0", "0", "0", "1", "1"],
+            ])),
+            3
+        );
     }
 }

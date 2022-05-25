@@ -59,6 +59,34 @@ pub mod solution_dfs {
 }
 
 pub mod solution_union {
+    /// # 思路
+    ///
+    /// 在边缘的O与dummy节点连通分为一组，所有与dummy连通的O都不会被X填充
+    ///
+    /// 注意：union只需要上下左右取2个方向就可以了，同时要保证边缘节点与dummy连接，否则
+    /// 会导致无法连接到边缘节点的相邻O节点
+    ///
+    /// ```no_run
+    /// if i == 0 || j == 0 || i == rows - 1 || j == cols - 1 {
+    ///     uf.union(p, dummy);
+    /// // 无法连接边缘的相邻O节点
+    /// } else {
+    ///     if i > 0 && board[i - 1][j] == O {
+    ///         uf.union(p, uf.index(i - 1, j));
+    ///     }
+    ///     if j > 0 && board[i][j - 1] == O {
+    ///         uf.union(p, uf.index(i, j - 1));
+    ///     }
+    /// }
+    /// ```
+    ///
+    /// 参考：
+    ///
+    /// * [bfs + 递归 dfs + 非递归 dfs + 并查集](https://leetcode.cn/problems/surrounded-regions/solution/bfsdi-gui-dfsfei-di-gui-dfsbing-cha-ji-by-ac_pipe/)
+    ///
+    /// ### Submissions
+    ///
+    /// date=20220525, mem=4.7, mem_beats=68, runtime=8, runtime_beats=78
     pub struct Solution;
 
     impl Solution {
@@ -68,6 +96,7 @@ pub mod solution_union {
 
             struct UnionFind {
                 parent: Vec<usize>,
+                rank: Vec<u32>,
                 cols: usize,
             }
 
@@ -76,10 +105,10 @@ pub mod solution_union {
                     Self {
                         parent: (0..rows * cols + 1).collect::<Vec<_>>(),
                         cols,
+                        rank: vec![0; rows * cols + 1],
                     }
                 }
-
-                #[inline]
+                #[inline(always)]
                 fn index(&self, row: usize, col: usize) -> usize {
                     self.cols * row + col
                 }
@@ -90,40 +119,41 @@ pub mod solution_union {
                     }
                     p
                 }
-
                 fn union(&mut self, p: usize, q: usize) {
-                    let (x, y) = (self.parent[p], self.parent[q]);
-                    if x != y {
-                        self.parent[x] = y;
+                    let (mut x, mut y) = (self.find(p), self.find(q));
+                    if x == y {
+                        return;
                     }
-                }
 
-                fn is_unit(&mut self, p: usize, q: usize) -> bool {
+                    use std::cmp::Ordering::*;
+                    match self.rank[x].cmp(&self.rank[y]) {
+                        Equal => self.rank[y] += 1,
+                        Greater => std::mem::swap(&mut x, &mut y),
+                        _ => {}
+                    }
+                    self.parent[x] = y;
+                }
+                fn has_unit(&mut self, p: usize, q: usize) -> bool {
                     self.find(p) == self.find(q)
                 }
             }
 
             let (rows, cols) = (board.len(), board[0].len());
-            let mut uf = UnionFind::new(rows, cols);
             let dummy = rows * cols;
+            let mut uf = UnionFind::new(rows, cols);
 
             for i in 0..rows {
                 for j in 0..cols {
                     if board[i][j] == O {
+                        let p = uf.index(i, j);
                         if i == 0 || j == 0 || i == rows - 1 || j == cols - 1 {
-                            uf.union(uf.index(i, j), dummy);
+                            uf.union(p, dummy);
                         } else {
                             if i > 0 && board[i - 1][j] == O {
-                                uf.union(uf.index(i, j), uf.index(i - 1, j));
+                                uf.union(p, uf.index(i - 1, j));
                             }
                             if j > 0 && board[i][j - 1] == O {
-                                uf.union(uf.index(i, j), uf.index(i, j - 1));
-                            }
-                            if i < board.len() - 1 && board[i + 1][j] == O {
-                                uf.union(uf.index(i, j), uf.index(i + 1, j));
-                            }
-                            if j < board[0].len() - 1 && board[i][j + 1] == O {
-                                uf.union(uf.index(i, j), uf.index(i, j + 1));
+                                uf.union(p, uf.index(i, j - 1));
                             }
                         }
                     }
@@ -132,7 +162,7 @@ pub mod solution_union {
 
             for i in 0..rows {
                 for j in 0..cols {
-                    if board[i][j] == O && !uf.is_unit(uf.index(i, j), dummy) {
+                    if board[i][j] == O && !uf.has_unit(uf.index(i, j), dummy) {
                         board[i][j] = X;
                     }
                 }
