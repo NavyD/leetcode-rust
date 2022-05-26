@@ -9,7 +9,7 @@ pub mod solution_dfs {
     /// 在一个添加左括号后添加对应的右括号。利用dfs递归时添加括号时回溯找出
     /// 所有括号
     ///
-    /// ![](https://pic.leetcode-cn.com/7ec04f84e936e95782aba26c4663c5fe7aaf94a2a80986a97d81574467b0c513-LeetCode%20%E7%AC%AC%2022%20%E9%A2%98%EF%BC%9A%E2%80%9C%E6%8B%AC%E5%8F%B7%E7%94%9F%E5%87%BA%E2%80%9D%E9%A2%98%E8%A7%A3%E9%85%8D%E5%9B%BE.png)
+    /// ![][a]
     ///
     /// 当前左右括号都有大于 0 个可以使用的时候，才产生分支；
     ///
@@ -26,7 +26,7 @@ pub mod solution_dfs {
     ///
     /// `fn generate(left: i32, right: i32, n: i32, res: &mut Vec<String>, s: &mut String) {`
     ///
-    /// ![](https://pic.leetcode-cn.com/efbe574e5e6addcd1c9dc5c13a50c6f162a2b14a95d6aed2c394e18287a067fa-image.png)
+    /// ![][b]
     ///
     /// 参考：
     ///
@@ -46,17 +46,21 @@ pub mod solution_dfs {
     ///
     /// date=20210114, mem=2.1, mem_beats=85, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/138299858/
     ///
+    /// date=20220526, mem=2.2, mem_beats=70, runtime=0, runtime_beats=100
+    ///
     /// ### 复杂度
     ///
     /// 参考：[括号生成 复杂度](https://leetcode-cn.com/problems/generate-parentheses/solution/gua-hao-sheng-cheng-by-leetcode-solution/)
+    #[embed_doc_image::embed_doc_image("a", "docs/images/2022-05-26-12-50-28.png")]
+    #[embed_doc_image::embed_doc_image("b", "docs/images/2022-05-26-13-07-23.png")]
     pub struct Solution;
 
     impl Solution {
         pub fn generate_parenthesis(n: i32) -> Vec<String> {
-            const LEFT_PARENTHESIS: char = '(';
-            const RIGHT_PARENTHESIS: char = ')';
+            const LEFT: char = '(';
+            const RIGHT: char = ')';
 
-            fn _backtrack(
+            fn backtrack(
                 left_count: i32,
                 right_count: i32,
                 path: &mut String,
@@ -68,19 +72,19 @@ pub mod solution_dfs {
                 }
 
                 if left_count > 0 {
-                    path.push(LEFT_PARENTHESIS);
-                    _backtrack(left_count - 1, right_count, path, res);
+                    path.push(LEFT);
+                    backtrack(left_count - 1, right_count, path, res);
                     path.pop();
                 }
                 if right_count > left_count {
-                    path.push(RIGHT_PARENTHESIS);
-                    _backtrack(left_count, right_count - 1, path, res);
+                    path.push(RIGHT);
+                    backtrack(left_count, right_count - 1, path, res);
                     path.pop();
                 }
             }
 
             let mut res = vec![];
-            _backtrack(n, n, &mut String::new(), &mut res);
+            backtrack(n, n, &mut String::new(), &mut res);
             res
         }
     }
@@ -154,26 +158,26 @@ pub mod solution_bfs {
     ///
     /// ```rust,ignore
     /// while !stack.is_empty() {
-    //      for _ in 0..stack.len() {
-    //          let node = stack.pop().unwrap();
-    //          if node.left_count == 0 && node.right_count == 0 {
-    //              res.push(node.parentheses);
-    //              continue;
-    //          }
-    //          if node.left_count > 0 {
-    //              let mut next = node.clone();
-    //              next.parentheses.push(LEFT_PARENTHESIS);
-    //              next.left_count -= 1;
-    //              stack.push(next);
-    //          }
-    //          if node.right_count > node.left_count {
-    //              let mut next = node;
-    //              next.parentheses.push(RIGHT_PARENTHESIS);
-    //              next.right_count -= 1;
-    //              stack.push(next);
-    //          }
-    //      }
-    //  }
+    ///      for _ in 0..stack.len() {
+    ///          let node = stack.pop().unwrap();
+    ///          if node.left_count == 0 && node.right_count == 0 {
+    ///              res.push(node.parentheses);
+    ///              continue;
+    ///          }
+    ///          if node.left_count > 0 {
+    ///              let mut next = node.clone();
+    ///              next.parentheses.push(LEFT_PARENTHESIS);
+    ///              next.left_count -= 1;
+    ///              stack.push(next);
+    ///          }
+    ///          if node.right_count > node.left_count {
+    ///              let mut next = node;
+    ///              next.parentheses.push(RIGHT_PARENTHESIS);
+    ///              next.right_count -= 1;
+    ///              stack.push(next);
+    ///          }
+    ///      }
+    ///  }
     /// ```
     ///
     /// 参考：
@@ -234,13 +238,43 @@ pub mod solution_bfs {
     }
 }
 
-#[allow(unused)]
 pub mod solution_dp {
+
+    /// # 思路
+    ///
+    /// `dp[i]`表示i组括号的所有有效组合
+    /// `dp[i] = '(' + dp[p]的所有有效组合 + ')' + dp[q]的组合`，其中 1 + p + q = i , p从0遍历到i-1, q则相应从i-1到0
+    ///
+    /// 参考：
+    ///
+    /// * [Clean Python DP Solution](https://leetcode.com/problems/generate-parentheses/discuss/10369/Clean-Python-DP-Solution)
+    /// * [【最简单易懂的】动态规划](https://leetcode.cn/problems/generate-parentheses/solution/zui-jian-dan-yi-dong-de-dong-tai-gui-hua-bu-lun-da/150727)
+    ///
+    /// ### Submissions
+    ///
+    /// date=20220526, mem=2.2, mem_beats=51, runtime=0, runtime_beats=100
     pub struct Solution;
 
     impl Solution {
         pub fn generate_parenthesis(n: i32) -> Vec<String> {
-            todo!()
+            let n = n as usize;
+            let mut dp = vec![vec![String::new()]];
+
+            for i in 1..n + 1 {
+                let mut valid_pars = vec![];
+                for p in 0..i {
+                    let lefts = &dp[p];
+                    let rights = &dp[i - p - 1];
+                    for left_par in lefts {
+                        for right_par in rights {
+                            valid_pars.push(format!("({}){}", left_par, right_par))
+                        }
+                    }
+                }
+                dp.push(valid_pars);
+            }
+
+            dp.pop().unwrap()
         }
     }
 }
@@ -253,34 +287,22 @@ mod tests {
     fn basics() {
         test(solution_dfs::Solution::generate_parenthesis);
         test(solution_bfs::Solution::generate_parenthesis);
+        test(solution_dp::Solution::generate_parenthesis);
     }
 
     fn test<F: Fn(i32) -> Vec<String>>(func: F) {
-        assert!(is_equals(
-            vec![
-                "((()))".to_string(),
-                "(()())".to_string(),
-                "(())()".to_string(),
-                "()(())".to_string(),
-                "()()()".to_string()
-            ],
-            func(3),
-        ))
-    }
-
-    /// 如果a与b长度一样且内容一样无序，则返回true
-    fn is_equals(a: Vec<String>, b: Vec<String>) -> bool {
-        if a.len() != b.len() {
-            false
-        } else {
-            let mut set = std::collections::HashSet::new();
-            a.into_iter().for_each(|s| {
-                set.insert(s);
-            });
-            b.iter().for_each(|s| {
-                set.remove(s);
-            });
-            set.is_empty()
+        fn arr<const M: usize>(a: [&str; M]) -> Vec<String> {
+            a.into_iter().map(ToOwned::to_owned).collect()
         }
+        let equals = |a: &[String], b: &[String]| {
+            use std::collections::HashSet;
+            a.iter().collect::<HashSet<_>>() == b.iter().collect::<HashSet<_>>()
+        };
+
+        assert!(equals(&arr(["()"]), &func(1)));
+        assert!(equals(
+            &arr(["((()))", "(()())", "(())()", "()(())", "()()()"]),
+            &func(3),
+        ))
     }
 }
