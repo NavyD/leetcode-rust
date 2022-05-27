@@ -151,3 +151,4 @@ pub mod word_search_ii;
 pub mod number_of_provinces;
 
 pub mod surrounded_regions;
+pub mod sudoku_solver;
