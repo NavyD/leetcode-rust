@@ -19,6 +19,8 @@ pub mod solution_backtracking {
     /// date=20220409, mem=2.2, mem_beats=100, runtime=656, runtime_beats=10
     ///
     /// date=20220511, mem=2.1, mem_beats=100, runtime=924, runtime_beats=20
+    ///
+    /// date=20220528, mem=2.1, mem_beats=88, runtime=964, runtime_beats=11
     pub struct Solution;
 
     impl Solution {
@@ -92,23 +94,18 @@ pub mod solution_trie {
     /// date=20220413, mem=3.7, mem_beats=66, runtime=96, runtime_beats=83
     ///
     /// date=20220511, mem=3.9, mem_beats=20, runtime=152, runtime_beats=40
+    ///
+    /// date=20220528, mem=3.7, mem_beats=33, runtime=124, runtime_beats=55
     pub struct Solution;
 
     impl Solution {
         pub fn find_words(mut board: Vec<Vec<char>>, words: Vec<String>) -> Vec<String> {
             use std::{cell::RefCell, rc::Rc};
 
+            #[derive(Clone, Default)]
             struct Node {
                 word: Option<String>,
-                chidren: Vec<Option<Rc<RefCell<Node>>>>,
-            }
-            impl Default for Node {
-                fn default() -> Self {
-                    Self {
-                        word: None,
-                        chidren: vec![None; 26],
-                    }
-                }
+                children: [Option<Rc<RefCell<Node>>>; 26],
             }
 
             #[inline(always)]
@@ -121,7 +118,7 @@ pub mod solution_trie {
                 for word in words {
                     let mut node = root.clone();
                     for c in word.chars() {
-                        let child = node.borrow_mut().chidren[index(c)]
+                        let child = node.borrow_mut().children[index(c)]
                             .get_or_insert_with(Default::default)
                             .clone();
                         node = child;
@@ -144,28 +141,28 @@ pub mod solution_trie {
                     return;
                 }
 
-                let child = if let Some(child) = root.borrow().chidren[index(cur)].clone() {
+                let root = if let Some(child) = root.borrow().children[index(cur)].clone() {
                     child
                 } else {
                     return;
                 };
 
-                if let Some(word) = child.borrow_mut().word.take() {
+                if let Some(word) = root.borrow_mut().word.take() {
                     res.push(word);
                 }
                 board[i][j] = MARK;
 
                 if i > 0 {
-                    backtrack(board, i - 1, j, child.clone(), res);
+                    backtrack(board, i - 1, j, root.clone(), res);
                 }
                 if j > 0 {
-                    backtrack(board, i, j - 1, child.clone(), res);
+                    backtrack(board, i, j - 1, root.clone(), res);
                 }
                 if i < board.len() - 1 {
-                    backtrack(board, i + 1, j, child.clone(), res);
+                    backtrack(board, i + 1, j, root.clone(), res);
                 }
                 if j < board[0].len() - 1 {
-                    backtrack(board, i, j + 1, child, res);
+                    backtrack(board, i, j + 1, root, res);
                 }
 
                 board[i][j] = cur;
@@ -195,41 +192,46 @@ mod tests {
 
     fn test<F: Fn(Vec<Vec<char>>, Vec<String>) -> Vec<String>>(f: F) {
         use std::collections::HashSet;
+        fn two_arr<const M: usize, const N: usize>(a: [[&str; N]; M]) -> Vec<Vec<char>> {
+            a.into_iter()
+                .map(|a| {
+                    a.into_iter()
+                        .map(|s| s.chars().next().unwrap())
+                        .collect::<Vec<_>>()
+                })
+                .collect()
+        }
+        fn one_arr<const N: usize>(a: [&str; N]) -> Vec<String> {
+            a.into_iter().map(ToOwned::to_owned).collect()
+        }
 
         let res = f(
-            vec![
-                vec!['o', 'a', 'a', 'n'],
-                vec!['e', 't', 'a', 'e'],
-                vec!['i', 'h', 'k', 'r'],
-                vec!['i', 'f', 'l', 'v'],
-            ],
-            vec![
-                "oath".to_string(),
-                "pea".to_string(),
-                "eat".to_string(),
-                "rain".to_string(),
-            ],
+            two_arr([
+                ["o", "a", "a", "n"],
+                ["e", "t", "a", "e"],
+                ["i", "h", "k", "r"],
+                ["i", "f", "l", "v"],
+            ]),
+            one_arr(["oath", "pea", "eat", "rain"]),
         );
-        let expected = vec!["eat".to_string(), "oath".to_string()];
+        let expected = one_arr(["eat", "oath"]);
         assert_eq!(res.len(), expected.len(),);
         assert_eq!(
             res.into_iter().collect::<HashSet<_>>(),
             expected.into_iter().collect()
         );
 
-        let res = f(
-            vec![vec!['a', 'b'], vec!['c', 'd']],
-            vec!["abcb".to_string()],
-        );
+        let res = f(two_arr([["a", "b"], ["c", "d"]]), one_arr(["abcb"]));
         let expected = vec![];
-        assert_eq!(res.len(), expected.len(),);
+        assert_eq!(res.len(), expected.len());
         assert_eq!(
             res.into_iter().collect::<HashSet<_>>(),
             expected.into_iter().collect()
         );
-        let res = f(vec![vec!['a', 'a']], vec!["aaa".to_string()]);
+
+        let res = f(two_arr([["a", "a"]]), one_arr(["aaa"]));
         let expected = vec![];
-        assert_eq!(res.len(), expected.len(),);
+        assert_eq!(res.len(), expected.len());
         assert_eq!(
             res.into_iter().collect::<HashSet<_>>(),
             expected.into_iter().collect()

@@ -146,9 +146,9 @@ pub mod valid_perfect_square;
 
 // trie
 pub mod implement_trie_prefix_tree;
+pub mod number_of_provinces;
 pub mod word_search;
 pub mod word_search_ii;
-pub mod number_of_provinces;
 
-pub mod surrounded_regions;
 pub mod sudoku_solver;
+pub mod surrounded_regions;

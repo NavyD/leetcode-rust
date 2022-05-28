@@ -245,14 +245,18 @@ pub mod solution_dp {
     /// `dp[i]`表示i组括号的所有有效组合
     /// `dp[i] = '(' + dp[p]的所有有效组合 + ')' + dp[q]的组合`，其中 1 + p + q = i , p从0遍历到i-1, q则相应从i-1到0
     ///
+    /// 注意：要迭代到n所以有`1..n+1`，最后取出第n个有效组合
+    ///
     /// 参考：
     ///
-    /// * [Clean Python DP Solution](https://leetcode.com/problems/generate-parentheses/discuss/10369/Clean-Python-DP-Solution)
     /// * [【最简单易懂的】动态规划](https://leetcode.cn/problems/generate-parentheses/solution/zui-jian-dan-yi-dong-de-dong-tai-gui-hua-bu-lun-da/150727)
+    /// * [Clean Python DP Solution](https://leetcode.com/problems/generate-parentheses/discuss/10369/Clean-Python-DP-Solution)
     ///
     /// ### Submissions
     ///
     /// date=20220526, mem=2.2, mem_beats=51, runtime=0, runtime_beats=100
+    ///
+    /// date=20220526, mem=2.3, mem_beats=36, runtime=0, runtime_beats=100
     pub struct Solution;
 
     impl Solution {
