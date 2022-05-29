@@ -152,3 +152,4 @@ pub mod word_search_ii;
 
 pub mod sudoku_solver;
 pub mod surrounded_regions;
+pub mod valid_sudoku;

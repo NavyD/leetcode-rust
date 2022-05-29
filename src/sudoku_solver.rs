@@ -29,6 +29,8 @@ pub mod solution_dfs {
     /// ### Submissions
     ///
     /// date=20220527, mem=2.1, mem_beats=42, runtime=0, runtime_beats=100
+    ///
+    /// date=20220529, mem=2.1, mem_beats=66, runtime=0, runtime_beats=100
     pub struct Solution;
 
     impl Solution {

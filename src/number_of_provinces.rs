@@ -15,6 +15,8 @@ pub mod solution_dfs {
     /// date=20220508, mem=2.2, mem_beats=33, runtime=0, runtime_beats=100
     ///
     /// date=20220514, mem=2.4, mem_beats=22, runtime=0, runtime_beats=100
+    ///
+    /// date=20220529, mem=2.1, mem_beats=100, runtime=0, runtime_beats=100
     pub struct Solution;
 
     impl Solution {
@@ -102,6 +104,8 @@ pub mod solution_union {
     /// date=20220508, mem=2.1, mem_beats=77, runtime=0, runtime_beats=100
     ///
     /// date=20220514, mem=2.1, mem_beats=74, runtime=0, runtime_beats=100
+    ///
+    /// date=20220529, mem=2.1, mem_beats=80, runtime=0, runtime_beats=100
     pub struct Solution;
 
     impl Solution {
@@ -163,15 +167,19 @@ mod tests {
     }
 
     fn test<F: Fn(Vec<Vec<i32>>) -> i32>(f: F) {
-        assert_eq!(f(vec![vec![1, 1, 0], vec![1, 1, 0], vec![0, 0, 1],]), 2);
-        assert_eq!(f(vec![vec![1, 0, 0], vec![0, 1, 0], vec![0, 0, 1]]), 3);
+        fn arr<const N: usize>(a: &[[i32; N]]) -> Vec<Vec<i32>> {
+            a.iter().map(|a| a.to_vec()).collect()
+        }
+
+        assert_eq!(f(arr(&[[1, 1, 0], [1, 1, 0], [0, 0, 1]])), 2);
+        assert_eq!(f(arr(&[[1, 0, 0], [0, 1, 0], [0, 0, 1]])), 3);
         assert_eq!(
-            f(vec![
-                vec![1, 0, 0, 1],
-                vec![0, 1, 1, 0],
-                vec![0, 1, 1, 1],
-                vec![1, 0, 1, 1]
-            ]),
+            f(arr(&[
+                [1, 0, 0, 1],
+                [0, 1, 1, 0],
+                [0, 1, 1, 1],
+                [1, 0, 1, 1]
+            ])),
             1
         );
     }
