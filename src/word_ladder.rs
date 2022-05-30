@@ -25,6 +25,8 @@ pub mod solution_bfs {
     /// date=20201228, mem=2.4, mem_beats=93, runtime=88, runtime_beats=21, url=https://leetcode-cn.com/submissions/detail/134406528/
     ///
     /// date=20210109, mem=2.9, mem_beats=26, runtime=104, runtime_beats=19, url=https://leetcode-cn.com/submissions/detail/137131008/
+    ///
+    /// date=20220530, mem=2.8, mem_beats=16, runtime=52, runtime_beats=32
     pub struct Solution;
 
     impl Solution {
@@ -38,6 +40,8 @@ pub mod solution_bfs {
             }
             // 要求从1开始
             let mut count = 1;
+
+            let word_len = begin_word.len();
             let (mut queue, mut visited) = (VecDeque::new(), HashSet::new());
             // 从begin_word开始
             queue.push_back(begin_word.clone());
@@ -47,30 +51,26 @@ pub mod solution_bfs {
             while !queue.is_empty() {
                 count += 1;
                 for _ in 0..queue.len() {
-                    let mut cur_word = queue
-                        .pop_front()
-                        .map(|w| w.chars().collect::<Vec<_>>())
-                        .unwrap();
-                    for i in 0..cur_word.len() {
-                        let old = cur_word[i];
-                        for letter in 'a'..='z' {
-                            cur_word[i] = letter;
-                            let next_word = cur_word.iter().collect::<String>();
-                            if word_list.contains(&next_word) {
-                                // 找到结果
-                                if next_word == end_word {
+                    let mut word = queue.pop_front().map(Into::<Vec<u8>>::into).unwrap();
+                    for i in 0..word_len {
+                        let old = word[i];
+                        for c in b'a'..=b'z' {
+                            word[i] = c;
+                            let new_word = unsafe { std::str::from_utf8_unchecked(&word) };
+                            if word_list.contains(new_word) {
+                                if new_word == end_word {
                                     return count;
                                 }
-                                // 如果visited没有包含next_word时insert并添加到queue
-                                if visited.insert(next_word.clone()) {
-                                    queue.push_back(next_word);
+                                if visited.insert(new_word.to_string()) {
+                                    queue.push_back(new_word.to_string());
                                 }
                             }
                         }
-                        cur_word[i] = old;
+                        word[i] = old;
                     }
                 }
             }
+
             NOT_FOUND
         }
     }
@@ -236,28 +236,25 @@ mod tests {
 
     #[test]
     fn basic() {
-        // test(solution_bfs::Solution::ladder_length);
         test(solution_bfs_two_end::Solution::ladder_length);
         test(solution_bfs::Solution::ladder_length);
+        test(ladder_length)
     }
 
     fn test<F: Fn(String, String, Vec<String>) -> i32>(func: F) {
+        fn arr<const N: usize>(a: [&str; N]) -> Vec<String> {
+            a.into_iter().map(ToString::to_string).collect()
+        }
+
         assert_eq!(
-            func(
-                "hot".to_string(),
-                "dog".to_string(),
-                ["hot", "dog"].iter().map(|e| e.to_string()).collect()
-            ),
+            func("hot".to_string(), "dog".to_string(), arr(["hot", "dog"])),
             0
         );
         assert_eq!(
             func(
                 "hit".to_string(),
                 "cog".to_string(),
-                ["hot", "dot", "dog", "lot", "log", "cog"]
-                    .iter()
-                    .map(|e| e.to_string())
-                    .collect()
+                arr(["hot", "dot", "dog", "lot", "log", "cog"])
             ),
             5
         );
@@ -265,10 +262,7 @@ mod tests {
             func(
                 "hit".to_string(),
                 "cog".to_string(),
-                ["hot", "dot", "dog", "lot", "log"]
-                    .iter()
-                    .map(|e| e.to_string())
-                    .collect()
+                arr(["hot", "dot", "dog", "lot", "log"])
             ),
             0
         );
@@ -276,10 +270,7 @@ mod tests {
             func(
                 "hit".to_string(),
                 "cog".to_string(),
-                ["hot", "dot", "tog", "cog"]
-                    .iter()
-                    .map(|e| e.to_string())
-                    .collect()
+                arr(["hot", "dot", "tog", "cog"])
             ),
             0
         );
@@ -287,7 +278,7 @@ mod tests {
             func(
                 "qa".to_string(),
                 "sq".to_string(),
-                [
+                arr([
                     "si", "go", "se", "cm", "so", "ph", "mt", "db", "mb", "sb", "kr", "ln", "tm",
                     "le", "av", "sm", "ar", "ci", "ca", "br", "ti", "ba", "to", "ra", "fa", "yo",
                     "ow", "sn", "ya", "cr", "po", "fe", "ho", "ma", "re", "or", "rn", "au", "ur",
@@ -296,12 +287,52 @@ mod tests {
                     "pi", "os", "uh", "wm", "an", "me", "mo", "na", "la", "st", "er", "sc", "ne",
                     "mn", "mi", "am", "ex", "pt", "io", "be", "fm", "ta", "tb", "ni", "mr", "pa",
                     "he", "lr", "sq", "ye"
-                ]
-                .iter()
-                .map(|e| e.to_string())
-                .collect()
+                ])
             ),
             5
         )
+    }
+
+    pub fn ladder_length(begin_word: String, end_word: String, word_list: Vec<String>) -> i32 {
+        use std::collections::{HashSet, VecDeque};
+        const NOT_FOUND: i32 = 0;
+
+        let word_list = word_list.into_iter().collect::<HashSet<_>>();
+        if word_list.is_empty() || !word_list.contains(&end_word) {
+            return NOT_FOUND;
+        }
+
+        let mut count = 1;
+        let word_len = begin_word.len();
+        let mut queue = VecDeque::new();
+        queue.push_back(begin_word.clone());
+
+        let mut visited = HashSet::new();
+        visited.insert(begin_word);
+
+        while !queue.is_empty() {
+            count += 1;
+            for _ in 0..queue.len() {
+                let mut word = queue.pop_front().map(Into::<Vec<u8>>::into).unwrap();
+                for i in 0..word_len {
+                    let old = word[i];
+                    for c in b'a'..=b'z' {
+                        word[i] = c;
+                        let new_word = unsafe { std::str::from_utf8_unchecked(&word) };
+                        if word_list.contains(new_word) {
+                            if new_word == end_word {
+                                return count;
+                            }
+                            if visited.insert(new_word.to_string()) {
+                                queue.push_back(new_word.to_string());
+                            }
+                        }
+                    }
+                    word[i] = old;
+                }
+            }
+        }
+
+        NOT_FOUND
     }
 }
