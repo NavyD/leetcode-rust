@@ -116,6 +116,8 @@ pub mod solution_bfs_two_end {
     /// date=20201228, mem=2.5, mem_beats=66, runtime=12, runtime_beats=75, url=https://leetcode-cn.com/submissions/detail/134409400/
     ///
     /// date=20210109, mem=2.5, mem_beats=69, runtime=12, runtime_beats=71, url=https://leetcode-cn.com/submissions/detail/137149168/
+    ///
+    /// date=20220602, mem=2.7, mem_beats=36, runtime=8, runtime_beats=96
     pub struct Solution;
 
     impl Solution {
@@ -128,44 +130,44 @@ pub mod solution_bfs_two_end {
                 return NOT_FOUND;
             }
 
-            let (mut begin_level_visited, mut end_level_visited) = (HashSet::new(), HashSet::new());
-            let mut global_visited = HashSet::new();
-            // 左边和右边扩散
-            begin_level_visited.insert(begin_word.clone());
-            end_level_visited.insert(end_word.clone());
-            // 避免重复一次 不加也没事，重复的会被global_visited过滤 不会添加到next_level
-            global_visited.insert(begin_word);
-            global_visited.insert(end_word);
-            // 计数从1开始
-            let mut count = 1;
+            let word_len = begin_word.len();
+            let (mut begin_visited, mut end_visited) = (HashSet::new(), HashSet::new());
+            begin_visited.insert(begin_word.clone());
+            end_visited.insert(end_word.clone());
 
-            while !begin_level_visited.is_empty() {
+            let mut all_visited = HashSet::new();
+            all_visited.insert(begin_word);
+            all_visited.insert(end_word);
+
+            let mut count = 1;
+            while !begin_visited.is_empty() {
                 count += 1;
-                if begin_level_visited.len() > end_level_visited.len() {
-                    std::mem::swap(&mut begin_level_visited, &mut end_level_visited);
+
+                if begin_visited.len() > end_visited.len() {
+                    std::mem::swap(&mut begin_visited, &mut end_visited);
                 }
-                let mut next_level_visited = HashSet::new();
-                for cur_word in begin_level_visited {
-                    let mut cur_word = cur_word.chars().collect::<Vec<_>>();
-                    for i in 0..cur_word.len() {
-                        let old = cur_word[i];
-                        for letter in 'a'..='z' {
-                            cur_word[i] = letter;
-                            let next_word = cur_word.iter().collect::<String>();
-                            if word_list.contains(&next_word) {
-                                if end_level_visited.contains(&next_word) {
+                let mut next_visited = HashSet::new();
+
+                for mut word in begin_visited.into_iter().map(Into::<Vec<u8>>::into) {
+                    for i in 0..word_len {
+                        let old = word[i];
+                        for c in b'a'..=b'z' {
+                            word[i] = c;
+                            let new_word = unsafe { std::str::from_utf8_unchecked(&word) };
+                            if word_list.contains(new_word) {
+                                if end_visited.contains(new_word) {
                                     return count;
                                 }
-                                // global_visited不存在时添加 next_word
-                                if global_visited.insert(next_word.clone()) {
-                                    next_level_visited.insert(next_word);
+                                let new_word = new_word.to_owned();
+                                if all_visited.insert(new_word.to_owned()) {
+                                    next_visited.insert(new_word);
                                 }
                             }
                         }
-                        cur_word[i] = old;
+                        word[i] = old;
                     }
                 }
-                begin_level_visited = next_level_visited;
+                begin_visited = next_visited;
             }
             NOT_FOUND
         }
@@ -238,7 +240,6 @@ mod tests {
     fn basic() {
         test(solution_bfs_two_end::Solution::ladder_length);
         test(solution_bfs::Solution::ladder_length);
-        test(ladder_length)
     }
 
     fn test<F: Fn(String, String, Vec<String>) -> i32>(func: F) {
@@ -291,48 +292,5 @@ mod tests {
             ),
             5
         )
-    }
-
-    pub fn ladder_length(begin_word: String, end_word: String, word_list: Vec<String>) -> i32 {
-        use std::collections::{HashSet, VecDeque};
-        const NOT_FOUND: i32 = 0;
-
-        let word_list = word_list.into_iter().collect::<HashSet<_>>();
-        if word_list.is_empty() || !word_list.contains(&end_word) {
-            return NOT_FOUND;
-        }
-
-        let mut count = 1;
-        let word_len = begin_word.len();
-        let mut queue = VecDeque::new();
-        queue.push_back(begin_word.clone());
-
-        let mut visited = HashSet::new();
-        visited.insert(begin_word);
-
-        while !queue.is_empty() {
-            count += 1;
-            for _ in 0..queue.len() {
-                let mut word = queue.pop_front().map(Into::<Vec<u8>>::into).unwrap();
-                for i in 0..word_len {
-                    let old = word[i];
-                    for c in b'a'..=b'z' {
-                        word[i] = c;
-                        let new_word = unsafe { std::str::from_utf8_unchecked(&word) };
-                        if word_list.contains(new_word) {
-                            if new_word == end_word {
-                                return count;
-                            }
-                            if visited.insert(new_word.to_string()) {
-                                queue.push_back(new_word.to_string());
-                            }
-                        }
-                    }
-                    word[i] = old;
-                }
-            }
-        }
-
-        NOT_FOUND
     }
 }
