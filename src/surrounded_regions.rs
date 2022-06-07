@@ -9,6 +9,8 @@ pub mod solution_dfs {
     /// ### Submissions
     ///
     /// date=20220520, mem=4.7, mem_beats=64, runtime=8, runtime_beats=76
+    ///
+    /// date=20220607, mem=4.6, mem_beats=100, runtime=4, runtime_beats=100
     pub struct Solution;
 
     impl Solution {
@@ -33,7 +35,6 @@ pub mod solution_dfs {
                 dfs(board, i, j + 1);
             }
 
-            // let board = &board;
             let (m, n) = (board.len(), board[0].len());
             for i in 0..m {
                 dfs(board, i, 0);
@@ -87,6 +88,8 @@ pub mod solution_union {
     /// ### Submissions
     ///
     /// date=20220525, mem=4.7, mem_beats=68, runtime=8, runtime_beats=78
+    ///
+    /// date=20220607, mem=4.7, mem_beats=30, runtime=8, runtime_beats=86
     pub struct Solution;
 
     impl Solution {
@@ -148,13 +151,12 @@ pub mod solution_union {
                         let p = uf.index(i, j);
                         if i == 0 || j == 0 || i == rows - 1 || j == cols - 1 {
                             uf.union(p, dummy);
-                        } else {
-                            if i > 0 && board[i - 1][j] == O {
-                                uf.union(p, uf.index(i - 1, j));
-                            }
-                            if j > 0 && board[i][j - 1] == O {
-                                uf.union(p, uf.index(i, j - 1));
-                            }
+                        }
+                        if i > 0 && board[i - 1][j] == O {
+                            uf.union(p, uf.index(i - 1, j));
+                        }
+                        if j > 0 && board[i][j - 1] == O {
+                            uf.union(p, uf.index(i, j - 1));
                         }
                     }
                 }

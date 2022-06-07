@@ -8,6 +8,8 @@ pub mod solution_bfs {
     /// ### Submissions
     ///
     /// date=20220602, mem=2.1, mem_beats=85, runtime=8, runtime_beats=85
+    ///
+    /// date=20220607, mem=2.2, mem_beats=66, runtime=12, runtime_beats=41
     pub struct Solution;
 
     impl Solution {
