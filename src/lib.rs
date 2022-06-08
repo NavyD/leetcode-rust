@@ -151,6 +151,7 @@ pub mod word_search;
 pub mod word_search_ii;
 
 pub mod shortest_path_in_binary_matrix;
+pub mod sliding_puzzle;
 pub mod sudoku_solver;
 pub mod surrounded_regions;
 pub mod valid_sudoku;
