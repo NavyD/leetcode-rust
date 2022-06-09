@@ -9,12 +9,14 @@ pub mod solution_bfs {
     /// ### Submissions
     ///
     /// date=20220608, mem=2.1, mem_beats=80, runtime=4, runtime_beats=40
+    ///
+    /// date=20220609, mem=2.2, mem_beats=20, runtime=0, runtime_beats=100
     pub struct Solution;
 
     impl Solution {
         pub fn sliding_puzzle(board: Vec<Vec<i32>>) -> i32 {
-            const EMPTY: u8 = b'0';
-            const END: [u8; 6] = [1 + EMPTY, 2 + EMPTY, 3 + EMPTY, 4 + EMPTY, 5 + EMPTY, EMPTY];
+            const ZERO: u8 = b'0';
+            const END: [u8; 6] = [1 + ZERO, 2 + ZERO, 3 + ZERO, 4 + ZERO, 5 + ZERO, ZERO];
 
             let neighbors: [Vec<usize>; 6] = [
                 vec![1, 3],
@@ -24,49 +26,45 @@ pub mod solution_bfs {
                 vec![1, 3, 5],
                 vec![2, 4],
             ];
-            // 1. convert to string
-            let init = std::rc::Rc::new(
-                board
-                    .into_iter()
-                    .flatten()
-                    .map(|e| e as u8 + EMPTY)
-                    .collect::<Vec<_>>(),
-            );
-            if *init == END {
+
+            let init = board
+                .into_iter()
+                .flatten()
+                .map(|e| e as u8 + ZERO)
+                .collect::<Vec<_>>();
+            if init == END {
                 return 0;
             }
-            // 2. get nexts for 0
-            let swap_statuses = |board: &[u8]| {
-                let i = board.iter().position(|e| *e == EMPTY).unwrap();
+
+            let swap_statuses = |status: &[u8]| {
+                let i = status.iter().position(|e| *e == ZERO).unwrap();
                 neighbors[i]
                     .iter()
-                    .copied()
                     .map(|j| {
-                        let mut board = board.to_owned();
-                        board.swap(i, j);
-                        std::rc::Rc::new(board)
+                        let mut next = status.to_vec();
+                        next.swap(i, *j);
+                        next
                     })
                     .collect::<Vec<_>>()
             };
 
-            // 3. dfs
             let mut queue = std::collections::VecDeque::new();
-            queue.push_back(init.clone());
             let mut visited = std::collections::HashSet::new();
+            queue.push_back(init.clone());
             visited.insert(init);
 
             let mut steps = 0;
             while !queue.is_empty() {
                 steps += 1;
                 for _ in 0..queue.len() {
-                    let s = queue.pop_front().unwrap();
-                    for next in swap_statuses(&s) {
+                    let status = queue.pop_front().unwrap();
+                    for next in swap_statuses(&status) {
                         if !visited.contains(&next) {
-                            if *next == END {
+                            if next == END {
                                 return steps;
                             }
-                            visited.insert(next.clone());
-                            queue.push_back(next);
+                            queue.push_back(next.clone());
+                            visited.insert(next);
                         }
                     }
                 }

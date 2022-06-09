@@ -155,3 +155,5 @@ pub mod sliding_puzzle;
 pub mod sudoku_solver;
 pub mod surrounded_regions;
 pub mod valid_sudoku;
+
+pub mod number_of_1_bits;
