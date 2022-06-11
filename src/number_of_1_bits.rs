@@ -2,6 +2,17 @@
 pub mod solution_bit {
     /// # 思路
     ///
+    /// 把 n 的二进制位中的最低位的 1 变为 0 之后的结果。
+    ///
+    /// ```no
+    /// 1.
+    /// n   = 0b101
+    /// n-1 = 0b100     &=>0b100
+    /// 2.
+    /// n   = 0b100
+    /// n-1 = 0b011     &=>0b000
+    /// ```
+    ///
     /// [u32::count_ones][u32::count_ones]
     ///
     /// 参考：
@@ -11,6 +22,8 @@ pub mod solution_bit {
     /// ### Submissions
     ///
     /// date=20220609, mem=2, mem_beats=76, runtime=0, runtime_beats=100
+    ///
+    /// date=20220610, mem=2.2, mem_beats=16, runtime=0, runtime_beats=100
     pub struct Solution;
 
     impl Solution {
