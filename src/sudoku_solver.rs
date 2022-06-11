@@ -31,6 +31,8 @@ pub mod solution_dfs {
     /// date=20220527, mem=2.1, mem_beats=42, runtime=0, runtime_beats=100
     ///
     /// date=20220529, mem=2.1, mem_beats=66, runtime=0, runtime_beats=100
+    ///
+    /// date=20220611, mem=2.1, mem_beats=46, runtime=0, runtime_beats=100
     pub struct Solution;
 
     impl Solution {
@@ -38,19 +40,19 @@ pub mod solution_dfs {
             const EMPTY: char = '.';
             const N: usize = 9;
 
-            fn validate(
+            fn backtrack(
                 board: &mut [Vec<char>],
                 count: usize,
                 used_rows: &mut [[bool; N]],
                 used_cols: &mut [[bool; N]],
                 used_areas: &mut [[bool; N]],
             ) -> bool {
-                if count >= 81 {
+                if count >= N * N {
                     return true;
                 }
                 let (i, j) = (count / N, count % N);
                 if board[i][j] != EMPTY {
-                    return validate(board, count + 1, used_rows, used_cols, used_areas);
+                    return backtrack(board, count + 1, used_rows, used_cols, used_areas);
                 }
 
                 let k = (i / 3) * 3 + j / 3;
@@ -61,7 +63,7 @@ pub mod solution_dfs {
                         used_cols[j][num] = true;
                         used_areas[k][num] = true;
 
-                        if validate(board, count + 1, used_rows, used_cols, used_areas) {
+                        if backtrack(board, count + 1, used_rows, used_cols, used_areas) {
                             return true;
                         }
 
@@ -81,9 +83,8 @@ pub mod solution_dfs {
 
             for i in 0..N {
                 for j in 0..N {
-                    let c = board[i][j];
-                    if c != EMPTY {
-                        let num = c as usize - '1' as usize;
+                    if board[i][j] != EMPTY {
+                        let num = board[i][j] as usize - '1' as usize;
                         let k = (i / 3) * 3 + j / 3;
 
                         used_rows[i][num] = true;
@@ -93,7 +94,7 @@ pub mod solution_dfs {
                 }
             }
 
-            validate(board, 0, &mut used_rows, &mut used_cols, &mut used_areas);
+            backtrack(board, 0, &mut used_rows, &mut used_cols, &mut used_areas);
         }
     }
 }
@@ -108,17 +109,17 @@ mod tests {
     }
 
     fn test(f: impl Fn(&mut Vec<Vec<char>>)) {
-        fn arr<const N: usize>(a: [[&str; N]; N]) -> Vec<Vec<char>> {
-            a.into_iter()
+        fn arr<const N: usize>(a: &[[&str; N]]) -> Vec<Vec<char>> {
+            a.iter()
                 .map(|a| {
-                    a.into_iter()
+                    a.iter()
                         .map(|s| s.chars().next().unwrap())
                         .collect::<Vec<_>>()
                 })
                 .collect()
         }
 
-        let mut input = arr([
+        let mut input = arr(&[
             ["5", "3", ".", ".", "7", ".", ".", ".", "."],
             ["6", ".", ".", "1", "9", "5", ".", ".", "."],
             [".", "9", "8", ".", ".", ".", ".", "6", "."],
@@ -131,7 +132,7 @@ mod tests {
         ]);
         f(&mut input);
         assert_eq!(
-            arr([
+            arr(&[
                 ["5", "3", "4", "6", "7", "8", "9", "1", "2"],
                 ["6", "7", "2", "1", "9", "5", "3", "4", "8"],
                 ["1", "9", "8", "3", "4", "2", "5", "6", "7"],

@@ -157,3 +157,4 @@ pub mod surrounded_regions;
 pub mod valid_sudoku;
 
 pub mod number_of_1_bits;
+pub mod power_of_two;
