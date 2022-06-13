@@ -42,54 +42,57 @@ pub mod solution_backtracking {
     /// date=20201220, mem=2.3, mem_beats=50, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/132332061/
     ///
     /// date=20201228, mem=2.2, mem_beats=92, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/134422730/
+    ///
+    /// date=20220613, mem=2.4, mem_beats=25, runtime=0, runtime_beats=100
     pub struct Solution;
 
     impl Solution {
         pub fn solve_n_queens(n: i32) -> Vec<Vec<String>> {
             const QUEEN: char = 'Q';
             const EMPTY: char = '.';
-            fn _backtrack(
+
+            fn backtrack(
                 n: usize,
                 row: usize,
                 cols: &mut Vec<bool>,
-                left_diagonals: &mut Vec<bool>,
-                right_diagonals: &mut Vec<bool>,
+                front_diagonals: &mut Vec<bool>,
+                back_diagonals: &mut Vec<bool>,
                 path: &mut Vec<Vec<char>>,
                 res: &mut Vec<Vec<String>>,
             ) {
                 if row == n {
-                    res.push(
-                        path.clone()
-                            .into_iter()
-                            .map(|e| e.into_iter().collect())
-                            .collect(),
-                    );
+                    let solution = path
+                        .iter()
+                        .map(|e| e.iter().collect())
+                        .collect::<Vec<String>>();
+                    res.push(solution);
                     return;
                 }
 
                 for col in 0..n {
                     // 对角线对应下标
-                    let (left_idx, right_idx) = (col + row, n - 1 + row - col);
+                    let (front, back) = (col + row, n - 1 + row - col);
                     // 不能攻击
-                    if !cols[col] && !left_diagonals[left_idx] && !right_diagonals[right_idx] {
-                        // used
+                    if !cols[col] && !front_diagonals[front] && !back_diagonals[back] {
                         cols[col] = true;
-                        left_diagonals[left_idx] = true;
-                        right_diagonals[right_idx] = true;
+                        front_diagonals[front] = true;
+                        back_diagonals[back] = true;
                         path[row][col] = QUEEN;
-                        // next
-                        _backtrack(n, row + 1, cols, left_diagonals, right_diagonals, path, res);
-                        // unused
+
+                        backtrack(n, row + 1, cols, front_diagonals, back_diagonals, path, res);
+
                         cols[col] = false;
-                        left_diagonals[left_idx] = false;
-                        right_diagonals[right_idx] = false;
+                        front_diagonals[front] = false;
+                        back_diagonals[back] = false;
                         path[row][col] = EMPTY;
                     }
                 }
             }
+
             let n = n as usize;
             let mut res = vec![];
-            _backtrack(
+
+            backtrack(
                 n,
                 0,
                 // 默认false表示对应位置没有占用 不能攻击到
@@ -100,6 +103,7 @@ pub mod solution_backtracking {
                 &mut vec![vec![EMPTY; n]; n],
                 &mut res,
             );
+
             res
         }
     }
@@ -192,17 +196,88 @@ mod tests {
     fn basic() {
         test(solution_backtracking::Solution::solve_n_queens);
         test(solution_backtracking_each_position::Solution::solve_n_queens);
+        test(solve_n_queens)
     }
 
     fn test<F: Fn(i32) -> Vec<Vec<String>>>(func: F) {
-        assert_eq!(func(1), vec![vec!["Q".to_string()]]);
-        let a = [
-            [".Q..", "...Q", "Q...", "..Q."],
-            ["..Q.", "Q...", "...Q", ".Q.."],
-        ]
-        .iter()
-        .map(|a| a.iter().map(|e| e.to_string()).collect::<Vec<_>>())
-        .collect::<Vec<_>>();
-        assert_eq!(func(4), a);
+        fn arr<const N: usize>(a: &[[&str; N]]) -> Vec<Vec<String>> {
+            a.iter()
+                .map(|a| a.iter().map(ToString::to_string).collect::<Vec<_>>())
+                .collect::<Vec<_>>()
+        }
+
+        assert_eq!(func(1), arr(&[["Q"]]));
+        assert_eq!(
+            func(4),
+            arr(&[
+                [".Q..", "...Q", "Q...", "..Q."],
+                ["..Q.", "Q...", "...Q", ".Q.."],
+            ])
+        );
+    }
+
+    pub fn solve_n_queens(n: i32) -> Vec<Vec<String>> {
+        const QUEEN: char = 'Q';
+        const EMPTY: char = '.';
+
+        fn backtrack(
+            n: usize,
+            row: usize,
+            cols: &mut [bool],
+            forward_diagonals: &mut [bool],
+            back_diagonals: &mut [bool],
+            path: &mut Vec<Vec<char>>,
+            res: &mut Vec<Vec<String>>,
+        ) {
+            if n == row {
+                let s = path
+                    .clone()
+                    .into_iter()
+                    .map(|s| s.into_iter().collect::<String>())
+                    .collect::<Vec<_>>();
+                res.push(s);
+                return;
+            }
+
+            for col in 0..n {
+                let (left, right) = (row + col, n - 1 + col - row);
+                if !cols[col] && !forward_diagonals[left] && !back_diagonals[right] {
+                    cols[col] = true;
+                    forward_diagonals[left] = true;
+                    back_diagonals[right] = true;
+                    path[row][col] = QUEEN;
+
+                    backtrack(
+                        n,
+                        row + 1,
+                        cols,
+                        forward_diagonals,
+                        back_diagonals,
+                        path,
+                        res,
+                    );
+
+                    path[row][col] = EMPTY;
+                    cols[col] = false;
+                    forward_diagonals[left] = false;
+                    back_diagonals[right] = false;
+                }
+            }
+        }
+
+        let n = n as usize;
+        let mut res = vec![];
+
+        backtrack(
+            n,
+            0,
+            &mut vec![false; n],
+            &mut vec![false; 2 * n - 1],
+            &mut vec![false; 2 * n - 1],
+            &mut vec![vec![EMPTY; n]; n],
+            &mut res,
+        );
+
+        res
     }
 }

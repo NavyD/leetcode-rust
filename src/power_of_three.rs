@@ -4,6 +4,8 @@ pub mod solution_loop {
     /// ### Submission
     ///
     /// date=20220612, mem=2, mem_beats=57, runtime=4, runtime_beats=93
+    ///
+    /// date=20220613, mem=2.1, mem_beats=44, runtime=16, runtime_beats=27
     pub struct Solution;
 
     impl Solution {
@@ -22,14 +24,20 @@ pub mod solution_loop {
 pub mod solution_divisor {
     /// # 思路
     ///
+    /// 在题目给定的 32 位有符号整数的范围内，最大的 3 的幂为 3^19=1162261467。
+    /// 我们只需要判断 n 是否是 3^19的约数即可
+    ///
     /// ### Submission
     ///
     /// date=20220612, mem=1.9, mem_beats=91, runtime=8, runtime_beats=81
+    ///
+    /// date=20220613, mem=2, mem_beats=67, runtime=4, runtime_beats=93
     pub struct Solution;
 
     impl Solution {
         pub fn is_power_of_three(n: i32) -> bool {
-            n > 0 && 1162261467 % n == 0
+            static MAX_DIV: i32 = 3_i32.pow(19);
+            n > 0 && MAX_DIV % n == 0
         }
     }
 }

@@ -10,6 +10,8 @@ pub mod solution_loop {
     /// ### Submissions
     ///
     /// date=20220612, mem=2.3, mem_beats=6, runtime=0, runtime_beats=100
+    ///
+    /// date=20220613, mem=2, mem_beats=93, runtime=0, runtime_beats=100
     pub struct Solution;
 
     impl Solution {
@@ -49,6 +51,8 @@ pub mod solution_bit {
     /// ### Submissions
     ///
     /// date=20220612, mem=2.1, mem_beats=13, runtime=0, runtime_beats=100
+    ///
+    /// date=20220613, mem=2.1, mem_beats=17, runtime=0, runtime_beats=100
     #[embed_doc_image::embed_doc_image("a", "docs/images/2022-06-12-09-32-55.png")]
     pub struct Solution;
 
