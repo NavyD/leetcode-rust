@@ -187,6 +187,65 @@ pub mod solution_backtracking_each_position {
     }
 }
 
+pub mod solution_bit {
+    pub struct Solution;
+
+    impl Solution {
+        pub fn solve_n_queens(n: i32) -> Vec<Vec<String>> {
+            const QUEEN: char = 'Q';
+            const EMPTY: char = '.';
+
+            fn backtrack(
+                n: usize,
+                row: usize,
+                queens: &mut [i16],
+                cols: i16,
+                front_diagonals: i16,
+                back_diagonals: i16,
+                solutions: &mut Vec<Vec<String>>,
+            ) {
+                if n == row {
+                    let solution = (0..n)
+                        .map(|i| {
+                            let mut board_row = vec![EMPTY; n];
+                            board_row[queens[i] as usize] = QUEEN;
+                            board_row.into_iter().collect()
+                        })
+                        .collect::<Vec<String>>();
+
+                    solutions.push(solution);
+                    return;
+                }
+
+                let mut available_positions =
+                    ((1 << n) - 1) & !(cols | front_diagonals | back_diagonals);
+                while available_positions != 0 {
+                    let position = available_positions & -available_positions;
+                    //
+                    available_positions = available_positions & (available_positions - 1);
+                    let col = (position - 1).count_ones() as i16;
+                    queens[row] = col;
+                    backtrack(
+                        n,
+                        row + 1,
+                        queens,
+                        cols | position,
+                        (front_diagonals | position) >> 1,
+                        (back_diagonals | position) << 1,
+                        solutions,
+                    );
+                    queens[row] = -1;
+                }
+            }
+
+            let n = n as usize;
+            let mut solutions = vec![];
+            backtrack(n, 0, &mut vec![-1; n], 0, 0, 0, &mut solutions);
+            solutions
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -196,7 +255,7 @@ mod tests {
     fn basic() {
         test(solution_backtracking::Solution::solve_n_queens);
         test(solution_backtracking_each_position::Solution::solve_n_queens);
-        test(solve_n_queens)
+        test(solution_bit::Solution::solve_n_queens);
     }
 
     fn test<F: Fn(i32) -> Vec<Vec<String>>>(func: F) {
@@ -214,70 +273,5 @@ mod tests {
                 ["..Q.", "Q...", "...Q", ".Q.."],
             ])
         );
-    }
-
-    pub fn solve_n_queens(n: i32) -> Vec<Vec<String>> {
-        const QUEEN: char = 'Q';
-        const EMPTY: char = '.';
-
-        fn backtrack(
-            n: usize,
-            row: usize,
-            cols: &mut [bool],
-            forward_diagonals: &mut [bool],
-            back_diagonals: &mut [bool],
-            path: &mut Vec<Vec<char>>,
-            res: &mut Vec<Vec<String>>,
-        ) {
-            if n == row {
-                let s = path
-                    .clone()
-                    .into_iter()
-                    .map(|s| s.into_iter().collect::<String>())
-                    .collect::<Vec<_>>();
-                res.push(s);
-                return;
-            }
-
-            for col in 0..n {
-                let (left, right) = (row + col, n - 1 + col - row);
-                if !cols[col] && !forward_diagonals[left] && !back_diagonals[right] {
-                    cols[col] = true;
-                    forward_diagonals[left] = true;
-                    back_diagonals[right] = true;
-                    path[row][col] = QUEEN;
-
-                    backtrack(
-                        n,
-                        row + 1,
-                        cols,
-                        forward_diagonals,
-                        back_diagonals,
-                        path,
-                        res,
-                    );
-
-                    path[row][col] = EMPTY;
-                    cols[col] = false;
-                    forward_diagonals[left] = false;
-                    back_diagonals[right] = false;
-                }
-            }
-        }
-
-        let n = n as usize;
-        let mut res = vec![];
-
-        backtrack(
-            n,
-            0,
-            &mut vec![false; n],
-            &mut vec![false; 2 * n - 1],
-            &mut vec![false; 2 * n - 1],
-            &mut vec![vec![EMPTY; n]; n],
-            &mut res,
-        );
-
-        res
     }
 }
