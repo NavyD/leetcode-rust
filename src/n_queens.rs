@@ -188,17 +188,27 @@ pub mod solution_backtracking_each_position {
 }
 
 pub mod solution_bit {
+    /// # 思路
+    ///
+    /// ### Submissions
+    ///
+    /// date=20220614, mem=2.2, mem_beats=75, runtime=0, runtime_beats=100
+    ///
+    /// date=20220615, mem=2.5, mem_beats=6, runtime=0, runtime_beats=100
     pub struct Solution;
 
     impl Solution {
         pub fn solve_n_queens(n: i32) -> Vec<Vec<String>> {
             const QUEEN: char = 'Q';
             const EMPTY: char = '.';
+            const INIT: i16 = -1;
 
             fn backtrack(
                 n: usize,
                 row: usize,
-                queens: &mut [i16],
+                // 表示在每行中queen放的列位置，用于定位queen在board的位置
+                queen_cols: &mut [i16],
+                // 当前列是否存在queen
                 cols: i16,
                 front_diagonals: i16,
                 back_diagonals: i16,
@@ -206,9 +216,9 @@ pub mod solution_bit {
             ) {
                 if n == row {
                     let solution = (0..n)
-                        .map(|i| {
+                        .map(|row| {
                             let mut board_row = vec![EMPTY; n];
-                            board_row[queens[i] as usize] = QUEEN;
+                            board_row[queen_cols[row] as usize] = QUEEN;
                             board_row.into_iter().collect()
                         })
                         .collect::<Vec<String>>();
@@ -218,29 +228,27 @@ pub mod solution_bit {
                 }
 
                 let mut available_positions =
-                    ((1 << n) - 1) & !(cols | front_diagonals | back_diagonals);
+                    ((1 << n) - 1) & (!(cols | front_diagonals | back_diagonals));
                 while available_positions != 0 {
                     let position = available_positions & -available_positions;
-                    //
-                    available_positions = available_positions & (available_positions - 1);
-                    let col = (position - 1).count_ones() as i16;
-                    queens[row] = col;
+                    available_positions &= available_positions - 1;
+                    queen_cols[row] = (position - 1).count_ones() as i16;
                     backtrack(
                         n,
                         row + 1,
-                        queens,
+                        queen_cols,
                         cols | position,
                         (front_diagonals | position) >> 1,
                         (back_diagonals | position) << 1,
                         solutions,
                     );
-                    queens[row] = -1;
+                    queen_cols[row] = INIT;
                 }
             }
 
             let n = n as usize;
             let mut solutions = vec![];
-            backtrack(n, 0, &mut vec![-1; n], 0, 0, 0, &mut solutions);
+            backtrack(n, 0, &mut vec![INIT; n], 0, 0, 0, &mut solutions);
             solutions
         }
     }
