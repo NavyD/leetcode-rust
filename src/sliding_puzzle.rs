@@ -11,12 +11,14 @@ pub mod solution_bfs {
     /// date=20220608, mem=2.1, mem_beats=80, runtime=4, runtime_beats=40
     ///
     /// date=20220609, mem=2.2, mem_beats=20, runtime=0, runtime_beats=100
+    ///
+    /// date=20220616, mem=2.3, mem_beats=12, runtime=0, runtime_beats=100
     pub struct Solution;
 
     impl Solution {
         pub fn sliding_puzzle(board: Vec<Vec<i32>>) -> i32 {
-            const ZERO: u8 = b'0';
-            const END: [u8; 6] = [1 + ZERO, 2 + ZERO, 3 + ZERO, 4 + ZERO, 5 + ZERO, ZERO];
+            const EMPTY: u8 = b'0';
+            const END_STATUS: [u8; 6] = [1 + EMPTY, 2 + EMPTY, 3 + EMPTY, 4 + EMPTY, 5 + EMPTY, EMPTY];
 
             let neighbors: [Vec<usize>; 6] = [
                 vec![1, 3],
@@ -27,17 +29,17 @@ pub mod solution_bfs {
                 vec![2, 4],
             ];
 
-            let init = board
+            let init_status = board
                 .into_iter()
                 .flatten()
-                .map(|e| e as u8 + ZERO)
+                .map(|e| e as u8 + EMPTY)
                 .collect::<Vec<_>>();
-            if init == END {
+            if init_status == END_STATUS {
                 return 0;
             }
 
             let swap_statuses = |status: &[u8]| {
-                let i = status.iter().position(|e| *e == ZERO).unwrap();
+                let i = status.iter().position(|e| *e == EMPTY).unwrap();
                 neighbors[i]
                     .iter()
                     .map(|j| {
@@ -50,8 +52,8 @@ pub mod solution_bfs {
 
             let mut queue = std::collections::VecDeque::new();
             let mut visited = std::collections::HashSet::new();
-            queue.push_back(init.clone());
-            visited.insert(init);
+            queue.push_back(init_status.clone());
+            visited.insert(init_status);
 
             let mut steps = 0;
             while !queue.is_empty() {
@@ -60,7 +62,7 @@ pub mod solution_bfs {
                     let status = queue.pop_front().unwrap();
                     for next in swap_statuses(&status) {
                         if !visited.contains(&next) {
-                            if next == END {
+                            if next == END_STATUS {
                                 return steps;
                             }
                             queue.push_back(next.clone());

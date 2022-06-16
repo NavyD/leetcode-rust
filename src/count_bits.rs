@@ -8,10 +8,13 @@ pub mod solution_loop {
     /// ### Submissions
     ///
     /// date=20220615, mem=2.7, mem_beats=14, runtime=4, runtime_beats=100
+    ///
+    /// date=20220616, mem=2.5, mem_beats=80, runtime=4, runtime_beats=100
     pub struct Solution;
 
     impl Solution {
         pub fn count_bits(n: i32) -> Vec<i32> {
+            #[inline]
             fn count_ones(mut i: i32) -> i32 {
                 let mut count = 0;
                 while i != 0 {
@@ -43,6 +46,8 @@ pub mod solution_dp {
     /// ### Submissions
     ///
     /// date=20220615, mem=2.9, mem_beats=5, runtime=4, runtime_beats=100
+    ///
+    /// date=20220616, mem=2.6, mem_beats=28, runtime=4, runtime_beats=100
     pub struct Solution;
 
     impl Solution {
@@ -50,12 +55,12 @@ pub mod solution_dp {
             let n = (n + 1) as usize;
             let mut bits = vec![0; n];
 
-            (0..n)
-                .map(|i| {
-                    bits[i] = bits[i >> 1] + (i & 1);
-                    bits[i] as i32
-                })
-                .collect()
+            let mut res = vec![];
+            for i in 0..n {
+                bits[i] = bits[i >> 1] + (i & 1);
+                res.push(bits[i] as i32)
+            }
+            res
         }
     }
 }
