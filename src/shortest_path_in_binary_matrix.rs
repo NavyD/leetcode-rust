@@ -1,6 +1,11 @@
 pub mod solution_bfs {
     /// # 思路
     ///
+    /// 注意：使用hashset保存要40ms
+    ///
+    /// `if i == n - 1 && j == n - 1 {`放在`for (x, y) in DIRS {`前以避免多余的判断。
+    /// 当`grid=[[0]]`时无法进入for中，没有判断当前点
+    ///
     /// 参考：
     ///
     /// * [BFS 最短路径问题（BFS，DFS 的思考）](https://leetcode.cn/problems/shortest-path-in-binary-matrix/solution/bfszui-duan-lu-jing-wen-ti-bfsdfsde-si-k-ngc5/)
@@ -10,6 +15,8 @@ pub mod solution_bfs {
     /// date=20220602, mem=2.1, mem_beats=85, runtime=8, runtime_beats=85
     ///
     /// date=20220607, mem=2.2, mem_beats=66, runtime=12, runtime_beats=41
+    ///
+    /// date=20220617, mem=2.1, mem_beats=92, runtime=8, runtime_beats=100
     pub struct Solution;
 
     impl Solution {
@@ -41,6 +48,7 @@ pub mod solution_bfs {
                 distance += 1;
                 for _ in 0..queue.len() {
                     let (i, j) = queue.pop_front().unwrap();
+
                     if i == n - 1 && j == n - 1 {
                         return distance;
                     }
@@ -82,5 +90,6 @@ mod tests {
 
         assert_eq!(f(arr([[0, 0, 0], [1, 1, 0], [1, 1, 0]])), 4);
         assert_eq!(f(arr([[1, 0, 0], [1, 1, 0], [1, 1, 0]])), -1);
+        assert_eq!(f(arr([[0]])), 1);
     }
 }
