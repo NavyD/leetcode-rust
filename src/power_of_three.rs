@@ -6,6 +6,8 @@ pub mod solution_loop {
     /// date=20220612, mem=2, mem_beats=57, runtime=4, runtime_beats=93
     ///
     /// date=20220613, mem=2.1, mem_beats=44, runtime=16, runtime_beats=27
+    ///
+    /// date=20220621, mem=2.1, mem_beats=28, runtime=12, runtime_beats=54
     pub struct Solution;
 
     impl Solution {
@@ -26,6 +28,8 @@ pub mod solution_divisor {
     ///
     /// 在题目给定的 32 位有符号整数的范围内，最大的 3 的幂为 3^19=1162261467。
     /// 我们只需要判断 n 是否是 3^19的约数即可
+    ///
+    /// 注意：只有质数（只能被1和自身整除）才能使用这样的方式
     ///
     /// ### Submission
     ///
@@ -49,6 +53,8 @@ pub mod solution_table {
     /// ### Submission
     ///
     /// date=20220612, mem=2, mem_beats=62, runtime=4, runtime_beats=93
+    ///
+    /// date=20220621, mem=2, mem_beats=64, runtime=0, runtime_beats=100
     pub struct Solution;
 
     impl Solution {

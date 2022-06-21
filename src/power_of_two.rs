@@ -22,6 +22,8 @@ pub mod solution_bit {
     /// date=20220611, mem=1.9, mem_beats=95, runtime=0, runtime_beats=100
     ///
     /// date=20220612, mem=2.2, mem_beats=6, runtime=0, runtime_beats=100
+    ///
+    /// date=20220621, mem=2, mem_beats=56, runtime=0, runtime_beats=100
     pub struct Solution;
 
     impl Solution {
@@ -48,6 +50,7 @@ pub mod solution_complement {
     ///
     /// date=20220612, mem=2.1, mem_beats=38, runtime=0, runtime_beats=100
     ///
+    /// date=20220622, mem=2, mem_beats=62, runtime=0, runtime_beats=100
     pub struct Solution;
 
     impl Solution {

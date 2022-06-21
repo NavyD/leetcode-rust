@@ -161,3 +161,5 @@ pub mod power_of_two;
 pub mod reverse_bits;
 pub mod power_of_three;
 pub mod count_bits;
+
+pub mod lru_cache;
