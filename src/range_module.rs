@@ -20,6 +20,8 @@ pub mod solution {
     /// ### Submissions
     ///
     /// date=20220622, mem=6.2, mem_beats=84, runtime=56, runtime_beats=66
+    ///
+    /// date=20220623, mem=6.2, mem_beats=79, runtime=60, runtime_beats=55
     #[derive(Debug)]
     pub struct Solution {
         map: BTreeMap<i32, i32>,
@@ -120,6 +122,7 @@ mod tests {
     #[test]
     fn basics() {
         test::<solution::Solution>();
+        test::<Solution>();
     }
 
     fn test<T: RangeModule + Debug>() {
@@ -135,10 +138,83 @@ mod tests {
         range_module.add_range(10, 180);
         range_module.add_range(150, 200);
         range_module.add_range(250, 500);
+
         assert!(range_module.query_range(50, 100));
         assert!(!range_module.query_range(180, 300));
         assert!(!range_module.query_range(600, 1000));
+
         range_module.remove_range(50, 150);
         assert!(!range_module.query_range(50, 100));
+    }
+
+    #[derive(Debug)]
+    struct Solution {
+        map: std::collections::BTreeMap<i32, i32>,
+    }
+    impl RangeModule for Solution {
+        fn new() -> Self {
+            Self {
+                map: Default::default(),
+            }
+        }
+
+        fn add_range(&mut self, left: i32, right: i32) {
+            let (mut left, mut right) = (left, right);
+
+            if let Some(start) = self
+                .map
+                .range(..=left)
+                .next_back()
+                .filter(|(_, start_right)| **start_right >= left)
+                .map(|(k, _)| *k)
+            {
+                left = start;
+            }
+
+            if let Some(end_right) = self
+                .map
+                .range(..=right)
+                .next_back()
+                .filter(|(_, end_right)| **end_right >= right)
+                .map(|(_, v)| *v)
+            {
+                right = end_right;
+            }
+
+            self.map.insert(left, right);
+
+            self.map.retain(|k, _| *k <= left || *k > right);
+        }
+
+        fn query_range(&self, left: i32, right: i32) -> bool {
+            self.map
+                .range(..=left)
+                .next_back()
+                .map(|(_, end)| *end >= right)
+                .unwrap_or(false)
+        }
+
+        fn remove_range(&mut self, left: i32, right: i32) {
+            if let Some(end_right) = self
+                .map
+                .range(..=right)
+                .next_back()
+                .filter(|(_, end_right)| **end_right >= right)
+                .map(|(_, v)| *v)
+            {
+                self.map.insert(right, end_right);
+            }
+
+            if let Some(start) = self
+                .map
+                .range(..left)
+                .next_back()
+                .filter(|(_, start_right)| **start_right >= left)
+                .map(|(start, _)| *start)
+            {
+                self.map.insert(start, left);
+            }
+            self.map.retain(|k, _| *k < left || *k >= right);
+        }
     }
 }

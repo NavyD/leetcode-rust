@@ -165,3 +165,5 @@ pub mod count_bits;
 pub mod lru_cache;
 
 pub mod range_module;
+
+pub mod relative_sort_array;
