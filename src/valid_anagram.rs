@@ -1,45 +1,30 @@
-pub mod solution_hash {
+pub mod solution_sort {
+    /// # 思路
+    ///
+    /// ### Submissions
+    ///
+    /// date=20220624, mem=2.1, mem_beats=90, runtime=0, runtime_beats=100
+    pub struct Solution;
+
+    impl Solution {
+        pub fn is_anagram(s: String, t: String) -> bool {
+            let (mut s, mut t) = (s.into_bytes(), t.into_bytes());
+            s.sort_unstable();
+            t.sort_unstable();
+            s == t
+        }
+    }
+}
+
+pub mod solution_count {
     /// # 思路
     ///
     /// 计算两个字符串中每个字母的出现次数并进行比较。
     ///
-    /// 下面是几种细节不同的思路
-    ///
     /// 参考：
     ///
-    /// ```rust,ignore
-    /// pub fn is_anagram(s: String, t: String) -> bool {
-    ///     if s.len() != t.len() {
-    ///         return false;
-    ///     }
-    ///     let mut counts = vec![0; 26];
-    ///     s.as_bytes()
-    ///         .iter()
-    ///         .for_each(|&b| counts[(b - b'a') as usize] += 1);
-    ///     t.as_bytes()
-    ///         .iter()
-    ///         .for_each(|&b| counts[(b - b'a') as usize] -= 1);
-    ///     counts.iter().all(|&c| c == 0)
-    /// }
-    /// ```
-    ///
-    /// - [画解算法：242. 有效的字母异位词](https://leetcode-cn.com/problems/valid-anagram/solution/hua-jie-suan-fa-242-you-xiao-de-zi-mu-yi-wei-ci-by/)
-    ///
-    /// ```java
-    /// public boolean isAnagram(String s, String t) {
-    ///     if(s.length() != t.length())
-    ///         return false;
-    ///     int[] alpha = new int[26];
-    ///     for(int i = 0; i< s.length(); i++) {
-    ///         alpha[s.charAt(i) - 'a'] ++;
-    ///         alpha[t.charAt(i) - 'a'] --;
-    ///     }
-    ///     for(int i=0;i<26;i++)
-    ///         if(alpha[i] != 0)
-    ///             return false;
-    ///     return true;
-    /// }
-    /// ```
+    /// * [画解算法：242. 有效的字母异位词](https://leetcode-cn.com/problems/valid-anagram/solution/hua-jie-suan-fa-242-you-xiao-de-zi-mu-yi-wei-ci-by/)
+    /// * [有效的字母异位词](https://leetcode.cn/problems/valid-anagram/solution/you-xiao-de-zi-mu-yi-wei-ci-by-leetcode-solution/)
     ///
     /// ### Submissions
     ///
@@ -49,6 +34,8 @@ pub mod solution_hash {
     ///
     /// date=20201004, mem=2.2, mem_beats=46.43, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/113152313/
     ///
+    /// date=20220624, mem=2.1, mem_beats=94, runtime=0, runtime_beats=100
+    ///
     /// ### 复杂度
     ///
     /// - 时间：O(n)
@@ -57,21 +44,22 @@ pub mod solution_hash {
 
     impl Solution {
         pub fn is_anagram(s: String, t: String) -> bool {
+            #[inline]
+            fn index(c: impl Into<usize>) -> usize {
+                c.into() - 'a' as usize
+            }
+
+            let (s, t) = (s.as_bytes(), t.as_bytes());
             if s.len() != t.len() {
                 return false;
             }
-            let mut counts = vec![0; 26];
-            s.as_bytes()
-                .iter()
-                .for_each(|b| counts[*b as usize - 'a' as usize] += 1);
-            for b in t.as_bytes() {
-                let i = *b as usize - 'a' as usize;
-                if counts[i] <= 0 {
-                    return false;
-                }
-                counts[i] -= 1;
+
+            let mut counts = [0; 26];
+            for i in 0..t.len() {
+                counts[index(t[i])] += 1;
+                counts[index(s[i])] -= 1;
             }
-            true
+            counts.iter().all(|count| *count == 0)
         }
     }
 }
@@ -82,32 +70,13 @@ mod tests {
 
     #[test]
     fn basics() {
-        test(solution_hash::Solution::is_anagram);
-        test(is_anagram);
+        test(solution_count::Solution::is_anagram);
+        test(solution_sort::Solution::is_anagram);
     }
 
     fn test<F: Fn(String, String) -> bool>(func: F) {
         assert!(func("anagram".to_string(), "nagaram".to_string()));
         assert!(!func("rat".to_string(), "car".to_string()));
         assert!(!func("ab".to_string(), "a".to_string()));
-    }
-
-    pub fn is_anagram(s: String, t: String) -> bool {
-        if s.len() != t.len() {
-            false
-        } else {
-            let mut counts = vec![0; 26];
-            s.as_bytes()
-                .iter()
-                .for_each(|b| counts[*b as usize - 'a' as usize] += 1);
-            for b in t.as_bytes() {
-                let i = *b as usize - 'a' as usize;
-                if counts[i] <= 0 {
-                    return false;
-                }
-                counts[i] -= 1;
-            }
-            true
-        }
     }
 }
