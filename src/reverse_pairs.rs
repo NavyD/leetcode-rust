@@ -45,134 +45,83 @@ impl SolutionByViolent {
     }
 }
 
-pub struct SolutionByMergeSort;
+pub mod solution_merge_sort_indices {
+    pub struct Solution;
 
-impl SolutionByMergeSort {
-    /// # 思路
-    ///
-    /// 尝试partition recurrence关系用DP解决，设在nums[i,j]中满足reverse pair条件数量为T(i,j)，
-    /// m=(i+j)/2，将nums分为nums[i,m], nums[m+1,j]两个数组，此时要求出T(i,m),T(m+1,j)和两个数组
-    /// 元素间满足reverse pair条件数量C[i,j]，通常还是要nums[i,j]每个元素比较才能找出C[i,j]，但
-    /// 如果nums[i,m], nums[m+1,j]分别有序时，用two pointer可在线性时间内找出C[i,j]，即
-    /// T(0,n)=T(0,m)+T(m+1,n)+C[0,n]
-    ///
-    /// 对nums indexes排序merge时统计nums[i]>2*nums[j]数量
-    ///
-    /// ## 问题
-    ///
-    /// - 如何在merge时two-pointer找出C[i,j]，nums[i,m],nums[m+1,j]
-    ///
-    ///   由于子数组已有序，对每个left只需在right中找到满足条件的offset并统计.在right中第1个不满足
-    /// `nums[indexes[left]] > 2 * nums[indexes[idx_upper]]`下标idx_upper，计算
-    /// `offset=idx_upper-(mid+1)`，注意要累加offset，只要存在left时offset>0，后面的left
-    /// 至少满足之前的offset，并尝试比较后面的right
-    ///
-    /// - 为何不能在判断`nums[indexes[left]] as i64 > 2 * nums[indexes[idx_upper]] as i64`时对right移动
-    ///
-    /// ```ignore
-    /// while idx_upper <= hi
-    ///     && nums[indexes[left]] as i64 > 2 * nums[indexes[idx_upper]] as i64
-    /// {
-    ///     idx_upper += 1;
-    ///     if right <= hi {
-    ///         aux_indexes[index] = indexes[right];
-    ///         index += 1;
-    ///         right += 1;
-    ///     }
-    /// }
-    /// ```
-    ///
-    /// 由于idx_upper与right下标不是同步对应的，即可能有`num <= 2 * nums[indexes[idx_upper]] as i64 && num > left`时导致right移动，
-    /// 但idx_upper不动，下标无法对应导致错误结果
-    ///
-    /// ## Submissions
-    ///
-    /// date=20200522, mem=3.2, mem_beats=100, runtime=96, runtime_beats=50, url=https://leetcode.com/submissions/detail/342936543/
-    ///
-    /// author=navyd
-    ///
-    /// date=20200526, mem=3,3m mem_beats=100, runtime=60, runtime_beats=75, url=https://leetcode.com/submissions/detail/344776495/
-    ///
-    /// author=fun4LeetCode, references=https://leetcode.com/problems/reverse-pairs/discuss/97268/General-principles-behind-problems-similar-to-%22Reverse-Pairs%22
-    ///
-    /// ## 复杂度
-    ///
-    /// - 时间：merge()中的double pointer是线性时间，总体复杂度还是O(N log N)
-    ///
-    /// - 空间：O(N)
-    ///
-    pub fn reverse_pairs(nums: Vec<i32>) -> i32 {
-        let n = nums.len();
-        if n == 0 {
-            return 0;
-        }
-        let (mut indexes, mut aux_indexes) = (vec![0; n], vec![0; n]);
-        for i in 0..n {
-            indexes[i] = i;
-        }
-        Self::merge_sort(&nums, &mut indexes, &mut aux_indexes, 0, n - 1) as i32
-    }
-
-    fn merge_sort(
-        nums: &[i32],
-        indexes: &mut Vec<usize>,
-        aux_indexes: &mut Vec<usize>,
-        lo: usize,
-        hi: usize,
-    ) -> usize {
-        if lo >= hi {
-            return 0;
-        }
-        let mid = lo + (hi - lo) / 2;
-        let mut count = 0;
-        count += Self::merge_sort(nums, indexes, aux_indexes, lo, mid)
-            + Self::merge_sort(nums, indexes, aux_indexes, mid + 1, hi)
-            + Self::merge(nums, indexes, aux_indexes, lo, mid, hi);
-        count
-    }
-
-    fn merge(
-        nums: &[i32],
-        indexes: &mut Vec<usize>,
-        aux_indexes: &mut Vec<usize>,
-        lo: usize,
-        mid: usize,
-        hi: usize,
-    ) -> usize {
-        // count = idx_upper-mid-1
-        let (mut count, mut idx_upper, mut index, mut right, mut left) =
-            (0, mid + 1, lo, mid + 1, lo);
-        while left <= mid {
-            // get first index with left > 2*right
-            while idx_upper <= hi
-                && nums[indexes[left]] as i64 > 2 * nums[indexes[idx_upper]] as i64
-            {
-                idx_upper += 1;
+    impl Solution {
+        pub fn reverse_pairs(nums: Vec<i32>) -> i32 {
+            let n = nums.len();
+            if n == 0 {
+                return 0;
             }
-            // offset 小的left>idx_upper, 大的left在这个基础上
-            count += idx_upper - mid - 1;
+            let (mut indexes, mut aux_indexes) = (vec![0; n], vec![0; n]);
+            for i in 0..n {
+                indexes[i] = i;
+            }
+            Self::merge_sort(&nums, &mut indexes, &mut aux_indexes, 0, n - 1) as i32
+        }
 
-            // move right
-            while right <= hi && nums[indexes[left]] > nums[indexes[right]] {
-                aux_indexes[index] = indexes[right];
+        fn merge_sort(
+            nums: &[i32],
+            indexes: &mut Vec<usize>,
+            aux_indexes: &mut Vec<usize>,
+            lo: usize,
+            hi: usize,
+        ) -> usize {
+            if lo >= hi {
+                return 0;
+            }
+            let mid = lo + (hi - lo) / 2;
+            let mut count = 0;
+            count += Self::merge_sort(nums, indexes, aux_indexes, lo, mid)
+                + Self::merge_sort(nums, indexes, aux_indexes, mid + 1, hi)
+                + Self::merge(nums, indexes, aux_indexes, lo, mid, hi);
+            count
+        }
+
+        fn merge(
+            nums: &[i32],
+            indexes: &mut Vec<usize>,
+            aux_indexes: &mut Vec<usize>,
+            lo: usize,
+            mid: usize,
+            hi: usize,
+        ) -> usize {
+            // count = idx_upper-mid-1
+            let (mut count, mut idx_upper, mut index, mut right, mut left) =
+                (0, mid + 1, lo, mid + 1, lo);
+            while left <= mid {
+                // get first index with left > 2*right
+                while idx_upper <= hi
+                    && nums[indexes[left]] as i64 > 2 * nums[indexes[idx_upper]] as i64
+                {
+                    idx_upper += 1;
+                }
+                // offset 小的left>idx_upper, 大的left在这个基础上
+                count += idx_upper - mid - 1;
+
+                // move right
+                while right <= hi && nums[indexes[left]] > nums[indexes[right]] {
+                    aux_indexes[index] = indexes[right];
+                    index += 1;
+                    right += 1;
+                }
+                // move left
+                aux_indexes[index] = indexes[left];
                 index += 1;
-                right += 1;
+                left += 1;
             }
-            // move left
-            aux_indexes[index] = indexes[left];
-            index += 1;
-            left += 1;
-        }
 
-        // move left for right
-        while right <= hi {
-            aux_indexes[index] = indexes[right];
-            right += 1;
-            index += 1;
-        }
+            // move left for right
+            while right <= hi {
+                aux_indexes[index] = indexes[right];
+                right += 1;
+                index += 1;
+            }
 
-        indexes[lo..(hi + 1)].clone_from_slice(&aux_indexes[lo..(hi + 1)]);
-        count
+            indexes[lo..(hi + 1)].clone_from_slice(&aux_indexes[lo..(hi + 1)]);
+            count
+        }
     }
 }
 
@@ -349,11 +298,126 @@ impl SolutionByBIT {
     }
 }
 
+pub mod solution_merge_sort {
+    /// # 思路
+    ///
+    /// 尝试partition recurrence关系用DP解决，设在nums[i,j]中满足reverse pair条件数量为T(i,j)，
+    /// m=(i+j)/2，将nums分为nums[i,m], nums[m+1,j]两个数组，此时要求出T(i,m),T(m+1,j)和两个数组
+    /// 元素间满足reverse pair条件数量C[i,j]，通常还是要nums[i,j]每个元素比较才能找出C[i,j]，但
+    /// 如果nums[i,m], nums[m+1,j]分别有序时，用two pointer可在线性时间内找出C[i,j]，即
+    /// T(0,n)=T(0,m)+T(m+1,n)+C[0,n]
+    ///
+    /// 对nums indexes排序merge时统计nums[i]>2*nums[j]数量
+    ///
+    /// ## 问题
+    ///
+    /// - 如何在merge时two-pointer找出C[i,j]，nums[i,m],nums[m+1,j]
+    ///
+    ///   由于子数组已有序，对每个left只需在right中找到满足条件的offset并统计.在right中第1个不满足
+    /// `nums[indexes[left]] > 2 * nums[indexes[idx_upper]]`下标idx_upper，计算
+    /// `offset=idx_upper-(mid+1)`，注意要累加offset，只要存在left时offset>0，后面的left
+    /// 至少满足之前的offset，并尝试比较后面的right
+    ///
+    /// - 为何不能在判断`nums[indexes[left]] as i64 > 2 * nums[indexes[idx_upper]] as i64`时对right移动
+    ///
+    /// ```ignore
+    /// while idx_upper <= hi
+    ///     && nums[indexes[left]] as i64 > 2 * nums[indexes[idx_upper]] as i64
+    /// {
+    ///     idx_upper += 1;
+    ///     if right <= hi {
+    ///         aux_indexes[index] = indexes[right];
+    ///         index += 1;
+    ///         right += 1;
+    ///     }
+    /// }
+    /// ```
+    ///
+    /// 由于idx_upper与right下标不是同步对应的，即可能有`num <= 2 * nums[indexes[idx_upper]] as i64 && num > left`时导致right移动，
+    /// 但idx_upper不动，下标无法对应导致错误结果
+    ///
+    /// 参考：
+    ///
+    /// * [General principles behind problems similar to "Reverse Pairs"](https://leetcode.com/problems/reverse-pairs/discuss/97268/General-principles-behind-problems-similar-to-%22Reverse-Pairs%22)
+    ///
+    /// ### Submissions
+    ///
+    /// date=20200522, mem=3.2, mem_beats=100, runtime=96, runtime_beats=50, url=https://leetcode.com/submissions/detail/342936543/
+    ///
+    /// date=20200526, mem=3,3m mem_beats=100, runtime=60, runtime_beats=75, url=https://leetcode.com/submissions/detail/344776495/
+    ///
+    /// ## 复杂度
+    ///
+    /// - 时间：merge()中的double pointer是线性时间，总体复杂度还是O(N log N)
+    ///
+    /// - 空间：O(N)
+    pub struct Solution;
+
+    impl Solution {
+        pub fn reverse_pairs(mut nums: Vec<i32>) -> i32 {
+            fn merge_sort(nums: &mut [i32], aux: &mut [i32], lo: usize, hi: usize) -> i32 {
+                if lo >= hi {
+                    return 0;
+                }
+
+                let mid = lo + (hi - lo) / 2;
+                let mut count = merge_sort(nums, aux, lo, mid) + merge_sort(nums, aux, mid + 1, hi);
+
+                let (mut left, mut right) = (lo, mid + 1);
+                let mut i = left;
+                let mut upper = right;
+
+                while left <= mid {
+                    while upper <= hi && nums[left] as i64 > 2 * nums[upper] as i64 {
+                        upper += 1;
+                    }
+                    count += (upper - mid - 1) as i32;
+
+                    while right <= hi && nums[left] >= nums[right] {
+                        aux[i] = nums[right];
+                        i += 1;
+                        right += 1;
+                    }
+
+                    aux[i] = nums[left];
+                    i += 1;
+                    left += 1;
+                }
+
+                while right <= hi {
+                    aux[i] = nums[right];
+                    i += 1;
+                    right += 1;
+                }
+                nums[lo..=hi].copy_from_slice(&aux[lo..=hi]);
+
+                count
+            }
+
+            if nums.is_empty() {
+                0
+            } else {
+                let n = nums.len();
+                merge_sort(&mut nums, &mut vec![0; n], 0, n - 1)
+            }
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
 
-    fn test_data<T: Fn(Vec<i32>) -> i32>(f: T) {
+    #[test]
+    fn basics() {
+        // test(SolutionByViolent::reverse_pairs);
+        // test(SolutionByMergeSort::reverse_pairs);
+        // test(SolutionByBIT::reverse_pairs);
+        test(solution_merge_sort::Solution::reverse_pairs);
+        test(solution_merge_sort_indices::Solution::reverse_pairs);
+    }
+
+    fn test(f: impl Fn(Vec<i32>) -> i32) {
         assert_eq!(f(vec![]), 0);
         assert_eq!(f(vec![1, 3, 2, 3, 1]), 2);
         assert_eq!(f(vec![2, 4, 3, 5, 1]), 3);
@@ -365,20 +429,5 @@ mod tests {
             0
         );
         assert_eq!(f(vec![5, 4, 3, 2, 1]), 4);
-    }
-
-    #[test]
-    fn solution_by_violent() {
-        test_data(SolutionByViolent::reverse_pairs);
-    }
-
-    #[test]
-    fn solution_by_merge_sort() {
-        test_data(SolutionByMergeSort::reverse_pairs);
-    }
-
-    #[test]
-    fn solution_by_bit() {
-        test_data(SolutionByBIT::reverse_pairs);
     }
 }
