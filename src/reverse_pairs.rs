@@ -346,6 +346,10 @@ pub mod solution_merge_sort {
     ///
     /// date=20200526, mem=3,3m mem_beats=100, runtime=60, runtime_beats=75, url=https://leetcode.com/submissions/detail/344776495/
     ///
+    /// date=20220625, mem=2.7, mem_beats=73, runtime=56, runtime_beats=70
+    ///
+    /// date=20220627, mem=2.5, mem_beats=90, runtime=36, runtime_beats=100
+    ///
     /// ## 复杂度
     ///
     /// - 时间：merge()中的double pointer是线性时间，总体复杂度还是O(N log N)
@@ -355,50 +359,58 @@ pub mod solution_merge_sort {
 
     impl Solution {
         pub fn reverse_pairs(mut nums: Vec<i32>) -> i32 {
-            fn merge_sort(nums: &mut [i32], aux: &mut [i32], lo: usize, hi: usize) -> i32 {
-                if lo >= hi {
+            fn merge_count(nums: &mut [i32], aux: &mut [i32]) -> usize {
+                let n = nums.len();
+                if n <= 1 {
                     return 0;
                 }
 
-                let mid = lo + (hi - lo) / 2;
-                let mut count = merge_sort(nums, aux, lo, mid) + merge_sort(nums, aux, mid + 1, hi);
+                let mid = n / 2;
+                let mut count = merge_count(&mut nums[..mid], &mut aux[..mid])
+                    + merge_count(&mut nums[mid..], &mut aux[mid..]);
 
-                let (mut left, mut right) = (lo, mid + 1);
-                let mut i = left;
+                let (mut left, mut right) = (0, mid);
                 let mut upper = right;
+                let mut i = 0;
 
-                while left <= mid {
-                    while upper <= hi && nums[left] as i64 > 2 * nums[upper] as i64 {
+                while left < mid {
+                    // 对当前left元素计算第1个大于的下标，找出偏移量
+                    while upper < n && nums[left] as i64 > 2 * nums[upper] as i64 {
                         upper += 1;
                     }
-                    count += (upper - mid - 1) as i32;
+                    count += upper - mid;
 
-                    while right <= hi && nums[left] >= nums[right] {
+                    // 归并right
+                    while right < n && nums[left] >= nums[right] {
                         aux[i] = nums[right];
                         i += 1;
                         right += 1;
                     }
 
+                    // 归并left
                     aux[i] = nums[left];
                     i += 1;
                     left += 1;
                 }
 
-                while right <= hi {
+                // 归并可能剩下的right
+                while right < n {
                     aux[i] = nums[right];
                     i += 1;
                     right += 1;
                 }
-                nums[lo..=hi].copy_from_slice(&aux[lo..=hi]);
+
+                // 应用到nums中
+                nums.copy_from_slice(aux);
 
                 count
             }
 
-            if nums.is_empty() {
+            let n = nums.len();
+            if n == 0 {
                 0
             } else {
-                let n = nums.len();
-                merge_sort(&mut nums, &mut vec![0; n], 0, n - 1)
+                merge_count(&mut nums, &mut vec![0; n]) as i32
             }
         }
     }
