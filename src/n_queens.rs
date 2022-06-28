@@ -44,34 +44,36 @@ pub mod solution_backtracking {
     /// date=20201228, mem=2.2, mem_beats=92, runtime=0, runtime_beats=100, url=https://leetcode-cn.com/submissions/detail/134422730/
     ///
     /// date=20220613, mem=2.4, mem_beats=25, runtime=0, runtime_beats=100
+    ///
+    /// date=20220628, mem=2.4, mem_beats=43, runtime=0, runtime_beats=100
     pub struct Solution;
 
     impl Solution {
         pub fn solve_n_queens(n: i32) -> Vec<Vec<String>> {
-            const QUEEN: char = 'Q';
-            const EMPTY: char = '.';
+            const EMPTY: u8 = b'.';
+            const QUEEN: u8 = b'Q';
 
             fn backtrack(
                 n: usize,
                 row: usize,
-                cols: &mut Vec<bool>,
-                front_diagonals: &mut Vec<bool>,
-                back_diagonals: &mut Vec<bool>,
-                path: &mut Vec<Vec<char>>,
-                res: &mut Vec<Vec<String>>,
+                cols: &mut [bool],
+                front_diagonals: &mut [bool],
+                back_diagonals: &mut [bool],
+                path: &mut [Vec<u8>],
+                solutions: &mut Vec<Vec<String>>,
             ) {
-                if row == n {
+                if row >= n {
                     let solution = path
                         .iter()
-                        .map(|e| e.iter().collect())
-                        .collect::<Vec<String>>();
-                    res.push(solution);
+                        .map(|a| unsafe { String::from_utf8_unchecked(a.to_vec()) })
+                        .collect::<Vec<_>>();
+                    solutions.push(solution);
                     return;
                 }
 
                 for col in 0..n {
                     // 对角线对应下标
-                    let (front, back) = (col + row, n - 1 + row - col);
+                    let (front, back) = (n - 1 + row - col, row + col);
                     // 不能攻击
                     if !cols[col] && !front_diagonals[front] && !back_diagonals[back] {
                         cols[col] = true;
@@ -79,7 +81,15 @@ pub mod solution_backtracking {
                         back_diagonals[back] = true;
                         path[row][col] = QUEEN;
 
-                        backtrack(n, row + 1, cols, front_diagonals, back_diagonals, path, res);
+                        backtrack(
+                            n,
+                            row + 1,
+                            cols,
+                            front_diagonals,
+                            back_diagonals,
+                            path,
+                            solutions,
+                        );
 
                         cols[col] = false;
                         front_diagonals[front] = false;
@@ -91,7 +101,6 @@ pub mod solution_backtracking {
 
             let n = n as usize;
             let mut res = vec![];
-
             backtrack(
                 n,
                 0,
@@ -103,7 +112,6 @@ pub mod solution_backtracking {
                 &mut vec![vec![EMPTY; n]; n],
                 &mut res,
             );
-
             res
         }
     }
@@ -190,6 +198,10 @@ pub mod solution_backtracking_each_position {
 pub mod solution_bit {
     /// # 思路
     ///
+    /// 参考：
+    ///
+    /// * [N 皇后 方法二：基于位运算的回溯](https://leetcode.cn/problems/n-queens/solution/nhuang-hou-by-leetcode-solution/)
+    ///
     /// ### Submissions
     ///
     /// date=20220614, mem=2.2, mem_beats=75, runtime=0, runtime_beats=100
@@ -227,17 +239,22 @@ pub mod solution_bit {
                     return;
                 }
 
+                // 可以放置皇后的位置（该结果的值为 1 的位置表示可以放置皇后的位置）
                 let mut available_positions =
                     ((1 << n) - 1) & (!(cols | front_diagonals | back_diagonals));
                 while available_positions != 0 {
+                    // 获取二进制表示中的最低位的 1 的位置；
                     let position = available_positions & -available_positions;
+                    // 移除最低位的 1
                     available_positions &= available_positions - 1;
+                    // 放在row中的queen的列位置。postion=8,0b1000 => 0b0111 => 3
                     queen_cols[row] = (position - 1).count_ones() as i16;
                     backtrack(
                         n,
                         row + 1,
                         queen_cols,
                         cols | position,
+                        // 下一行正对角线往左移一位，表示为右移一位（左列对应最低二进制位）
                         (front_diagonals | position) >> 1,
                         (back_diagonals | position) << 1,
                         solutions,
@@ -264,6 +281,8 @@ mod tests {
         test(solution_backtracking::Solution::solve_n_queens);
         test(solution_backtracking_each_position::Solution::solve_n_queens);
         test(solution_bit::Solution::solve_n_queens);
+        // TODO
+        // test(solve_n_queens)
     }
 
     fn test<F: Fn(i32) -> Vec<Vec<String>>>(func: F) {
@@ -281,5 +300,56 @@ mod tests {
                 ["..Q.", "Q...", "...Q", ".Q.."],
             ])
         );
+    }
+
+    pub fn solve_n_queens(n: i32) -> Vec<Vec<String>> {
+        const EMPTY: u8 = b'.';
+        const QUEEN: u8 = b'Q';
+        const INIT: i16 = -1;
+
+        fn backtrack(
+            n: usize,
+            row: usize,
+            queen_cols: &mut [i16],
+            cols: i16,
+            front_diagoals: i16,
+            back_diagonals: i16,
+            solutions: &mut Vec<Vec<String>>,
+        ) {
+            if n >= row {
+                let solution = (0..n)
+                    .map(|row| {
+                        let mut board_row = vec![EMPTY; n];
+                        board_row[queen_cols[row] as usize] = QUEEN;
+                        unsafe { String::from_utf8_unchecked(board_row) }
+                    })
+                    .collect::<Vec<_>>();
+                solutions.push(solution);
+                return;
+            }
+
+            let mut available_positions =
+                ((1 << n) - 1) & (!(cols | front_diagoals | back_diagonals));
+            while available_positions != 0 {
+                let position = available_positions & -available_positions;
+                available_positions &= available_positions - 1;
+                queen_cols[row] = (position - 1).count_ones() as i16;
+                backtrack(
+                    n,
+                    row + 1,
+                    queen_cols,
+                    cols | position,
+                    (front_diagoals | position) >> 1,
+                    (back_diagonals | position) << 1,
+                    solutions,
+                );
+                queen_cols[row] = INIT;
+            }
+        }
+
+        let n = n as usize;
+        let mut res = vec![];
+        backtrack(n, 0, &mut vec![INIT; n], 0, 0, 0, &mut res);
+        res
     }
 }
