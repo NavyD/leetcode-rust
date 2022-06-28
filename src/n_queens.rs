@@ -207,12 +207,14 @@ pub mod solution_bit {
     /// date=20220614, mem=2.2, mem_beats=75, runtime=0, runtime_beats=100
     ///
     /// date=20220615, mem=2.5, mem_beats=6, runtime=0, runtime_beats=100
+    ///
+    /// date=20220629, mem=2.3, mem_beats=53, runtime=0, runtime_beats=100
     pub struct Solution;
 
     impl Solution {
         pub fn solve_n_queens(n: i32) -> Vec<Vec<String>> {
-            const QUEEN: char = 'Q';
-            const EMPTY: char = '.';
+            const QUEEN: u8 = b'Q';
+            const EMPTY: u8 = b'.';
             const INIT: i16 = -1;
 
             fn backtrack(
@@ -226,12 +228,12 @@ pub mod solution_bit {
                 back_diagonals: i16,
                 solutions: &mut Vec<Vec<String>>,
             ) {
-                if n == row {
+                if row >= n {
                     let solution = (0..n)
                         .map(|row| {
                             let mut board_row = vec![EMPTY; n];
                             board_row[queen_cols[row] as usize] = QUEEN;
-                            board_row.into_iter().collect()
+                            unsafe { String::from_utf8_unchecked(board_row) }
                         })
                         .collect::<Vec<String>>();
 
@@ -281,8 +283,6 @@ mod tests {
         test(solution_backtracking::Solution::solve_n_queens);
         test(solution_backtracking_each_position::Solution::solve_n_queens);
         test(solution_bit::Solution::solve_n_queens);
-        // TODO
-        // test(solve_n_queens)
     }
 
     fn test<F: Fn(i32) -> Vec<Vec<String>>>(func: F) {
@@ -300,56 +300,5 @@ mod tests {
                 ["..Q.", "Q...", "...Q", ".Q.."],
             ])
         );
-    }
-
-    pub fn solve_n_queens(n: i32) -> Vec<Vec<String>> {
-        const EMPTY: u8 = b'.';
-        const QUEEN: u8 = b'Q';
-        const INIT: i16 = -1;
-
-        fn backtrack(
-            n: usize,
-            row: usize,
-            queen_cols: &mut [i16],
-            cols: i16,
-            front_diagoals: i16,
-            back_diagonals: i16,
-            solutions: &mut Vec<Vec<String>>,
-        ) {
-            if n >= row {
-                let solution = (0..n)
-                    .map(|row| {
-                        let mut board_row = vec![EMPTY; n];
-                        board_row[queen_cols[row] as usize] = QUEEN;
-                        unsafe { String::from_utf8_unchecked(board_row) }
-                    })
-                    .collect::<Vec<_>>();
-                solutions.push(solution);
-                return;
-            }
-
-            let mut available_positions =
-                ((1 << n) - 1) & (!(cols | front_diagoals | back_diagonals));
-            while available_positions != 0 {
-                let position = available_positions & -available_positions;
-                available_positions &= available_positions - 1;
-                queen_cols[row] = (position - 1).count_ones() as i16;
-                backtrack(
-                    n,
-                    row + 1,
-                    queen_cols,
-                    cols | position,
-                    (front_diagoals | position) >> 1,
-                    (back_diagonals | position) << 1,
-                    solutions,
-                );
-                queen_cols[row] = INIT;
-            }
-        }
-
-        let n = n as usize;
-        let mut res = vec![];
-        backtrack(n, 0, &mut vec![INIT; n], 0, 0, 0, &mut res);
-        res
     }
 }
