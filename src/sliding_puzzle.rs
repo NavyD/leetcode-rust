@@ -13,12 +13,15 @@ pub mod solution_bfs {
     /// date=20220609, mem=2.2, mem_beats=20, runtime=0, runtime_beats=100
     ///
     /// date=20220616, mem=2.3, mem_beats=12, runtime=0, runtime_beats=100
+    ///
+    /// date=20220630, mem=2.1, mem_beats=37, runtime=0, runtime_beats=100
     pub struct Solution;
 
     impl Solution {
         pub fn sliding_puzzle(board: Vec<Vec<i32>>) -> i32 {
             const EMPTY: u8 = b'0';
-            const END_STATUS: [u8; 6] = [1 + EMPTY, 2 + EMPTY, 3 + EMPTY, 4 + EMPTY, 5 + EMPTY, EMPTY];
+            const END_STATUS: [u8; 6] =
+                [1 + EMPTY, 2 + EMPTY, 3 + EMPTY, 4 + EMPTY, 5 + EMPTY, EMPTY];
 
             let neighbors: [Vec<usize>; 6] = [
                 vec![1, 3],

@@ -276,7 +276,6 @@ pub mod solution_bit {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::i32;
 
     #[test]
     fn basic() {
