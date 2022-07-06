@@ -22,26 +22,28 @@
 //! 2. All the numbers in the input array are in the range of 32-bit integer.
 //!
 
-pub struct SolutionByViolent;
-
-impl SolutionByViolent {
+pub mod solution_traverse {
     /// # 思路
     ///
     /// 直接双重for对每个i判断j有`nums[i] as i64 > 2 * nums[j] as i64`
     ///
     /// Time Limit Exceeded
     ///
-    pub fn reverse_pairs(nums: Vec<i32>) -> i32 {
-        let n = nums.len();
-        let mut count = 0;
-        for i in 0..n {
-            for j in i + 1..n {
-                if nums[i] as i64 > 2 * nums[j] as i64 {
-                    count += 1;
+    pub struct Solution;
+
+    impl Solution {
+        pub fn reverse_pairs(nums: Vec<i32>) -> i32 {
+            let n = nums.len();
+            let mut count = 0;
+            for i in 0..n {
+                for j in i + 1..n {
+                    if nums[i] as i64 > 2 * nums[j] as i64 {
+                        count += 1;
+                    }
                 }
             }
+            count
         }
-        count
     }
 }
 
@@ -425,29 +427,115 @@ pub mod solution_merge_sort {
     }
 }
 
+pub mod solution_bit {
+    /// 参考：
+    ///
+    /// * [101731](https://leetcode.com/problems/reverse-pairs/discuss/97268/General-principles-behind-problems-similar-to-"Reverse-Pairs"/101731)
+    /// * [101736](https://leetcode.com/problems/reverse-pairs/discuss/97268/General-principles-behind-problems-similar-to-"Reverse-Pairs"/101736)
+    /// * [翻转对](https://leetcode.cn/problems/reverse-pairs/solution/fan-zhuan-dui-by-leetcode-solution/)
+    ///
+    /// ### Submissions
+    ///
+    /// date=20220706, mem=2.9, mem_beats=16, runtime=56, runtime_beats=33
+    pub struct Solution;
+
+    impl Solution {
+        pub fn reverse_pairs(nums: Vec<i32>) -> i32 {
+            #[inline(always)]
+            const fn lowbit(i: usize) -> usize {
+                let i = i as isize;
+                (i & -i) as usize
+            }
+            struct Bit {
+                bits: Vec<usize>,
+            }
+            impl Bit {
+                #[inline]
+                fn new(size: usize) -> Self {
+                    Self {
+                        bits: vec![0; size + 1],
+                    }
+                }
+                // #[inline]
+                // fn get_sum(&self, start: usize, end: usize) -> usize {
+                //     self.query(end) - self.query(start)
+                // }
+                #[inline]
+                fn query(&self, mut i: usize) -> usize {
+                    let mut sum = 0;
+                    while i < self.bits.len() {
+                        sum += self.bits[i];
+                        i += lowbit(i);
+                    }
+                    sum
+                }
+                #[inline]
+                fn update(&mut self, mut i: usize, val: usize) {
+                    while i > 0 {
+                        self.bits[i] += val;
+                        i -= lowbit(i)
+                    }
+                }
+            }
+
+            #[inline]
+            fn right_index(nums: &[i32], val: i64) -> usize {
+                let (mut lo, mut hi) = (0, nums.len() - 1);
+                while lo <= hi {
+                    let mid = lo + (hi - lo) / 2;
+                    if nums[mid] as i64 >= val {
+                        if mid == 0 {
+                            break;
+                        }
+                        hi = mid - 1;
+                    } else {
+                        lo = mid + 1;
+                    }
+                }
+                lo + 1
+            }
+
+            let mut bit = Bit::new(nums.len());
+
+            let mut sorted_nums = nums.to_vec();
+            sorted_nums.sort_unstable();
+
+            let mut count = 0;
+            for num in nums {
+                let num = num as i64;
+                count += bit.query(right_index(&sorted_nums, 2 * num + 1));
+                bit.update(right_index(&sorted_nums, num), 1);
+            }
+
+            count as i32
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
 
     #[test]
     fn basics() {
-        // test(SolutionByViolent::reverse_pairs);
-        test(SolutionByBIT::reverse_pairs);
-        // test(solution_merge_sort::Solution::reverse_pairs);
-        // test(solution_merge_sort_indices::Solution::reverse_pairs);
+        // test(SolutionByBIT::reverse_pairs);
+        test(solution_traverse::Solution::reverse_pairs);
+        test(solution_merge_sort::Solution::reverse_pairs);
+        test(solution_merge_sort_indices::Solution::reverse_pairs);
+        test(solution_bit::Solution::reverse_pairs);
     }
 
     fn test(f: impl Fn(Vec<i32>) -> i32) {
-        // assert_eq!(f(vec![]), 0);
+        assert_eq!(f(vec![]), 0);
         assert_eq!(f(vec![1, 3, 2, 3, 1]), 2);
-        // assert_eq!(f(vec![2, 4, 3, 5, 1]), 3);
-        // assert_eq!(f(vec![-5, -5]), 1);
-        // assert_eq!(
-        //     f(vec![
-        //         2147483647, 2147483647, 2147483647, 2147483647, 2147483647, 2147483647
-        //     ]),
-        //     0
-        // );
-        // assert_eq!(f(vec![5, 4, 3, 2, 1]), 4);
+        assert_eq!(f(vec![2, 4, 3, 5, 1]), 3);
+        assert_eq!(f(vec![-5, -5]), 1);
+        assert_eq!(
+            f(vec![
+                2147483647, 2147483647, 2147483647, 2147483647, 2147483647, 2147483647
+            ]),
+            0
+        );
+        assert_eq!(f(vec![5, 4, 3, 2, 1]), 4);
     }
 }
